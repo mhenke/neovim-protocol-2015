@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neovim Protocol: 2015</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=VT323&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background-color: #050505;
+        color: #33ff00;
+        font-family: 'Fira Code', monospace;
+        overflow: hidden;
+      }
+      .scanline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2));
+        background-size: 100% 4px;
+        pointer-events: none;
+        z-index: 50;
+        animation: scroll 10s linear infinite;
+        opacity: 0.3;
+      }
+      @keyframes scroll {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(100vh); }
+      }
+      .crt-flicker {
+        animation: flicker 0.15s infinite;
+      }
+      @keyframes flicker {
+        0% { opacity: 0.95; }
+        5% { opacity: 0.9; }
+        10% { opacity: 0.95; }
+        100% { opacity: 0.98; }
+      }
+      .cursor-block {
+        display: inline-block;
+        width: 1ch;
+        height: 1.2em;
+        vertical-align: text-bottom;
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      
+      /* Scrollbar hiding for that raw terminal feel */
+      ::-webkit-scrollbar {
+          width: 0px;
+          background: transparent;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.34.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <div class="scanline"></div>
+  </body>
+</html>
