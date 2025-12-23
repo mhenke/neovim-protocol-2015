@@ -1,11 +1,9 @@
 
-
 export enum VimMode {
   NORMAL = 'NORMAL',
   INSERT = 'INSERT',
   VISUAL = 'VISUAL',
   VISUAL_LINE = 'VISUAL_LINE',
-  VISUAL_BLOCK = 'VISUAL_BLOCK',
   COMMAND = 'COMMAND'
 }
 
@@ -18,23 +16,23 @@ export interface LevelConfig {
   id: number;
   episode: number;
   episodeTitle: string;
-  filename: string;
+  filename: string; // e.g. "syslog.conf"
   objective: string;
   newKeys: string[];
   mechanics: string[];
-  targetFile?: string; 
-  timeLimit?: number; 
-  maxKeystrokes?: number;
-  ghostPar?: number;
+  targetFile?: string; // For :e command mechanic
+  timeLimit?: number; // Seconds (Episode 2)
+  maxKeystrokes?: number; // Count (Episode 3)
+  idealKeystrokes?: number; // For "Ghost" par score
 }
 
 export interface Task {
   description: string;
-  type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'indent' | 'selection';
+  type: 'contains' | 'missing' | 'cursor_on' | 'run_command';
   value: string;
   completed: boolean;
-  loreFragment?: string;
-  keyHint?: string;
+  loreFragment?: string; // Optional narrative reward for completing specific task
+  keyHint?: string; // Short key combo hint e.g. "ciw" or "j/k"
 }
 
 export interface Level {
@@ -52,11 +50,10 @@ export type DialogType = 'NONE' | 'HELP' | 'MAP' | 'HINTS';
 
 export interface LastAction {
   type: 'delete' | 'change' | 'indent' | 'insert';
-  subType?: 'line' | 'word' | 'char' | 'object' | 'block';
-  text?: string; 
+  subType?: 'line' | 'word' | 'char' | 'object';
+  text?: string; // For insert/change
   count?: number;
-  object?: string; 
-  visualBlockInfo?: { startY: number, endY: number, startX: number };
+  object?: string; // for text objects
 }
 
 export interface GameState {
@@ -64,30 +61,36 @@ export interface GameState {
   mode: VimMode;
   text: string[];
   cursor: Cursor;
-  clipboard: string | null;
-  clipboardType: 'line' | 'char' | 'block' | null;
+  clipboard: string | null; // Register "
+  clipboardType: 'line' | 'char' | null;
   commandBuffer: string; 
-  operatorBuffer: string; 
-  motionBuffer: string;   
-  countBuffer: string;    
+  operatorBuffer: string; // Pending operator (d, c, y)
+  motionBuffer: string;   // Pending motion numbers (e.g. '2' in '2w') or chars (e.g. 'f')
+  countBuffer: string;    // Numeric prefix (e.g. '5' in '5j')
   message: string; 
   status: 'LANDING' | 'BOOT' | 'EPISODE_INTRO' | 'BRIEFING' | 'PLAYING' | 'SUCCESS' | 'GAMEOVER' | 'EPISODE_COMPLETE';
   loreLog: string[];
   activeDialog: DialogType;
+  // Mechanics
   timeLeft: number | null;
   keystrokeCount: number;
-  lastAction: LastAction | null;
-  insertBuffer: string;
+  lastAction: LastAction | null; // For Dot command
+  insertBuffer: string; // Track text typed during current insert session
   viewLayout: 'single' | 'vsplit' | 'hsplit';
-  lastExecutedCommand: string | null;
-  visualStart: Cursor | null; 
-  marks: Record<string, Cursor>; 
-  
-  // New features
-  macroRecording: string | null; // The register currently being recorded to (e.g. 'a')
-  macros: Record<string, string>; // Map of register -> key sequence
-  registerBuffer: boolean; // True if we are waiting for a register name (after ")
-  activeRegister: string | null; // The register selected for the next operation
-  registers: Record<string, string>; // Map of register -> content
-  activeWindow: 0 | 1; // 0 = main, 1 = split
+  lastExecutedCommand: string | null; // To validate run_command tasks
+}
+
+export interface GeminiLevelResponse {
+  briefing: string;
+  initialText: string[];
+  targetText: string[];
+  loreReveal: string;
+  hints: string[];
+  tasks: Array<{ 
+    description: string, 
+    type: 'contains' | 'missing' | 'cursor_on' | 'run_command', 
+    value: string, 
+    loreFragment: string,
+    keyHint?: string 
+  }>;
 }
