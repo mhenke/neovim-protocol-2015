@@ -172,8 +172,9 @@ export const CURRICULUM: LevelConfig[] = [
 export const LEVEL_1_FALLBACK: Level = {
   id: 1,
   config: CURRICULUM[0],
-  briefing: "CONNECTION ESTABLISHED.\n\nWe are at the perimeter gate. Agent 'Echo' went dark 72 hours ago. Echo's last transmission came from this sector.\n\nUse the legacy navigation keys (H, J, K, L) to align the signal interceptors. Do not use the arrow keys; they trigger the alarm.",
+  briefing: "CONNECTION ESTABLISHED.\n\nWe are at the perimeter gate. Agent 'Echo' went dark 72 hours ago. Echo's last transmission is fragmented across these logs.\n\nAlign your cursor with the signal nodes to decrypt them. Then type ':w' to WRITE the coordinates to the targeting computer.",
   initialText: [
+    "// SYSTEM_ONLINE",
     "SIGNAL_TRACE [MISALIGNED]",
     "-------------------------",
     "Origin: UNKNOWN",
@@ -186,15 +187,39 @@ export const LEVEL_1_FALLBACK: Level = {
   ],
   targetText: (text) => true, // Navigation levels usually check tasks not text state
   tasks: [
-    { description: "ALIGN: Move DOWN to 'Status' (press 'j' 2 times)", type: 'cursor_on', value: "Status", completed: false },
-    { description: "TRACK: Move RIGHT to 'LOST' (press 'l' or '$')", type: 'cursor_on', value: "LOST", completed: false },
-    { description: "SCAN: Move DOWN to 'ALPHA' (press 'j')", type: 'cursor_on', value: "ALPHA", completed: false },
-    { description: "RESET: Move UP and LEFT to 'SIGNAL' (press 'k' then '0')", type: 'cursor_on', value: "SIGNAL", completed: false }
+    { 
+        description: "ALIGN: Move DOWN to 'Status' (press 'j' 4 times)", 
+        type: 'cursor_on', 
+        value: "Status", 
+        completed: false,
+        loreFragment: "010001... [DECRYPTED]: 'I found the backdoor...'"
+    },
+    { 
+        description: "TRACK: Move RIGHT to 'LOST' (press 'l' or '$')", 
+        type: 'cursor_on', 
+        value: "LOST", 
+        completed: false,
+        loreFragment: "110110... [DECRYPTED]: '...hidden in R&D Sector 4.'"
+    },
+    { 
+        description: "SCAN: Move DOWN to 'ALPHA' (press 'j' 3 times)", 
+        type: 'cursor_on', 
+        value: "ALPHA", 
+        completed: false,
+        loreFragment: "001011... [DECRYPTED]: 'They are watching everything.'"
+    },
+    { 
+        description: "RESET: Move UP to 'SIGNAL' (press 'k' 6 times)", 
+        type: 'cursor_on', 
+        value: "SIGNAL", 
+        completed: false,
+        loreFragment: "111111... [DECRYPTED]: 'Signal Lock Established. Ready for injection.'"
+    }
   ],
   hints: [
     "H = Left, J = Down, K = Up, L = Right",
-    "The arrow keys are disabled to prevent detection.",
-    "Move swiftly, Ghost."
+    "Hover over the keywords to decrypt the binary data.",
+    ":w (Write) confirms your cursor positions to the mainframe."
   ],
   loreReveal: "Log Fragment 01: 'I found the backdoor. They're hiding something massive in R&D. Going in.' - Echo"
 };

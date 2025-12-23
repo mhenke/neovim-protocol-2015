@@ -32,6 +32,20 @@ const Modal = ({ title, children, onClose }: { title: string, children?: React.R
     </div>
 );
 
+// --- Notification Component ---
+const Notification = ({ message }: { message: string }) => {
+  if (!message) return null;
+  return (
+    <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-50 animate-fadeIn">
+       <div className="bg-[#0a0a0a] border border-[#33ff00] text-[#33ff00] px-6 py-3 shadow-[0_0_15px_rgba(51,255,0,0.3)] flex items-center gap-4">
+           <div className="animate-pulse bg-[#33ff00] h-2 w-2 rounded-full"></div>
+           <span className="font-mono text-sm tracking-wider">{message}</span>
+       </div>
+    </div>
+  );
+};
+
+
 // --- New Screen Components ---
 
 const LandingScreen = ({ onStart }: { onStart: () => void }) => {
@@ -224,6 +238,7 @@ export default function App() {
 
   const [currentLevel, setCurrentLevel] = useState<Level>(LEVEL_1_FALLBACK);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeNotification, setActiveNotification] = useState<string | null>(null);
 
   // --- Effects ---
 
@@ -251,6 +266,8 @@ export default function App() {
     if (gameState.status !== 'PLAYING') return;
 
     setCurrentLevel(prevLevel => {
+        let loreFound: string | null = null;
+
         const newTasks = prevLevel.tasks.map(task => {
             if (task.completed && task.type === 'cursor_on') {
                 return task;
@@ -273,10 +290,27 @@ export default function App() {
             }
 
             if (task.type === 'cursor_on') {
-               return { ...task, completed: task.completed || isMet };
+                const wasCompleted = task.completed;
+                const nowCompleted = task.completed || isMet;
+                if (!wasCompleted && nowCompleted && task.loreFragment) {
+                    loreFound = task.loreFragment;
+                }
+                return { ...task, completed: nowCompleted };
             }
-            return { ...task, completed: isMet };
+            
+            // For other task types
+            const nowCompleted = isMet;
+            if (!task.completed && nowCompleted && task.loreFragment) {
+                loreFound = task.loreFragment;
+            }
+            return { ...task, completed: nowCompleted };
         });
+
+        // Trigger Notification if lore found
+        if (loreFound) {
+            setActiveNotification(loreFound);
+            setTimeout(() => setActiveNotification(null), 4000);
+        }
 
         const hasChanged = JSON.stringify(newTasks) !== JSON.stringify(prevLevel.tasks);
         if (!hasChanged) return prevLevel;
@@ -308,7 +342,10 @@ export default function App() {
       
       // Use fallback if no key or for level 1 to ensure smooth start
       if (index === 0 || !process.env.API_KEY) {
-         levelData = LEVEL_1_FALLBACK;
+         levelData = {
+             ...LEVEL_1_FALLBACK,
+             tasks: LEVEL_1_FALLBACK.tasks.map(t => ({...t, completed: false}))
+         };
       } else {
         // Fix: Removed apiKey argument to comply with guidelines, accessing process.env.API_KEY directly in service
         const genLevel = await generateLevel(config, gameState.loreLog);
@@ -375,9 +412,10 @@ export default function App() {
         return; 
     }
 
-    if (e.key === 'F1') { e.preventDefault(); setGameState(prev => ({ ...prev, activeDialog: 'HELP' })); return; }
-    if (e.key === 'F2') { e.preventDefault(); setGameState(prev => ({ ...prev, activeDialog: 'MAP' })); return; }
-    if (e.key === 'F3') { e.preventDefault(); setGameState(prev => ({ ...prev, activeDialog: 'HINTS' })); return; }
+    // UPDATED: Added Alt+1/2/3 support
+    if (e.key === 'F1' || (e.altKey && e.key === '1')) { e.preventDefault(); setGameState(prev => ({ ...prev, activeDialog: 'HELP' })); return; }
+    if (e.key === 'F2' || (e.altKey && e.key === '2')) { e.preventDefault(); setGameState(prev => ({ ...prev, activeDialog: 'MAP' })); return; }
+    if (e.key === 'F3' || (e.altKey && e.key === '3')) { e.preventDefault(); setGameState(prev => ({ ...prev, activeDialog: 'HINTS' })); return; }
 
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
       e.preventDefault();
@@ -715,6 +753,9 @@ export default function App() {
       
       {/* Background Noise */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-0 pointer-events-none bg-[length:100%_4px,3px_100%]"></div>
+      
+      {/* Notification Toast */}
+      <Notification message={activeNotification || ''} />
 
       {/* --- TOP PANEL --- */}
       <div className="h-10 border-b border-gray-800 bg-[#050505] flex items-center z-50 select-none">
@@ -723,19 +764,19 @@ export default function App() {
           </div>
           <TopButton 
             label="HELP" 
-            shortcut="F1" 
+            shortcut="ALT+1" 
             active={gameState.activeDialog === 'HELP'} 
             onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'HELP' ? 'NONE' : 'HELP'}))} 
           />
           <TopButton 
             label="MAP" 
-            shortcut="F2" 
+            shortcut="ALT+2" 
             active={gameState.activeDialog === 'MAP'} 
             onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'MAP' ? 'NONE' : 'MAP'}))} 
           />
           <TopButton 
             label="NOTES" 
-            shortcut="F3" 
+            shortcut="ALT+3" 
             active={gameState.activeDialog === 'HINTS'} 
             onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'HINTS' ? 'NONE' : 'HINTS'}))} 
           />
@@ -943,15 +984,15 @@ export default function App() {
                         const isDone = task.completed;
                         
                         let borderClass = 'border-gray-800 bg-gray-900/30';
-                        if (isDone) borderClass = 'border-[#33ff00] bg-[#33ff00]/10';
+                        if (isDone) borderClass = 'border-[#33ff00]/50 bg-[#33ff00]/10';
                         if (isActive) borderClass = 'border-white bg-white/10 animate-pulse';
 
                         return (
-                            <div key={idx} className={`flex items-start gap-3 p-2 rounded border transition-all duration-300 ${borderClass} ${isFuture ? 'opacity-30 blur-[0.5px]' : 'opacity-100'}`}>
-                                <div className={`mt-1 text-sm ${isDone ? 'text-[#33ff00]' : (isActive ? 'text-white' : 'text-gray-600')}`}>
+                            <div key={idx} className={`flex items-start gap-3 p-2 rounded border transition-all duration-300 ${borderClass} ${isFuture ? 'opacity-75' : 'opacity-100'}`}>
+                                <div className={`mt-1 text-sm ${isDone ? 'text-[#33ff00]' : (isActive ? 'text-white' : 'text-gray-500')}`}>
                                     {isDone ? '☑' : (isActive ? '➤' : '☐')}
                                 </div>
-                                <div className={`text-xs leading-relaxed ${isDone ? 'line-through text-gray-500' : (isActive ? 'text-white font-bold' : 'text-gray-400')}`}>
+                                <div className={`text-xs leading-relaxed ${isDone ? 'line-through text-gray-400' : (isActive ? 'text-white font-bold' : 'text-gray-400')}`}>
                                     {task.description}
                                 </div>
                             </div>
@@ -986,7 +1027,7 @@ export default function App() {
       {/* --- MODALS --- */}
       
       {gameState.activeDialog === 'HELP' && (
-          <Modal title="SYSTEM MANUAL (F1)" onClose={() => setGameState(prev => ({...prev, activeDialog: 'NONE'}))}>
+          <Modal title="SYSTEM MANUAL (ALT+1)" onClose={() => setGameState(prev => ({...prev, activeDialog: 'NONE'}))}>
               <div className="grid grid-cols-2 gap-8">
                   <div>
                       <h4 className="text-[#33ff00] mb-4 border-b border-gray-700 pb-1">CURRENT PROTOCOLS</h4>
@@ -1021,7 +1062,7 @@ export default function App() {
       )}
 
       {gameState.activeDialog === 'HINTS' && (
-          <Modal title="OPERATOR NOTES (F3)" onClose={() => setGameState(prev => ({...prev, activeDialog: 'NONE'}))}>
+          <Modal title="OPERATOR NOTES (ALT+3)" onClose={() => setGameState(prev => ({...prev, activeDialog: 'NONE'}))}>
               <div className="space-y-6">
                   <div className="bg-[#1a1a1a] p-4 border-l-4 border-[#cc7832]">
                       <h4 className="text-[#cc7832] font-bold mb-2">PRIMARY OBJECTIVE</h4>
@@ -1043,7 +1084,7 @@ export default function App() {
       )}
 
       {gameState.activeDialog === 'MAP' && (
-          <Modal title="NETWORK MAP (F2)" onClose={() => setGameState(prev => ({...prev, activeDialog: 'NONE'}))}>
+          <Modal title="NETWORK MAP (ALT+2)" onClose={() => setGameState(prev => ({...prev, activeDialog: 'NONE'}))}>
               <div className="space-y-8">
                   {episodes.map(epId => (
                       <div key={epId}>

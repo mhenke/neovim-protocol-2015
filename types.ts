@@ -30,6 +30,7 @@ export interface Task {
   type: 'contains' | 'missing' | 'cursor_on';
   value: string;
   completed: boolean;
+  loreFragment?: string; // Optional narrative reward for completing specific task
 }
 
 export interface Level {
