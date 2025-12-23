@@ -17,22 +17,22 @@ export interface LevelConfig {
   id: number;
   episode: number;
   episodeTitle: string;
-  filename: string; // e.g. "syslog.conf"
+  filename: string;
   objective: string;
   newKeys: string[];
   mechanics: string[];
-  timeLimit?: number; // Seconds (Episode 2)
-  maxKeystrokes?: number; // Count (Episode 3)
-  idealKeystrokes?: number; // For "Ghost" par score
+  targetFile?: string; 
+  timeLimit?: number; 
+  maxKeystrokes?: number;
 }
 
 export interface Task {
   description: string;
-  type: 'contains' | 'missing' | 'cursor_on';
+  type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'indent';
   value: string;
   completed: boolean;
-  loreFragment?: string; // Optional narrative reward for completing specific task
-  keyHint?: string; // Short key combo hint e.g. "ciw" or "j/k"
+  loreFragment?: string;
+  keyHint?: string;
 }
 
 export interface Level {
@@ -51,9 +51,9 @@ export type DialogType = 'NONE' | 'HELP' | 'MAP' | 'HINTS';
 export interface LastAction {
   type: 'delete' | 'change' | 'indent' | 'insert';
   subType?: 'line' | 'word' | 'char' | 'object';
-  text?: string; // For insert/change
+  text?: string; 
   count?: number;
-  object?: string; // for text objects
+  object?: string; 
 }
 
 export interface GameState {
@@ -61,34 +61,20 @@ export interface GameState {
   mode: VimMode;
   text: string[];
   cursor: Cursor;
-  clipboard: string | null; // Register "
+  clipboard: string | null;
   clipboardType: 'line' | 'char' | null;
   commandBuffer: string; 
-  operatorBuffer: string; // Pending operator (d, c, y)
-  motionBuffer: string;   // Pending motion numbers (e.g. '2' in '2w') or chars (e.g. 'f')
-  countBuffer: string;    // Numeric prefix (e.g. '5' in '5j')
+  operatorBuffer: string; 
+  motionBuffer: string;   
+  countBuffer: string;    
   message: string; 
   status: 'LANDING' | 'BOOT' | 'EPISODE_INTRO' | 'BRIEFING' | 'PLAYING' | 'SUCCESS' | 'GAMEOVER' | 'EPISODE_COMPLETE';
   loreLog: string[];
   activeDialog: DialogType;
-  // New Mechanics
   timeLeft: number | null;
   keystrokeCount: number;
-  lastAction: LastAction | null; // For Dot command
-  insertBuffer: string; // Track text typed during current insert session
-}
-
-export interface GeminiLevelResponse {
-  briefing: string;
-  initialText: string[];
-  targetText: string[];
-  loreReveal: string;
-  hints: string[];
-  tasks: Array<{ 
-    description: string, 
-    type: 'contains' | 'missing' | 'cursor_on', 
-    value: string, 
-    loreFragment: string,
-    keyHint?: string 
-  }>;
+  lastAction: LastAction | null;
+  insertBuffer: string;
+  viewLayout: 'single' | 'vsplit' | 'hsplit';
+  lastExecutedCommand: string | null;
 }

@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
-import { CURRICULUM, INITIAL_LORE, LEVEL_1_FALLBACK, EPISODE_CONTEXT } from './constants';
-import { generateLevel } from './services/geminiService';
+import { GameState, VimMode, Level, Task, DialogType, LastAction } from './types';
+import { STATIC_LEVELS, INITIAL_LORE, EPISODE_CONTEXT } from './constants';
 import * as fs from './utils/fsHelpers';
 
 // --- Utility Components ---
@@ -168,8 +166,8 @@ const EpisodeScreen = ({ episode, onContinue }: { episode: number, onContinue: (
   }, [onContinue]);
 
   return (
-    <div className="min-h-screen bg-black flex flex-col items-center justify-center font-mono p-12 text-center relative">
-       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#33ff00]/10 via-black to-black"></div>
+    <div className="absolute inset-0 z-[60] bg-black/90 flex flex-col items-center justify-center font-mono p-12 text-center animate-fadeIn">
+       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#33ff00]/10 via-transparent to-transparent pointer-events-none"></div>
        
        <div className="z-10 max-w-2xl w-full border-t border-b border-[#33ff00]/30 py-12">
           <div className="text-[#33ff00] text-sm tracking-[0.5em] mb-4 uppercase">Episode 0{episode}</div>
@@ -226,7 +224,7 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState>({
     currentLevelIndex: 0,
     mode: VimMode.NORMAL,
-    text: LEVEL_1_FALLBACK.initialText, // Ensure initial text is never empty
+    text: STATIC_LEVELS[0].initialText, 
     cursor: { x: 0, y: 0 },
     commandBuffer: '',
     operatorBuffer: '',
@@ -241,11 +239,13 @@ export default function App() {
     timeLeft: null,
     keystrokeCount: 0,
     lastAction: null,
-    insertBuffer: ''
+    insertBuffer: '',
+    viewLayout: 'single',
+    lastExecutedCommand: null
   });
 
-  const [currentLevel, setCurrentLevel] = useState<Level>(LEVEL_1_FALLBACK);
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentLevel, setCurrentLevel] = useState<Level>(STATIC_LEVELS[0]);
+  const hasJumpedRef = useRef(false);
 
   // --- Effects ---
 
@@ -274,7 +274,7 @@ export default function App() {
 
     setCurrentLevel(prevLevel => {
         const newTasks = prevLevel.tasks.map(task => {
-            if (task.completed && task.type === 'cursor_on') {
+            if (task.completed) {
                 return task;
             }
 
@@ -292,15 +292,22 @@ export default function App() {
                     const endIndex = targetIndex + task.value.length;
                     isMet = gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
                 }
+            } else if (task.type === 'run_command') {
+                // Check if lastExecutedCommand matches the task value
+                if (gameState.lastExecutedCommand && gameState.lastExecutedCommand.startsWith(task.value)) {
+                    isMet = true;
+                }
+            } else if (task.type === 'indent' && task.value) {
+                // Check if the specific text (stripped of whitespace) exists with indentation
+                const targetTrimmed = task.value.trim();
+                const found = gameState.text.find(l => l.trim() === targetTrimmed && l.startsWith("  ")); // Expect 2 spaces indent
+                if (found) isMet = true;
             }
 
-            if (task.type === 'cursor_on') {
-                const nowCompleted = task.completed || isMet;
-                return { ...task, completed: nowCompleted };
+            if (isMet) {
+                return { ...task, completed: true };
             }
-
-            const nowCompleted = isMet;
-            return { ...task, completed: nowCompleted };
+            return task;
         });
 
         const hasChanged = JSON.stringify(newTasks) !== JSON.stringify(prevLevel.tasks);
@@ -309,89 +316,76 @@ export default function App() {
         return { ...prevLevel, tasks: newTasks };
     });
 
-  }, [gameState.text, gameState.cursor, gameState.status]);
+  }, [gameState.text, gameState.cursor, gameState.status, gameState.lastExecutedCommand]);
 
 
   // --- Logic Helpers ---
 
-  const loadLevel = useCallback(async (index: number) => {
-    if (index >= CURRICULUM.length) {
+  const loadLevel = useCallback((index: number) => {
+    if (index >= STATIC_LEVELS.length) {
       setGameState(prev => ({ ...prev, status: 'EPISODE_COMPLETE', message: "SYSTEM RESTORED" }));
       return;
     }
 
-    const config = CURRICULUM[index];
-    const prevConfig = CURRICULUM[index - 1];
+    const levelData = STATIC_LEVELS[index];
+    const prevLevel = STATIC_LEVELS[index - 1];
     
     // Logic: Only show EPISODE_INTRO if we are moving to a NEW episode AND it's not the very first level.
-    // Level 1 (Index 0) intro is handled by the Landing Screen + Briefing Header.
-    const isNewEpisode = index > 0 && prevConfig && config.episode > prevConfig.episode;
+    const isNewEpisode = index > 0 && prevLevel && levelData.config.episode > prevLevel.config.episode;
     
-    setIsLoading(true);
+    // Reset tasks completion state (important for replaying or jumping)
+    const freshTasks = levelData.tasks.map(t => ({...t, completed: false}));
     
-    try {
-      let levelData: Level;
+    const hydratedLevel = {
+        ...levelData,
+        tasks: freshTasks
+    };
+
+    setCurrentLevel(hydratedLevel);
+    
+    setGameState(prev => ({
+      ...prev,
+      currentLevelIndex: index,
+      status: isNewEpisode ? 'EPISODE_INTRO' : 'BRIEFING', // Skip Intro for Level 1
+      mode: VimMode.NORMAL,
+      text: [...hydratedLevel.initialText],
+      cursor: { x: 0, y: 0 },
+      message: '',
+      commandBuffer: '',
+      operatorBuffer: '',
+      motionBuffer: '',
+      countBuffer: '',
+      activeDialog: 'NONE',
+      timeLeft: hydratedLevel.config.timeLimit || null,
+      keystrokeCount: 0,
+      lastAction: null,
+      insertBuffer: '',
+      viewLayout: 'single',
+      lastExecutedCommand: null
+    }));
+
+  }, []);
+
+  // Debug Hook: Jump to level via ?lvl=ID
+  useEffect(() => {
+      if (hasJumpedRef.current) return;
       
-      // Use fallback if no key or for level 1 to ensure smooth start
-      if (index === 0 || !process.env.API_KEY) {
-         levelData = {
-             ...LEVEL_1_FALLBACK,
-             tasks: LEVEL_1_FALLBACK.tasks.map(t => ({...t, completed: false}))
-         };
-      } else {
-        const genLevel = await generateLevel(config, gameState.loreLog);
-        
-        const hydratedTasks: Task[] = genLevel.tasks.map(t => ({
-             ...t,
-             completed: false
-        }));
-
-        levelData = {
-          id: config.id,
-          config: config,
-          briefing: genLevel.briefing,
-          initialText: genLevel.initialText,
-          targetText: genLevel.targetText,
-          loreReveal: genLevel.loreReveal,
-          hints: genLevel.hints,
-          tasks: hydratedTasks
-        };
-      }
-
-      // Safety: Ensure text is never empty to prevent crash
-      if (!levelData.initialText || levelData.initialText.length === 0) {
-          levelData.initialText = ["DATA_CORRUPT", "RETRY_MANUAL_OVERRIDE"];
-      }
-
-      setCurrentLevel(levelData);
+      const params = new URLSearchParams(window.location.search);
+      const lvlParam = params.get('lvl');
       
-      setGameState(prev => ({
-        ...prev,
-        currentLevelIndex: index,
-        status: isNewEpisode ? 'EPISODE_INTRO' : 'BRIEFING', // Skip Intro for Level 1
-        mode: VimMode.NORMAL,
-        text: [...levelData.initialText],
-        cursor: { x: 0, y: 0 },
-        message: '',
-        commandBuffer: '',
-        operatorBuffer: '',
-        motionBuffer: '',
-        countBuffer: '',
-        activeDialog: 'NONE',
-        timeLeft: config.timeLimit || null,
-        keystrokeCount: 0,
-        lastAction: null,
-        insertBuffer: ''
-      }));
-
-    } catch (e) {
-      console.error(e);
-      setCurrentLevel(LEVEL_1_FALLBACK);
-      setGameState(prev => ({...prev, message: "CONNECTION_LOST. RETRYING LOCAL CACHE.", status: 'BRIEFING', text: LEVEL_1_FALLBACK.initialText}));
-    } finally {
-      setIsLoading(false);
-    }
-  }, [gameState.loreLog]);
+      if (lvlParam) {
+          const lvlId = parseInt(lvlParam, 10);
+          const targetIndex = STATIC_LEVELS.findIndex(c => c.id === lvlId);
+          
+          if (targetIndex !== -1) {
+              console.log(`DEBUG: Jumping to Level ID ${lvlId} (Index ${targetIndex})`);
+              hasJumpedRef.current = true;
+              // Force state to BOOT to bypass Landing screen immediately
+              setGameState(prev => ({ ...prev, status: 'BOOT' }));
+              loadLevel(targetIndex);
+          }
+      }
+  }, [loadLevel]);
 
   // --- Input Handler ---
 
@@ -478,37 +472,71 @@ export default function App() {
       // COMMAND MODE
       if (prev.mode === VimMode.COMMAND) {
         if (e.key === 'Escape') return { ...newState, mode: VimMode.NORMAL, commandBuffer: '' };
+        
+        // TAB Completion for :e
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            if (prev.commandBuffer.startsWith(':e ')) {
+                const input = prev.commandBuffer.slice(3).trim();
+                const target = currentLevel.config.targetFile;
+                // Simple prefix match auto-completion
+                if (target && target.startsWith(input)) {
+                    return { ...newState, commandBuffer: `:e ${target}` };
+                }
+            }
+            return newState;
+        }
+
         if (e.key === 'Enter') {
           const cmd = prev.commandBuffer.trim();
+          let msg = '';
+          let mode = VimMode.NORMAL;
+          let layout: 'single' | 'vsplit' | 'hsplit' = prev.viewLayout;
           
           if (cmd === ':w' || cmd === ':wq' || cmd === ':x') {
              const allDone = currentLevel.tasks.every(t => t.completed);
              if (allDone) {
                  return { ...newState, status: 'SUCCESS', mode: VimMode.NORMAL, commandBuffer: '' };
              } else {
-                 return { ...newState, mode: VimMode.NORMAL, commandBuffer: '', message: 'E503: PRIMARY DIRECTIVE INCOMPLETE' };
+                 msg = 'E503: PRIMARY DIRECTIVE INCOMPLETE';
              }
-          }
-
-          if (cmd === ':q' || cmd === ':q!' || cmd === ':qa') {
+          } else if (cmd === ':q' || cmd === ':q!' || cmd === ':qa') {
              return { 
                 ...newState, 
                 text: [...currentLevel.initialText], 
                 mode: VimMode.NORMAL, 
                 commandBuffer: '', 
                 cursor: { x: 0, y: 0 },
-                message: 'CHANGES DISCARDED. RESETTING...' 
+                message: 'CHANGES DISCARDED. RESETTING...',
+                viewLayout: 'single' 
              };
-          }
-
-          if (cmd.startsWith(':%s')) {
-             return fs.executeSubstitute(newState, cmd.slice(1)); // strip ':' but keep '%s...'
-          }
-
-          if (cmd.startsWith('/')) {
+          } else if (cmd.startsWith(':e ')) {
+               const file = cmd.slice(3).trim();
+               if (currentLevel.config.mechanics.includes('file_open') && file === currentLevel.config.targetFile) {
+                    return { ...newState, status: 'SUCCESS', mode: VimMode.NORMAL, commandBuffer: '', message: 'FILE ACCESSED' };
+               }
+               msg = `E403: Access Denied to '${file}'`;
+          } else if (cmd.startsWith(':sp') || cmd.startsWith(':vsp') || cmd.startsWith(':tabnew')) {
+              if (cmd.startsWith(':sp')) layout = 'hsplit';
+              if (cmd.startsWith(':vsp')) layout = 'vsplit';
+              if (cmd.startsWith(':tabnew')) layout = 'single'; // Tab just clears view effectively for now
+              msg = `Buffer Split: ${cmd.split(' ')[1] || 'current'}`;
+          } else if (cmd.startsWith(':%s')) {
+             return fs.executeSubstitute(newState, cmd.slice(1)); 
+          } else if (cmd.startsWith('/')) {
              return { ...fs.executeSearch(newState, cmd.slice(1)), mode: VimMode.NORMAL, commandBuffer: '' };
+          } else {
+             msg = 'E492: Not an editor command';
           }
-          return { ...newState, mode: VimMode.NORMAL, commandBuffer: '', message: 'E492: Not an editor command' };
+
+          return { 
+              ...newState, 
+              mode: mode, 
+              commandBuffer: '', 
+              message: msg, 
+              viewLayout: layout,
+              lastExecutedCommand: cmd 
+          };
         }
         if (e.key === 'Backspace') {
            const newCmd = prev.commandBuffer.slice(0, -1);
@@ -730,20 +758,48 @@ export default function App() {
       </button>
   );
 
-  const episodes = Array.from(new Set(CURRICULUM.map(l => l.episode)));
+  const episodes = Array.from(new Set(STATIC_LEVELS.map(l => l.config.episode)));
+
+  const EditorView = ({ text, cursor, isDimmed }: { text: string[], cursor: {x:number, y:number}, isDimmed?: boolean }) => (
+    <div className={`flex-1 font-['Fira_Code'] text-lg relative outline-none bg-[#0a0a0a] p-4 border border-gray-800 shadow-inner overflow-hidden ${isDimmed ? 'opacity-50 grayscale' : ''}`}>
+        {text.map((line, idx) => (
+            <div key={idx} className="flex min-h-[1.5em]">
+            <div className="w-8 text-gray-700 text-right mr-4 select-none text-sm pt-1">{idx + 1}</div>
+            <div className="relative whitespace-pre text-[#a9b7c6]">
+                {line.length === 0 && cursor.y === idx && !isDimmed ? (
+                    <span className="absolute left-0 top-0 bg-[#a9b7c6] opacity-80 w-[1ch] h-[1.2em] animate-pulse"></span>
+                ) : (
+                line.split('').map((char, charIdx) => {
+                    const isCursor = !isDimmed && cursor.y === idx && cursor.x === charIdx;
+                    return (
+                    <span key={charIdx} className={`${isCursor ? 'bg-[#a9b7c6] text-black' : ''}`}>
+                        {char}
+                    </span>
+                    );
+                })
+                )}
+                {!isDimmed && cursor.y === idx && cursor.x === line.length && line.length > 0 && (
+                <span className="absolute bg-[#a9b7c6] opacity-80 w-[1ch] h-[1.2em] animate-pulse" style={{left: `${line.length}ch`}}></span>
+                )}
+            </div>
+            </div>
+        ))}
+        {Array.from({ length: Math.max(0, 15 - text.length) }).map((_, i) => (
+            <div key={`empty-${i}`} className="flex">
+                <div className="w-8 text-[#464f5b] text-right mr-4 select-none font-bold">~</div>
+            </div>
+        ))}
+    </div>
+  );
 
 
   // --- MAIN RENDER SWITCH ---
 
   if (gameState.status === 'LANDING') {
-    return <LandingScreen onStart={() => loadLevel(0)} />;
-  }
-
-  if (gameState.status === 'EPISODE_INTRO') {
-     return <EpisodeScreen 
-              episode={currentLevel.config.episode} 
-              onContinue={() => setGameState(prev => ({...prev, status: 'BRIEFING'}))} 
-            />;
+    return <LandingScreen onStart={() => {
+        setGameState(prev => ({...prev, status: 'BOOT'}));
+        loadLevel(0);
+    }} />;
   }
 
   // Find the first uncompleted task for highlighting
@@ -755,61 +811,60 @@ export default function App() {
       {/* Background Noise */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-0 pointer-events-none bg-[length:100%_4px,3px_100%]"></div>
       
-      {/* --- TOP PANEL --- */}
-      <div className="h-10 border-b border-gray-800 bg-[#050505] flex items-center z-50 select-none">
-          <div className="px-4 text-[#33ff00] font-bold tracking-widest text-sm border-r border-gray-800 h-full flex items-center">
-              NEOVIM:2015
+      {/* Wrapper to apply blur to main UI when Episode Intro is active */}
+      <div className={`flex flex-col h-full transition-all duration-700 ${gameState.status === 'EPISODE_INTRO' ? 'blur-sm opacity-40 scale-[0.99]' : ''}`}>
+          
+          {/* --- TOP PANEL --- */}
+          <div className="h-10 border-b border-gray-800 bg-[#050505] flex items-center z-50 select-none">
+              <div className="px-4 text-[#33ff00] font-bold tracking-widest text-sm border-r border-gray-800 h-full flex items-center">
+                  NEOVIM:2015
+              </div>
+              <TopButton 
+                label="HELP" 
+                shortcut="ALT+1" 
+                active={gameState.activeDialog === 'HELP'} 
+                onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'HELP' ? 'NONE' : 'HELP'}))} 
+              />
+              <TopButton 
+                label="MAP" 
+                shortcut="ALT+2" 
+                active={gameState.activeDialog === 'MAP'} 
+                onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'MAP' ? 'NONE' : 'MAP'}))} 
+              />
+              <TopButton 
+                label="NOTES" 
+                shortcut="ALT+3" 
+                active={gameState.activeDialog === 'HINTS'} 
+                onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'HINTS' ? 'NONE' : 'HINTS'}))} 
+              />
+              <div className="flex-1"></div>
+              <div className="px-4 text-xs text-gray-600">
+                EP_{currentLevel.config.episode} // LVL_{currentLevel.id}
+              </div>
           </div>
-          <TopButton 
-            label="HELP" 
-            shortcut="ALT+1" 
-            active={gameState.activeDialog === 'HELP'} 
-            onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'HELP' ? 'NONE' : 'HELP'}))} 
-          />
-          <TopButton 
-            label="MAP" 
-            shortcut="ALT+2" 
-            active={gameState.activeDialog === 'MAP'} 
-            onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'MAP' ? 'NONE' : 'MAP'}))} 
-          />
-          <TopButton 
-            label="NOTES" 
-            shortcut="ALT+3" 
-            active={gameState.activeDialog === 'HINTS'} 
-            onClick={() => setGameState(prev => ({...prev, activeDialog: prev.activeDialog === 'HINTS' ? 'NONE' : 'HINTS'}))} 
-          />
-          <div className="flex-1"></div>
-          <div className="px-4 text-xs text-gray-600">
-             EP_{currentLevel.config.episode} // LVL_{currentLevel.config.id}
-          </div>
-      </div>
 
-      <div className="flex-1 flex overflow-hidden">
-        
-        {/* --- LEFT: MAIN TERMINAL AREA --- */}
-        <div className="flex-1 flex flex-col p-6 z-10 relative">
+          <div className="flex-1 flex overflow-hidden">
             
-            {/* Header Info */}
-            <div className="flex justify-between items-end border-b border-gray-800 pb-2 mb-4 text-xs tracking-widest text-gray-500">
-                <div>
-                <span className="text-[#33ff00] mr-4">USER: GHOST</span>
-                <span>CONNECTION: ENCRYPTED</span>
+            {/* --- LEFT: MAIN TERMINAL AREA --- */}
+            <div className="flex-1 flex flex-col p-6 z-10 relative">
+                
+                {/* Header Info */}
+                <div className="flex justify-between items-end border-b border-gray-800 pb-2 mb-4 text-xs tracking-widest text-gray-500">
+                    <div>
+                    <span className="text-[#33ff00] mr-4">USER: GHOST</span>
+                    <span>CONNECTION: ENCRYPTED</span>
+                    </div>
+                    <div>
+                    {currentLevel.config.episodeTitle}
+                    </div>
                 </div>
-                <div>
-                {currentLevel.config.episodeTitle}
-                </div>
-            </div>
 
-            {/* EDITOR OR LOADING */}
-            {isLoading ? (
-                <div className="flex-1 flex items-center justify-center text-[#33ff00] animate-pulse">
-                    DOWNLOADING PACKETS...
-                </div>
-            ) : (
+                {/* EDITOR OR LOADING */}
                 <div className="flex-1 relative flex flex-col">
                     {/* File Name Header within Editor */}
-                    <div className="bg-[#2b2b2b] text-gray-400 px-3 py-1 text-sm mb-2 w-fit rounded-t-sm">
-                    {currentLevel.config.filename}
+                    <div className="bg-[#2b2b2b] text-gray-400 px-3 py-1 text-sm mb-2 w-fit rounded-t-sm flex justify-between">
+                        <span>{currentLevel.config.filename}</span>
+                        {gameState.viewLayout !== 'single' && <span className="text-xs text-[#cc7832] uppercase px-2">[SPLIT ACTIVE]</span>}
                     </div>
 
                     {/* Briefing Overlay (If active) */}
@@ -845,156 +900,146 @@ export default function App() {
                     {/* Game Over Overlay */}
                     {gameState.status === 'GAMEOVER' && (
                         <GameOverScreen 
-                           reason={gameState.message} 
-                           onRetry={() => loadLevel(gameState.currentLevelIndex)} 
+                            reason={gameState.message} 
+                            onRetry={() => loadLevel(gameState.currentLevelIndex)} 
                         />
                     )}
                     
                     {/* Persistent Lore Notification Stack */}
                     <NotificationLog tasks={currentLevel.tasks} visible={gameState.status === 'PLAYING' || gameState.status === 'GAMEOVER'} />
 
-                    {/* Actual Editor Content */}
-                    <div className="flex-1 font-['Fira_Code'] text-lg relative outline-none bg-[#0a0a0a] p-4 border border-gray-800 shadow-inner overflow-hidden" tabIndex={0}>
-                        {gameState.text.map((line, idx) => (
-                            <div key={idx} className="flex min-h-[1.5em]">
-                            <div className="w-8 text-gray-700 text-right mr-4 select-none text-sm pt-1">{idx + 1}</div>
-                            <div className="relative whitespace-pre text-[#a9b7c6]">
-                                {line.length === 0 && gameState.cursor.y === idx ? (
-                                    <span className="absolute left-0 top-0 bg-[#a9b7c6] opacity-80 w-[1ch] h-[1.2em] animate-pulse"></span>
-                                ) : (
-                                line.split('').map((char, charIdx) => {
-                                    const isCursor = gameState.cursor.y === idx && gameState.cursor.x === charIdx;
-                                    return (
-                                    <span key={charIdx} className={`${isCursor ? 'bg-[#a9b7c6] text-black' : ''}`}>
-                                        {char}
-                                    </span>
-                                    );
-                                })
-                                )}
-                                {gameState.cursor.y === idx && gameState.cursor.x === line.length && line.length > 0 && (
-                                <span className="absolute bg-[#a9b7c6] opacity-80 w-[1ch] h-[1.2em] animate-pulse" style={{left: `${line.length}ch`}}></span>
-                                )}
-                            </div>
-                            </div>
-                        ))}
-                        {Array.from({ length: Math.max(0, 15 - gameState.text.length) }).map((_, i) => (
-                            <div key={`empty-${i}`} className="flex">
-                                <div className="w-8 text-[#464f5b] text-right mr-4 select-none font-bold">~</div>
-                            </div>
-                        ))}
+                    {/* Actual Editor Content - With Split Logic */}
+                    <div className={`flex-1 flex overflow-hidden ${gameState.viewLayout === 'vsplit' ? 'flex-row gap-1' : 'flex-col gap-1'}`}>
+                        <EditorView text={gameState.text} cursor={gameState.cursor} />
+                        
+                        {/* Simulated Split View */}
+                        {gameState.viewLayout !== 'single' && (
+                            <>
+                                <div className={`bg-gray-800 ${gameState.viewLayout === 'vsplit' ? 'w-[1px]' : 'h-[1px]'}`}></div>
+                                <EditorView text={gameState.text} cursor={gameState.cursor} isDimmed={true} />
+                            </>
+                        )}
                     </div>
                     
                     {/* Vim Status Bar */}
                     <div className="mt-2 bg-[#2b2b2b] text-[#a9b7c6] px-3 py-1 text-sm flex justify-between font-bold border-t border-gray-700 shadow-lg">
                         <div className="flex gap-4 items-center">
                             <span className={`px-2 uppercase text-xs ${gameState.mode === VimMode.NORMAL ? 'bg-[#a9b7c6] text-black' : 'bg-[#cc7832] text-white'}`}>
-                                {gameState.mode}
+                                {gameState.mode === VimMode.INSERT && currentLevel.config.episode === 1 ? '-- INSERT (ESC TO EXIT) --' : gameState.mode}
                             </span>
-                            {gameState.message && <span className="text-[#cc7832] italic text-xs">[{gameState.message}]</span>}
                             {gameState.countBuffer && <span className="text-white text-xs">{gameState.countBuffer}</span>}
                             {gameState.operatorBuffer && <span className="text-yellow-500 text-xs">OP:{gameState.operatorBuffer}</span>}
                             {gameState.commandBuffer && <span className="text-white text-xs">{gameState.commandBuffer}</span>}
                         </div>
-                        <div className="flex gap-4 text-xs text-gray-400">
+                        <div className="flex gap-4 text-xs text-gray-400 items-center">
+                            {gameState.message && <span className="text-[#cc7832] italic text-xs mr-4 truncate max-w-[300px]">[{gameState.message}]</span>}
                             <span>Ln {gameState.cursor.y + 1}, Col {gameState.cursor.x + 1}</span>
                             <span>{Math.round(((gameState.cursor.y + 1) / Math.max(1, gameState.text.length)) * 100)}%</span>
                         </div>
                     </div>
 
                 </div>
-            )}
-        </div>
-
-        {/* --- RIGHT: MISSION LOG (HUD) --- */}
-        <div className="w-80 border-l border-gray-800 bg-[#080808] p-6 flex flex-col z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
-            
-            {/* HUD Header */}
-            <div className="mb-8 border-b border-gray-700 pb-2 flex justify-between items-end">
-                <h3 className="text-[#33ff00] font-bold text-lg tracking-widest">MISSION LOG</h3>
-                <div className={`text-[10px] animate-pulse ${areAllTasksComplete ? 'text-[#33ff00]' : 'text-gray-600'}`}>
-                    STATUS: {areAllTasksComplete ? 'READY TO COMMIT' : 'ACTIVE'}
-                </div>
             </div>
 
-            {/* Constraints HUD */}
-            {(currentLevel.config.timeLimit) && (
-                <div className="mb-6 border border-gray-800 bg-gray-900/20 p-4 relative overflow-hidden">
-                    {/* Time Limit */}
-                    {currentLevel.config.timeLimit && (
-                        <div className="mb-4">
-                             <div className="text-[10px] text-red-400 uppercase tracking-widest">Trace Timeout</div>
-                             <div className="text-3xl font-bold text-red-500 tabular-nums">
-                                 {gameState.timeLeft !== null ? gameState.timeLeft : '--'}s
-                             </div>
+            {/* --- RIGHT: MISSION LOG (HUD) --- */}
+            <div className="w-80 border-l border-gray-800 bg-[#080808] p-6 flex flex-col z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+                
+                {/* HUD Header */}
+                <div className="mb-8 border-b border-gray-700 pb-2 flex justify-between items-end">
+                    <h3 className="text-[#33ff00] font-bold text-lg tracking-widest">MISSION LOG</h3>
+                    <div className={`text-[10px] animate-pulse ${areAllTasksComplete ? 'text-[#33ff00]' : 'text-gray-600'}`}>
+                        STATUS: {areAllTasksComplete ? 'READY TO COMMIT' : 'ACTIVE'}
+                    </div>
+                </div>
+
+                {/* Constraints HUD */}
+                {(currentLevel.config.timeLimit) && (
+                    <div className="mb-6 border border-gray-800 bg-gray-900/20 p-4 relative overflow-hidden">
+                        {/* Time Limit */}
+                        {currentLevel.config.timeLimit && (
+                            <div className="mb-4">
+                                <div className="text-[10px] text-red-400 uppercase tracking-widest">Trace Timeout</div>
+                                <div className="text-3xl font-bold text-red-500 tabular-nums">
+                                    {gameState.timeLeft !== null ? gameState.timeLeft : '--'}s
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* Target Info */}
+                <div className="mb-6">
+                    <div className="text-gray-500 text-[10px] mb-1 uppercase tracking-widest">Target File</div>
+                    <div className="text-white font-bold font-mono border border-gray-800 p-2 bg-black/50 text-sm mb-2">
+                    {currentLevel.config.filename}
+                    </div>
+                    <div className="text-gray-500 text-[10px] mb-1 uppercase tracking-widest mt-4">Primary Directive</div>
+                    <div className="text-gray-400 text-xs leading-relaxed italic border-l-2 border-[#cc7832] pl-2">
+                    {currentLevel.config.objective}
+                    </div>
+                </div>
+
+                {/* Atomic Tasks Checklist */}
+                <div className="mb-8">
+                    <div className="text-gray-500 text-[10px] mb-2 uppercase tracking-widest">Tactical Intel</div>
+                    <div className="space-y-2">
+                        {currentLevel.tasks.map((task, idx) => {
+                            const isActive = idx === activeTaskIndex;
+                            const isFuture = idx > activeTaskIndex && activeTaskIndex !== -1;
+                            const isDone = task.completed;
+                            
+                            let borderClass = 'border-gray-800 bg-gray-900/30';
+                            if (isDone) borderClass = 'border-[#33ff00]/50 bg-[#33ff00]/10';
+                            if (isActive) borderClass = 'border-white bg-white/10 animate-pulse';
+
+                            return (
+                                <div key={idx} className={`flex items-start gap-3 p-2 rounded border transition-all duration-300 ${borderClass} ${isFuture ? 'opacity-75' : 'opacity-100'}`}>
+                                    <div className={`mt-1 text-sm ${isDone ? 'text-[#33ff00]' : (isActive ? 'text-white' : 'text-gray-500')}`}>
+                                        {isDone ? '☑' : (isActive ? '➤' : '☐')}
+                                    </div>
+                                    <div className={`text-xs leading-relaxed ${isDone ? 'line-through text-gray-400' : (isActive ? 'text-white font-bold' : 'text-gray-400')}`}>
+                                        {task.description}
+                                        {task.keyHint && !isDone && (
+                                            <span className="ml-2 text-[#33ff00] bg-[#33ff00]/10 px-1 rounded text-[10px] font-mono border border-[#33ff00]/30">{task.keyHint}</span>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    
+                    {/* Visual Indicator for :w */}
+                    {areAllTasksComplete && gameState.status !== 'SUCCESS' && (
+                        <div className="mt-4 p-2 bg-[#33ff00]/10 border border-[#33ff00] text-[#33ff00] text-xs text-center animate-pulse">
+                            ⚠ DIRECTIVES MET<br/>
+                            TYPE <span className="font-bold">:w</span> TO COMMIT
                         </div>
                     )}
                 </div>
-            )}
-
-            {/* Target Info */}
-            <div className="mb-6">
-                <div className="text-gray-500 text-[10px] mb-1 uppercase tracking-widest">Target File</div>
-                <div className="text-white font-bold font-mono border border-gray-800 p-2 bg-black/50 text-sm mb-2">
-                {currentLevel.config.filename}
-                </div>
-                <div className="text-gray-500 text-[10px] mb-1 uppercase tracking-widest mt-4">Primary Directive</div>
-                <div className="text-gray-400 text-xs leading-relaxed italic border-l-2 border-[#cc7832] pl-2">
-                {currentLevel.config.objective}
-                </div>
-            </div>
-
-            {/* Atomic Tasks Checklist */}
-            <div className="mb-8">
-                <div className="text-gray-500 text-[10px] mb-2 uppercase tracking-widest">Tactical Intel</div>
-                <div className="space-y-2">
-                    {currentLevel.tasks.map((task, idx) => {
-                        const isActive = idx === activeTaskIndex;
-                        const isFuture = idx > activeTaskIndex && activeTaskIndex !== -1;
-                        const isDone = task.completed;
-                        
-                        let borderClass = 'border-gray-800 bg-gray-900/30';
-                        if (isDone) borderClass = 'border-[#33ff00]/50 bg-[#33ff00]/10';
-                        if (isActive) borderClass = 'border-white bg-white/10 animate-pulse';
-
-                        return (
-                            <div key={idx} className={`flex items-start gap-3 p-2 rounded border transition-all duration-300 ${borderClass} ${isFuture ? 'opacity-75' : 'opacity-100'}`}>
-                                <div className={`mt-1 text-sm ${isDone ? 'text-[#33ff00]' : (isActive ? 'text-white' : 'text-gray-500')}`}>
-                                    {isDone ? '☑' : (isActive ? '➤' : '☐')}
-                                </div>
-                                <div className={`text-xs leading-relaxed ${isDone ? 'line-through text-gray-400' : (isActive ? 'text-white font-bold' : 'text-gray-400')}`}>
-                                    {task.description}
-                                    {task.keyHint && !isDone && (
-                                        <span className="ml-2 text-[#33ff00] bg-[#33ff00]/10 px-1 rounded text-[10px] font-mono border border-[#33ff00]/30">{task.keyHint}</span>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
                 
-                {/* Visual Indicator for :w */}
-                {areAllTasksComplete && gameState.status !== 'SUCCESS' && (
-                    <div className="mt-4 p-2 bg-[#33ff00]/10 border border-[#33ff00] text-[#33ff00] text-xs text-center animate-pulse">
-                        ⚠ DIRECTIVES MET<br/>
-                        TYPE <span className="font-bold">:w</span> TO COMMIT
-                    </div>
-                )}
+                {/* Hints / Intel */}
+                <div className="mb-8 flex-1">
+                    <div className="text-gray-500 text-[10px] mb-2 uppercase tracking-widest">Operator Notes</div>
+                    <ul className="space-y-3">
+                    {currentLevel.hints.map((hint, idx) => (
+                        <li key={idx} className="flex gap-2 text-gray-400 text-xs items-start">
+                            <span className="text-[#cc7832] mt-[2px]">›</span>
+                            <span className="leading-tight">{hint}</span>
+                        </li>
+                    ))}
+                    </ul>
+                </div>
             </div>
-            
-            {/* Hints / Intel */}
-            <div className="mb-8 flex-1">
-                <div className="text-gray-500 text-[10px] mb-2 uppercase tracking-widest">Operator Notes</div>
-                <ul className="space-y-3">
-                {currentLevel.hints.map((hint, idx) => (
-                    <li key={idx} className="flex gap-2 text-gray-400 text-xs items-start">
-                        <span className="text-[#cc7832] mt-[2px]">›</span>
-                        <span className="leading-tight">{hint}</span>
-                    </li>
-                ))}
-                </ul>
-            </div>
-        </div>
+          </div>
       </div>
+      
+      {/* Overlay Episode Screen */}
+      {gameState.status === 'EPISODE_INTRO' && (
+          <EpisodeScreen 
+            episode={currentLevel.config.episode} 
+            onContinue={() => setGameState(prev => ({...prev, status: 'BRIEFING'}))} 
+          />
+      )}
 
       {/* --- MODALS --- */}
       
@@ -1064,10 +1109,10 @@ export default function App() {
                              EPISODE {epId}
                           </h4>
                           <div className="flex flex-wrap gap-4">
-                              {CURRICULUM.filter(l => l.episode === epId).map(lvl => {
-                                  const isLocked = lvl.id > (CURRICULUM[gameState.currentLevelIndex].id || 0) && gameState.currentLevelIndex < CURRICULUM.length;
-                                  const isCompleted = lvl.id <= gameState.currentLevelIndex;
-                                  const isCurrent = lvl.id === CURRICULUM[gameState.currentLevelIndex].id;
+                              {STATIC_LEVELS.filter(l => l.config.episode === epId).map(lvl => {
+                                  const isLocked = lvl.config.id > (STATIC_LEVELS[gameState.currentLevelIndex].config.id || 0) && gameState.currentLevelIndex < STATIC_LEVELS.length;
+                                  const isCompleted = lvl.config.id <= gameState.currentLevelIndex;
+                                  const isCurrent = lvl.config.id === STATIC_LEVELS[gameState.currentLevelIndex].config.id;
                                   
                                   let statusClass = "border-gray-800 bg-gray-900 text-gray-600 opacity-50";
                                   if (isCurrent) statusClass = "border-[#33ff00] bg-[#33ff00]/20 text-white animate-pulse";
@@ -1075,8 +1120,8 @@ export default function App() {
 
                                   return (
                                       <div key={lvl.id} className={`w-32 h-24 border p-2 flex flex-col justify-between relative ${statusClass}`}>
-                                          <div className="text-xs font-bold">{lvl.filename}</div>
-                                          <div className="text-[10px] uppercase">{lvl.mechanics[0].replace('_', ' ')}</div>
+                                          <div className="text-xs font-bold">{lvl.config.filename}</div>
+                                          <div className="text-[10px] uppercase">{lvl.config.mechanics[0].replace('_', ' ')}</div>
                                           {isLocked && <div className="absolute inset-0 bg-black/80 flex items-center justify-center text-red-900 font-bold">LOCKED</div>}
                                       </div>
                                   )
