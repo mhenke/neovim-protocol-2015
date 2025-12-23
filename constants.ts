@@ -188,30 +188,30 @@ export const LEVEL_1_FALLBACK: Level = {
   targetText: (text) => true, // Navigation levels usually check tasks not text state
   tasks: [
     { 
-        description: "ALIGN: Move DOWN to 'Status' (press 'j' 4 times)", 
+        description: "ALIGN: Move DOWN to 'Status' (press 'j' mulitple times)", 
         type: 'cursor_on', 
         value: "Status", 
         completed: false,
         loreFragment: "010001... [DECRYPTED]: 'I found the backdoor...'"
     },
     { 
-        description: "TRACK: Move RIGHT to 'LOST' (press 'l' or '$')", 
+        description: "TRACK: Move RIGHT to 'LOST' (press 'l' mulitple times)", 
         type: 'cursor_on', 
         value: "LOST", 
         completed: false,
         loreFragment: "110110... [DECRYPTED]: '...hidden in R&D Sector 4.'"
     },
     { 
-        description: "SCAN: Move DOWN to 'ALPHA' (press 'j' 3 times)", 
+        description: "SCAN: Move DOWN to 'ALPHA' (press 'j', 'l' mulitple times)", 
         type: 'cursor_on', 
         value: "ALPHA", 
         completed: false,
         loreFragment: "001011... [DECRYPTED]: 'They are watching everything.'"
     },
     { 
-        description: "RESET: Move UP to 'SIGNAL' (press 'k' 6 times)", 
+        description: "RESET: Move UP to 'MISALIGNED' (press 'k', 'l' mulitple times)", 
         type: 'cursor_on', 
-        value: "SIGNAL", 
+        value: "MISALIGNED", 
         completed: false,
         loreFragment: "111111... [DECRYPTED]: 'Signal Lock Established. Ready for injection.'"
     }

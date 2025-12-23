@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
 import { CURRICULUM, INITIAL_LORE, LEVEL_1_FALLBACK, EPISODE_CONTEXT } from './constants';
@@ -32,19 +31,27 @@ const Modal = ({ title, children, onClose }: { title: string, children?: React.R
     </div>
 );
 
-// --- Notification Component ---
-const Notification = ({ message }: { message: string }) => {
-  if (!message) return null;
-  return (
-    <div className="absolute top-16 left-1/2 transform -translate-x-1/2 z-50 animate-fadeIn">
-       <div className="bg-[#0a0a0a] border border-[#33ff00] text-[#33ff00] px-6 py-3 shadow-[0_0_15px_rgba(51,255,0,0.3)] flex items-center gap-4">
-           <div className="animate-pulse bg-[#33ff00] h-2 w-2 rounded-full"></div>
-           <span className="font-mono text-sm tracking-wider">{message}</span>
-       </div>
-    </div>
-  );
-};
+const NotificationLog = ({ tasks, visible }: { tasks: Task[], visible: boolean }) => {
+    // DRY Logic: Derive logs directly from tasks. 
+    // This ensures they are always ordered by the task sequence (Narrative Order),
+    // regardless of which one was triggered first.
+    const logs = tasks
+        .map((task, index) => ({ task, index }))
+        .filter(({ task }) => task.completed && task.loreFragment);
 
+    if (!visible || logs.length === 0) return null;
+
+    return (
+        <div className="absolute top-4 right-4 z-40 flex flex-col items-end gap-2 pointer-events-none max-h-[80vh] overflow-y-auto w-80">
+            {logs.map(({ task, index }) => (
+                <div key={index} className="bg-black/90 border-r-4 border-[#33ff00] p-3 text-right shadow-[0_0_15px_rgba(51,255,0,0.2)] animate-fadeIn w-full backdrop-blur-sm transition-all duration-500">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Signal Decrypted_0{index + 1}</div>
+                    <div className="text-[#33ff00] text-xs font-mono leading-relaxed">{task.loreFragment}</div>
+                </div>
+            ))}
+        </div>
+    );
+};
 
 // --- New Screen Components ---
 
@@ -238,7 +245,6 @@ export default function App() {
 
   const [currentLevel, setCurrentLevel] = useState<Level>(LEVEL_1_FALLBACK);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeNotification, setActiveNotification] = useState<string | null>(null);
 
   // --- Effects ---
 
@@ -266,8 +272,6 @@ export default function App() {
     if (gameState.status !== 'PLAYING') return;
 
     setCurrentLevel(prevLevel => {
-        let loreFound: string | null = null;
-
         const newTasks = prevLevel.tasks.map(task => {
             if (task.completed && task.type === 'cursor_on') {
                 return task;
@@ -290,27 +294,13 @@ export default function App() {
             }
 
             if (task.type === 'cursor_on') {
-                const wasCompleted = task.completed;
                 const nowCompleted = task.completed || isMet;
-                if (!wasCompleted && nowCompleted && task.loreFragment) {
-                    loreFound = task.loreFragment;
-                }
                 return { ...task, completed: nowCompleted };
             }
-            
-            // For other task types
+
             const nowCompleted = isMet;
-            if (!task.completed && nowCompleted && task.loreFragment) {
-                loreFound = task.loreFragment;
-            }
             return { ...task, completed: nowCompleted };
         });
-
-        // Trigger Notification if lore found
-        if (loreFound) {
-            setActiveNotification(loreFound);
-            setTimeout(() => setActiveNotification(null), 4000);
-        }
 
         const hasChanged = JSON.stringify(newTasks) !== JSON.stringify(prevLevel.tasks);
         if (!hasChanged) return prevLevel;
@@ -337,6 +327,7 @@ export default function App() {
     const isNewEpisode = index > 0 && prevConfig && config.episode > prevConfig.episode;
     
     setIsLoading(true);
+    
     try {
       let levelData: Level;
       
@@ -347,7 +338,6 @@ export default function App() {
              tasks: LEVEL_1_FALLBACK.tasks.map(t => ({...t, completed: false}))
          };
       } else {
-        // Fix: Removed apiKey argument to comply with guidelines, accessing process.env.API_KEY directly in service
         const genLevel = await generateLevel(config, gameState.loreLog);
         
         const hydratedTasks: Task[] = genLevel.tasks.map(t => ({
@@ -754,9 +744,6 @@ export default function App() {
       {/* Background Noise */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-0 pointer-events-none bg-[length:100%_4px,3px_100%]"></div>
       
-      {/* Notification Toast */}
-      <Notification message={activeNotification || ''} />
-
       {/* --- TOP PANEL --- */}
       <div className="h-10 border-b border-gray-800 bg-[#050505] flex items-center z-50 select-none">
           <div className="px-4 text-[#33ff00] font-bold tracking-widest text-sm border-r border-gray-800 h-full flex items-center">
@@ -852,6 +839,9 @@ export default function App() {
                         />
                     )}
                     
+                    {/* Persistent Lore Notification Stack */}
+                    <NotificationLog tasks={currentLevel.tasks} visible={gameState.status === 'PLAYING' || gameState.status === 'GAMEOVER'} />
+
                     {/* Actual Editor Content */}
                     <div className="flex-1 font-['Fira_Code'] text-lg relative outline-none bg-[#0a0a0a] p-4 border border-gray-800 shadow-inner overflow-hidden" tabIndex={0}>
                         {gameState.text.map((line, idx) => (
@@ -916,7 +906,7 @@ export default function App() {
             </div>
 
             {/* Constraints HUD */}
-            {(currentLevel.config.timeLimit || currentLevel.config.maxKeystrokes || currentLevel.config.idealKeystrokes) && (
+            {(currentLevel.config.timeLimit) && (
                 <div className="mb-6 border border-gray-800 bg-gray-900/20 p-4 relative overflow-hidden">
                     {/* Time Limit */}
                     {currentLevel.config.timeLimit && (
@@ -925,38 +915,6 @@ export default function App() {
                              <div className="text-3xl font-bold text-red-500 tabular-nums">
                                  {gameState.timeLeft !== null ? gameState.timeLeft : '--'}s
                              </div>
-                        </div>
-                    )}
-                    
-                    {/* Keystrokes & Ghost Metric */}
-                    {(currentLevel.config.maxKeystrokes || currentLevel.config.idealKeystrokes) && (
-                        <div>
-                             <div className="flex justify-between items-end mb-1">
-                                 <div className="text-[10px] text-gray-400 uppercase tracking-widest">Keystrokes</div>
-                                 {currentLevel.config.idealKeystrokes && (
-                                     <div className="text-[10px] text-[#33ff00] uppercase tracking-widest">
-                                         PAR: {currentLevel.config.idealKeystrokes}
-                                     </div>
-                                 )}
-                             </div>
-                             
-                             <div className="text-xl font-bold tabular-nums flex items-baseline gap-2">
-                                 <span className={currentLevel.config.maxKeystrokes && gameState.keystrokeCount > currentLevel.config.maxKeystrokes ? 'text-red-500' : 'text-white'}>
-                                    {gameState.keystrokeCount}
-                                 </span>
-                                 {currentLevel.config.maxKeystrokes && (
-                                     <span className="text-sm text-gray-600">/ {currentLevel.config.maxKeystrokes} (LIMIT)</span>
-                                 )}
-                             </div>
-
-                             {currentLevel.config.maxKeystrokes && (
-                                 <div className="w-full bg-gray-800 h-1 mt-1 overflow-hidden">
-                                     <div 
-                                        className={`h-full transition-all duration-200 ${gameState.keystrokeCount > currentLevel.config.maxKeystrokes ? 'bg-red-500' : 'bg-[#33ff00]'}`}
-                                        style={{ width: `${Math.min(100, (gameState.keystrokeCount / (currentLevel.config.maxKeystrokes || 1)) * 100)}%` }}
-                                     ></div>
-                                 </div>
-                             )}
                         </div>
                     )}
                 </div>
