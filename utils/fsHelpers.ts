@@ -1,3 +1,4 @@
+
 import { GameState, Cursor, VimMode } from '../types';
 
 // --- Helpers ---
@@ -307,5 +308,38 @@ export const changeWord = (state: GameState): GameState => {
         mode: VimMode.INSERT,
         message: '-- INSERT --',
         operatorBuffer: ''
+    };
+};
+
+export const executeSubstitute = (state: GameState, cmd: string): GameState => {
+    // Basic implementation of :%s/old/new/g
+    // Requires exactly 3 parts separated by delimiters, assuming separator is '/'
+    // Input cmd comes as "s/old/new/g" from the main parsing loop which strips the first char if it was %
+    
+    // Handle %s prefix stripping if not already done, or assume caller handled it.
+    // In App.tsx we will detect :%s and pass the rest.
+    
+    const parts = cmd.split('/');
+    if (parts.length < 3) return { ...state, message: 'E488: Trailing characters' };
+    
+    const pattern = parts[1];
+    const replacement = parts[2];
+    const flags = parts[3] || '';
+    const isGlobal = flags.includes('g');
+    
+    const newText = state.text.map(line => {
+        if (isGlobal) {
+            return line.split(pattern).join(replacement);
+        } else {
+            return line.replace(pattern, replacement);
+        }
+    });
+    
+    return {
+        ...state,
+        text: newText,
+        message: `${pattern} substituted`,
+        mode: VimMode.NORMAL,
+        commandBuffer: ''
     };
 };

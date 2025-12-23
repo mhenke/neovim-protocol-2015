@@ -1,4 +1,5 @@
 
+
 export enum VimMode {
   NORMAL = 'NORMAL',
   INSERT = 'INSERT',
@@ -31,6 +32,7 @@ export interface Task {
   value: string;
   completed: boolean;
   loreFragment?: string; // Optional narrative reward for completing specific task
+  keyHint?: string; // Short key combo hint e.g. "ciw" or "j/k"
 }
 
 export interface Level {
@@ -82,5 +84,11 @@ export interface GeminiLevelResponse {
   targetText: string[];
   loreReveal: string;
   hints: string[];
-  tasks: Array<{ description: string, type: 'contains' | 'missing' | 'cursor_on', value: string }>;
+  tasks: Array<{ 
+    description: string, 
+    type: 'contains' | 'missing' | 'cursor_on', 
+    value: string, 
+    loreFragment: string,
+    keyHint?: string 
+  }>;
 }

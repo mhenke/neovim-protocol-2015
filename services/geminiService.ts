@@ -17,21 +17,35 @@ Current Context:
 
 Create a specific hacking challenge formatted as JSON.
 
-STRICT LORE RULES:
-1. DO NOT create generic tasks like "write a shopping list" or "fix this sentence".
-2. All content must look like system logs, code fragments, config files, or hex dumps.
-3. Tasks must be "Delete corrupt sector", "Inject override code", "Align memory block", etc.
-4. "briefing" must be a tense, theatrical status report.
+STRICT GENERATION RULES:
+1. **Atomic Tasks**: You must map the game mechanic to the specific Task Type.
+   - If mechanic is 'insert_mode' -> Task Type must be 'contains'.
+   - If mechanic is 'delete_line' -> Task Type must be 'missing'.
+   - If mechanic is 'search' or 'nav' -> Task Type must be 'cursor_on'.
+   - If mechanic is 'substitute' -> Task Type must be 'contains' (checking for the replacement string).
+   
+2. **Episode 3 (Mastery) Rules**:
+   - **NO HANDHOLDING**: Do NOT tell the user which keys to press in the description.
+   - **Key Hint**: Must be empty string or null.
+   - **Result-Oriented**: Describe the *outcome* required. (e.g. "Protocol mismatch. Enforce 'HTTPS' globally.").
+
+3. **Episode 1 & 2 Rules**:
+   - **Instructional**: Provide a 'keyHint' for each task (e.g., "ciw", "dd", "/term").
+
+4. **Diegetic Lore**: Content must look like system logs, code fragments, config files, or hex dumps.
+5. **No Fluff**: Tasks must be "Delete corrupt sector", "Inject override code". NEVER "Write a sentence".
 
 JSON Structure:
 1. "briefing": Status report.
-2. "tasks": Array of 3-5 TACTICAL STEPS. Format descriptions as imperative commands.
+2. "tasks": Array of 3-5 TACTICAL STEPS.
    - 'contains': File must contain string.
    - 'missing': File must NOT contain string.
    - 'cursor_on': Cursor must be on line with string.
+   - 'value': The EXACT string to look for (for contains/missing) or land on (for cursor_on).
+   - 'keyHint': Short key combo to help user (e.g. "ciw").
 3. "initialText": The file content before solving (max 8 lines).
-4. "targetText": The solved state.
-5. "loreReveal": A hidden log entry found upon success that reveals a piece of the conspiracy.
+4. "targetText": The solved state (for visual ref, engine uses 'tasks' to validate).
+5. "loreReveal": A hidden log entry found upon success (Status: SUCCESS).
 6. "hints": "Operator Notes". Short, technical reminders about the keys.
 
 Output JSON schema:
@@ -40,16 +54,14 @@ Output JSON schema:
   "initialText": ["String"],
   "targetText": ["String"],
   "tasks": [
-    { "description": "String", "type": "contains" | "missing" | "cursor_on", "value": "String" }
+    { "description": "String", "type": "contains" | "missing" | "cursor_on", "value": "String", "loreFragment": "String", "keyHint": "String" }
   ],
   "loreReveal": "String",
   "hints": ["String"]
 }
 `;
 
-// Fix: Removed apiKey argument to use process.env.API_KEY directly
 export const generateLevel = async (config: LevelConfig, loreLog: string[]): Promise<GeminiLevelResponse> => {
-  // Fix: Use process.env.API_KEY directly as per guidelines
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   
   let constraints = "";
@@ -58,6 +70,9 @@ export const generateLevel = async (config: LevelConfig, loreLog: string[]): Pro
   }
   if (config.maxKeystrokes) {
     constraints += `- CRITICAL CONSTRAINT: KEYSTROKE LIMIT ${config.maxKeystrokes}. The initialText must be solvable with minimal moves. Do not generate long files.`;
+  }
+  if (config.episode === 3) {
+      constraints += `- MODE: MASTERY. Do NOT provide key hints.`;
   }
 
   const prompt = PROMPT_TEMPLATE
@@ -89,9 +104,11 @@ export const generateLevel = async (config: LevelConfig, loreLog: string[]): Pro
               properties: {
                 description: { type: Type.STRING },
                 type: { type: Type.STRING, enum: ["contains", "missing", "cursor_on"] },
-                value: { type: Type.STRING }
+                value: { type: Type.STRING },
+                loreFragment: { type: Type.STRING, description: "A short, decrypted log message found when this specific task is completed." },
+                keyHint: { type: Type.STRING, description: "Short key combination string, e.g. 'ciw' or 'dd'." }
               },
-              required: ["description", "type", "value"]
+              required: ["description", "type", "value", "loreFragment"]
             }
           }
         },
@@ -115,7 +132,7 @@ export const generateLevel = async (config: LevelConfig, loreLog: string[]): Pro
       targetText: ["RETRY_INIT"],
       loreReveal: "Memory sector recovered.",
       hints: ["Keys: " + config.newKeys.join(" ")],
-      tasks: [{ description: "Manually override error", type: "cursor_on", value: "ERROR" }]
+      tasks: [{ description: "Manually override error", type: "cursor_on", value: "ERROR", loreFragment: "Error bypassed.", keyHint: "j" }]
     };
   }
 };

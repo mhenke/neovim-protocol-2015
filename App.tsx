@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
 import { CURRICULUM, INITIAL_LORE, LEVEL_1_FALLBACK, EPISODE_CONTEXT } from './constants';
@@ -436,6 +437,12 @@ export default function App() {
         return;
     }
 
+    // LEVEL 1 RESTRICTION: BLOCK INSERT MODE
+    if (currentLevel.id === 1 && ['i', 'a', 'o', 'A', 'O', 'I'].includes(e.key)) {
+         setGameState(prev => ({ ...prev, message: 'ERROR: WRITE MODULE OFFLINE (NAV ONLY)' }));
+         return;
+    }
+
     setGameState(prev => {
       // Increment keystroke count for valid inputs
       let newState = { ...prev, keystrokeCount: prev.keystrokeCount + 1 };
@@ -492,6 +499,10 @@ export default function App() {
                 cursor: { x: 0, y: 0 },
                 message: 'CHANGES DISCARDED. RESETTING...' 
              };
+          }
+
+          if (cmd.startsWith(':%s')) {
+             return fs.executeSubstitute(newState, cmd.slice(1)); // strip ':' but keep '%s...'
           }
 
           if (cmd.startsWith('/')) {
@@ -952,6 +963,9 @@ export default function App() {
                                 </div>
                                 <div className={`text-xs leading-relaxed ${isDone ? 'line-through text-gray-400' : (isActive ? 'text-white font-bold' : 'text-gray-400')}`}>
                                     {task.description}
+                                    {task.keyHint && !isDone && (
+                                        <span className="ml-2 text-[#33ff00] bg-[#33ff00]/10 px-1 rounded text-[10px] font-mono border border-[#33ff00]/30">{task.keyHint}</span>
+                                    )}
                                 </div>
                             </div>
                         );
