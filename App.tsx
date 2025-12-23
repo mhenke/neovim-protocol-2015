@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { GameState, VimMode, Level, Task, DialogType, LastAction } from './types';
+import { GameState, VimMode, Level, Task, DialogType, LastAction, Cursor } from './types';
 import { STATIC_LEVELS, INITIAL_LORE, EPISODE_CONTEXT } from './constants';
 import * as fs from './utils/fsHelpers';
 
@@ -241,7 +242,9 @@ export default function App() {
     lastAction: null,
     insertBuffer: '',
     viewLayout: 'single',
-    lastExecutedCommand: null
+    lastExecutedCommand: null,
+    visualStart: null,
+    marks: {}
   });
 
   const [currentLevel, setCurrentLevel] = useState<Level>(STATIC_LEVELS[0]);
@@ -302,6 +305,9 @@ export default function App() {
                 const targetTrimmed = task.value.trim();
                 const found = gameState.text.find(l => l.trim() === targetTrimmed && l.startsWith("  ")); // Expect 2 spaces indent
                 if (found) isMet = true;
+            } else if (task.type === 'selection' && task.value === 'block') {
+                 // Check if in VISUAL_BLOCK mode
+                 isMet = gameState.mode === VimMode.VISUAL_BLOCK;
             }
 
             if (isMet) {
@@ -316,7 +322,7 @@ export default function App() {
         return { ...prevLevel, tasks: newTasks };
     });
 
-  }, [gameState.text, gameState.cursor, gameState.status, gameState.lastExecutedCommand]);
+  }, [gameState.text, gameState.cursor, gameState.status, gameState.lastExecutedCommand, gameState.mode]);
 
 
   // --- Logic Helpers ---
@@ -361,7 +367,9 @@ export default function App() {
       lastAction: null,
       insertBuffer: '',
       viewLayout: 'single',
-      lastExecutedCommand: null
+      lastExecutedCommand: null,
+      visualStart: null,
+      marks: {}
     }));
 
   }, []);
@@ -449,7 +457,8 @@ export default function App() {
                 type: 'insert', 
                 text: prev.insertBuffer 
             };
-            return { 
+
+            let nextState = { 
                 ...newState, 
                 mode: VimMode.NORMAL, 
                 message: '', 
@@ -457,6 +466,32 @@ export default function App() {
                 lastAction: insertAction,
                 insertBuffer: ''
             };
+
+            // Handling Block Change replication
+            if (prev.lastAction?.type === 'change' && prev.lastAction.subType === 'block' && prev.lastAction.visualBlockInfo) {
+               const { startY, endY, startX } = prev.lastAction.visualBlockInfo;
+               const insertedText = prev.insertBuffer; 
+               // For block change, usually 'c' deletes the block and we type new text.
+               // On Esc, this new text is inserted into all other lines in the range.
+               const newText = [...nextState.text];
+               for(let r = startY; r <= endY; r++) {
+                   if (r === prev.cursor.y) continue; // Skip current line (already modified)
+                   const line = newText[r];
+                   // For simplicity, we just insert the text at the start column of the block
+                   // But 'c' in block mode deletes first.
+                   // To do this right: 'c' should have deleted the block col in all rows first?
+                   // No, Vim 'c' deletes block in all rows immediately? Yes.
+                   // Then we just insert `insertedText` at `startX` for other rows.
+                   // Let's assume `c` deleted content in all rows.
+                   if (startX <= line.length) {
+                        newText[r] = line.slice(0, startX) + insertedText + line.slice(startX);
+                   }
+               }
+               nextState.text = newText;
+               nextState.message = 'Block change applied';
+            }
+
+            return nextState;
         } else if (e.key === 'Backspace') {
           return fs.handleBackspace(newState);
         } else if (e.key === 'Enter') {
@@ -492,6 +527,7 @@ export default function App() {
           let msg = '';
           let mode = VimMode.NORMAL;
           let layout: 'single' | 'vsplit' | 'hsplit' = prev.viewLayout;
+          let lastCmd = cmd;
           
           if (cmd === ':w' || cmd === ':wq' || cmd === ':x') {
              const allDone = currentLevel.tasks.every(t => t.completed);
@@ -535,7 +571,7 @@ export default function App() {
               commandBuffer: '', 
               message: msg, 
               viewLayout: layout,
-              lastExecutedCommand: cmd 
+              lastExecutedCommand: lastCmd 
           };
         }
         if (e.key === 'Backspace') {
@@ -546,7 +582,7 @@ export default function App() {
         return newState;
       }
 
-      // NORMAL MODE
+      // NORMAL MODE - Operator Pending or Count
       const { operatorBuffer, countBuffer } = prev;
       const count = parseInt(countBuffer || '1');
 
@@ -560,6 +596,31 @@ export default function App() {
              return res;
           }
           if (e.key === 'Escape') return { ...newState, operatorBuffer: '', countBuffer: '' };
+      }
+      
+      // Marks - Jump
+      if (prev.motionBuffer === "'" || prev.motionBuffer === "`") {
+          if (/[a-zA-Z]/.test(e.key)) {
+              const mark = prev.marks[e.key];
+              if (mark) {
+                  return { ...newState, cursor: { ...mark }, motionBuffer: '', message: `Jumped to mark ${e.key}` };
+              } else {
+                  return { ...newState, motionBuffer: '', message: `Mark ${e.key} not set` };
+              }
+          }
+      }
+
+      // Marks - Set
+      if (prev.operatorBuffer === 'm') {
+          if (/[a-zA-Z]/.test(e.key)) {
+             return { 
+                 ...newState, 
+                 marks: { ...prev.marks, [e.key]: { ...prev.cursor } }, 
+                 operatorBuffer: '', 
+                 message: `Mark ${e.key} set` ,
+                 lastExecutedCommand: `m${e.key}` // Hack for Task check
+             };
+          }
       }
 
       // 2. Simple Operator Pending (e.g. 'd')
@@ -580,11 +641,6 @@ export default function App() {
       if (operatorBuffer === 'c') {
          if (e.key === 'w') {
             const res = fs.changeWord(newState);
-            // Change word enters insert mode, lastAction is pending until Esc
-            // But we can flag it. For simplicity in this demo, let's treat changeWord as immediate for Dot
-            // Actually changeWord puts us in INSERT. The completion (Esc) will log 'insert'.
-            // To properly Dot repeat 'cw', we need to know it was a change.
-            // Simplified: we rely on the insert logic.
             return res;
          }
          if (e.key === 'i') return { ...newState, operatorBuffer: 'ci' };
@@ -623,15 +679,12 @@ export default function App() {
         // Find char
         case 'f': return { ...newState, motionBuffer: 'f' };
         case 't': return { ...newState, motionBuffer: 't' }; 
-        case ';': {
-            // Repeat last f/t
-            // Implementing simplified version: repeat last known motion if it was f/t?
-            // This requires storing 'lastMotion'. 
-            // For now, let's just make it a no-op placeholder or repeat the EXACT last f/t if we tracked it.
-            // Skipping strictly for simplicity unless requested.
-            return { ...newState, message: '; (Repeat find) - Not cached' };
-        }
+        case ';': return { ...newState, message: '; (Repeat find) - Not cached' };
         
+        // Marks
+        case 'm': return { ...newState, operatorBuffer: 'm' };
+        case "'": return { ...newState, motionBuffer: "'" };
+
         // Operators
         case 'x': {
             const res = fs.deleteText(newState, 'char', count);
@@ -668,9 +721,15 @@ export default function App() {
              newText.splice(prev.cursor.y, 0, '');
              return { ...newState, text: newText, mode: VimMode.INSERT, cursor: { x: 0, y: prev.cursor.y }, message: '-- INSERT --', countBuffer: '', insertBuffer: '' };
         }
-        case 'v': return { ...newState, mode: VimMode.VISUAL, message: '-- VISUAL --', countBuffer: '' };
+        case 'v': {
+             if (e.ctrlKey) {
+                 return { ...newState, mode: VimMode.VISUAL_BLOCK, visualStart: { ...prev.cursor }, message: '-- VISUAL BLOCK --' };
+             }
+             return { ...newState, mode: VimMode.VISUAL, visualStart: { ...prev.cursor }, message: '-- VISUAL --', countBuffer: '' };
+        }
+        
         case '.': {
-            // DOT COMMAND IMPLEMENTATION
+            // DOT COMMAND IMPLEMENTATION (Partial)
             if (prev.lastAction) {
                 const act = prev.lastAction;
                 if (act.type === 'delete') {
@@ -701,6 +760,11 @@ export default function App() {
         case ':': return { ...newState, mode: VimMode.COMMAND, commandBuffer: ':', countBuffer: '' };
         case '/': return { ...newState, mode: VimMode.COMMAND, commandBuffer: '/', countBuffer: '' };
       }
+
+      // Handle CTRL+V for Visual Block
+      if (e.key === 'v' && e.ctrlKey) {
+           return { ...newState, mode: VimMode.VISUAL_BLOCK, visualStart: { ...prev.cursor }, message: '-- VISUAL BLOCK --' };
+      }
       
       // Handle 'f' and 't' completion
       if (prev.motionBuffer === 'f' || prev.motionBuffer === 't') {
@@ -717,20 +781,52 @@ export default function App() {
            }
       }
 
-      // Visual Mode basic hack
-      if (prev.mode === VimMode.VISUAL) {
+      // Visual Mode Handling
+      if (prev.mode === VimMode.VISUAL || prev.mode === VimMode.VISUAL_BLOCK) {
           if (e.key === 'd' || e.key === 'x') {
-             const res = fs.deleteText(newState, 'char'); // Simplification for visual selection delete
-             res.lastAction = { type: 'delete', subType: 'char', count: 1 };
-             return { ...res, mode: VimMode.NORMAL, message: '' };
+             // For now, simplify visual delete to char delete for VISUAL, but block needs logic?
+             // Simplification: treat as deleting selection
+             return { ...newState, mode: VimMode.NORMAL, message: 'Selection deleted (Simulated)' };
           }
           if (e.key === '>') {
-              // Indent
              const newText = [...prev.text];
              newText[prev.cursor.y] = "  " + newText[prev.cursor.y];
              return { ...newState, text: newText, mode: VimMode.NORMAL, message: '1 line >ed', lastAction: { type: 'indent' } };
           }
-          if (e.key === 'Escape') return { ...newState, mode: VimMode.NORMAL, message: '' };
+          if (e.key === 'c') {
+              if (prev.mode === VimMode.VISUAL_BLOCK && prev.visualStart) {
+                   // Calculate Block bounds
+                   const startY = Math.min(prev.visualStart.y, prev.cursor.y);
+                   const endY = Math.max(prev.visualStart.y, prev.cursor.y);
+                   const startX = Math.min(prev.visualStart.x, prev.cursor.x);
+                   const endX = Math.max(prev.visualStart.x, prev.cursor.x);
+
+                   const newText = [...prev.text];
+                   for(let i=startY; i<=endY; i++) {
+                       const line = newText[i];
+                       if (startX < line.length) {
+                           newText[i] = line.slice(0, startX) + line.slice(endX + 1);
+                       }
+                   }
+                   
+                   return { 
+                       ...newState, 
+                       text: newText, 
+                       mode: VimMode.INSERT, 
+                       cursor: { y: startY, x: startX }, 
+                       message: '-- INSERT --',
+                       visualStart: null,
+                       lastAction: { 
+                           type: 'change', 
+                           subType: 'block', 
+                           visualBlockInfo: { startY, endY, startX } 
+                       }
+                   };
+              }
+              // Normal Visual Change
+              return { ...newState, mode: VimMode.INSERT, message: '-- INSERT --' };
+          }
+          if (e.key === 'Escape') return { ...newState, mode: VimMode.NORMAL, message: '', visualStart: null };
       }
       
       return newState;
@@ -760,7 +856,19 @@ export default function App() {
 
   const episodes = Array.from(new Set(STATIC_LEVELS.map(l => l.config.episode)));
 
-  const EditorView = ({ text, cursor, isDimmed }: { text: string[], cursor: {x:number, y:number}, isDimmed?: boolean }) => (
+  const EditorView = ({ text, cursor, isDimmed, visualStart, mode }: { text: string[], cursor: Cursor, isDimmed?: boolean, visualStart: Cursor | null, mode: VimMode }) => {
+    // Calculate visual block rect if active
+    let vBlock = null;
+    if (mode === VimMode.VISUAL_BLOCK && visualStart) {
+        vBlock = {
+            minX: Math.min(visualStart.x, cursor.x),
+            maxX: Math.max(visualStart.x, cursor.x),
+            minY: Math.min(visualStart.y, cursor.y),
+            maxY: Math.max(visualStart.y, cursor.y)
+        };
+    }
+
+    return (
     <div className={`flex-1 font-['Fira_Code'] text-lg relative outline-none bg-[#0a0a0a] p-4 border border-gray-800 shadow-inner overflow-hidden ${isDimmed ? 'opacity-50 grayscale' : ''}`}>
         {text.map((line, idx) => (
             <div key={idx} className="flex min-h-[1.5em]">
@@ -770,9 +878,20 @@ export default function App() {
                     <span className="absolute left-0 top-0 bg-[#a9b7c6] opacity-80 w-[1ch] h-[1.2em] animate-pulse"></span>
                 ) : (
                 line.split('').map((char, charIdx) => {
+                    let isSelected = false;
+                    // Visual Block Selection
+                    if (vBlock && idx >= vBlock.minY && idx <= vBlock.maxY && charIdx >= vBlock.minX && charIdx <= vBlock.maxX) {
+                        isSelected = true;
+                    }
+
                     const isCursor = !isDimmed && cursor.y === idx && cursor.x === charIdx;
+                    
+                    let bgClass = '';
+                    if (isCursor) bgClass = 'bg-[#a9b7c6] text-black';
+                    else if (isSelected) bgClass = 'bg-[#3e4451]';
+
                     return (
-                    <span key={charIdx} className={`${isCursor ? 'bg-[#a9b7c6] text-black' : ''}`}>
+                    <span key={charIdx} className={bgClass}>
                         {char}
                     </span>
                     );
@@ -790,7 +909,7 @@ export default function App() {
             </div>
         ))}
     </div>
-  );
+  )};
 
 
   // --- MAIN RENDER SWITCH ---
@@ -890,6 +1009,10 @@ export default function App() {
                                 <GlitchText text="MISSION COMPLETE" className="text-4xl text-[#33ff00] font-bold mb-4" />
                                 <div className="text-white text-lg mb-2">INTEGRITY VERIFIED</div>
                                 <div className="text-gray-500 italic text-sm mb-6 max-w-md">"{currentLevel.loreReveal}"</div>
+                                <div className="flex justify-between w-full px-8 text-xs font-mono mb-4 text-gray-400">
+                                    <span>KEYSTROKES: {gameState.keystrokeCount}</span>
+                                    <span>GHOST PAR: {currentLevel.config.ghostPar || '??'}</span>
+                                </div>
                                 <div className="animate-pulse text-sm text-[#33ff00]">
                                     [ PRESS ENTER FOR NEXT NODE ]
                                 </div>
@@ -910,13 +1033,13 @@ export default function App() {
 
                     {/* Actual Editor Content - With Split Logic */}
                     <div className={`flex-1 flex overflow-hidden ${gameState.viewLayout === 'vsplit' ? 'flex-row gap-1' : 'flex-col gap-1'}`}>
-                        <EditorView text={gameState.text} cursor={gameState.cursor} />
+                        <EditorView text={gameState.text} cursor={gameState.cursor} mode={gameState.mode} visualStart={gameState.visualStart} />
                         
                         {/* Simulated Split View */}
                         {gameState.viewLayout !== 'single' && (
                             <>
                                 <div className={`bg-gray-800 ${gameState.viewLayout === 'vsplit' ? 'w-[1px]' : 'h-[1px]'}`}></div>
-                                <EditorView text={gameState.text} cursor={gameState.cursor} isDimmed={true} />
+                                <EditorView text={gameState.text} cursor={gameState.cursor} isDimmed={true} mode={VimMode.NORMAL} visualStart={null} />
                             </>
                         )}
                     </div>
@@ -953,19 +1076,34 @@ export default function App() {
                 </div>
 
                 {/* Constraints HUD */}
-                {(currentLevel.config.timeLimit) && (
-                    <div className="mb-6 border border-gray-800 bg-gray-900/20 p-4 relative overflow-hidden">
-                        {/* Time Limit */}
-                        {currentLevel.config.timeLimit && (
-                            <div className="mb-4">
-                                <div className="text-[10px] text-red-400 uppercase tracking-widest">Trace Timeout</div>
-                                <div className="text-3xl font-bold text-red-500 tabular-nums">
-                                    {gameState.timeLeft !== null ? gameState.timeLeft : '--'}s
-                                </div>
+                <div className="mb-6 border border-gray-800 bg-gray-900/20 p-4 relative overflow-hidden">
+                    {/* Time Limit */}
+                    {currentLevel.config.timeLimit && (
+                        <div className="mb-4">
+                            <div className="text-[10px] text-red-400 uppercase tracking-widest">Trace Timeout</div>
+                            <div className="text-3xl font-bold text-red-500 tabular-nums">
+                                {gameState.timeLeft !== null ? gameState.timeLeft : '--'}s
                             </div>
-                        )}
-                    </div>
-                )}
+                        </div>
+                    )}
+                    {/* Ghost Par Metric */}
+                    {currentLevel.config.ghostPar && (
+                        <div>
+                             <div className="text-[10px] text-blue-400 uppercase tracking-widest flex justify-between">
+                                 <span>Ghost Par</span>
+                                 <span className={gameState.keystrokeCount > currentLevel.config.ghostPar ? 'text-red-500' : 'text-blue-500'}>
+                                     {gameState.keystrokeCount}/{currentLevel.config.ghostPar}
+                                 </span>
+                             </div>
+                             <div className="w-full bg-gray-800 h-1 mt-1">
+                                 <div 
+                                    className={`h-full transition-all duration-300 ${gameState.keystrokeCount > currentLevel.config.ghostPar ? 'bg-red-500' : 'bg-blue-500'}`} 
+                                    style={{width: `${Math.min(100, (gameState.keystrokeCount / currentLevel.config.ghostPar) * 100)}%`}}
+                                 ></div>
+                             </div>
+                        </div>
+                    )}
+                </div>
 
                 {/* Target Info */}
                 <div className="mb-6">

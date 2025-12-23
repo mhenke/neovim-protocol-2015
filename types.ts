@@ -5,6 +5,7 @@ export enum VimMode {
   INSERT = 'INSERT',
   VISUAL = 'VISUAL',
   VISUAL_LINE = 'VISUAL_LINE',
+  VISUAL_BLOCK = 'VISUAL_BLOCK',
   COMMAND = 'COMMAND'
 }
 
@@ -24,11 +25,12 @@ export interface LevelConfig {
   targetFile?: string; 
   timeLimit?: number; 
   maxKeystrokes?: number;
+  ghostPar?: number;
 }
 
 export interface Task {
   description: string;
-  type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'indent';
+  type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'indent' | 'selection';
   value: string;
   completed: boolean;
   loreFragment?: string;
@@ -50,10 +52,11 @@ export type DialogType = 'NONE' | 'HELP' | 'MAP' | 'HINTS';
 
 export interface LastAction {
   type: 'delete' | 'change' | 'indent' | 'insert';
-  subType?: 'line' | 'word' | 'char' | 'object';
+  subType?: 'line' | 'word' | 'char' | 'object' | 'block';
   text?: string; 
   count?: number;
   object?: string; 
+  visualBlockInfo?: { startY: number, endY: number, startX: number };
 }
 
 export interface GameState {
@@ -62,7 +65,7 @@ export interface GameState {
   text: string[];
   cursor: Cursor;
   clipboard: string | null;
-  clipboardType: 'line' | 'char' | null;
+  clipboardType: 'line' | 'char' | 'block' | null;
   commandBuffer: string; 
   operatorBuffer: string; 
   motionBuffer: string;   
@@ -77,4 +80,14 @@ export interface GameState {
   insertBuffer: string;
   viewLayout: 'single' | 'vsplit' | 'hsplit';
   lastExecutedCommand: string | null;
+  visualStart: Cursor | null; 
+  marks: Record<string, Cursor>; 
+  
+  // New features
+  macroRecording: string | null; // The register currently being recorded to (e.g. 'a')
+  macros: Record<string, string>; // Map of register -> key sequence
+  registerBuffer: boolean; // True if we are waiting for a register name (after ")
+  activeRegister: string | null; // The register selected for the next operation
+  registers: Record<string, string>; // Map of register -> content
+  activeWindow: 0 | 1; // 0 = main, 1 = split
 }
