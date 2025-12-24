@@ -77,7 +77,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   2: {
     briefing: "THE BREACH: A fragile handshake — repair protocol headers and leave a persistent trace before the watchdog purges temporary buffers.",
     initialText: [
-      "// protocol_log.log",
+      "// protocol_header.cfg",
       "// Agent Echo - Protocol Log",
       "",
       "PROTOCOL_STATUS: DEACTIVATED",
@@ -92,7 +92,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// END_SESSION"
     ],
     targetText: [
-      "// protocol_log.log",
+      "// protocol_header.cfg",
       "// Agent Echo - Protocol Log",
       "",
       "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED", // After Task 1 (I)
@@ -403,11 +403,18 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   },
   7: { // Formerly Level 6
     briefing: "FIREWALL: Rule chains block diagnostic probes — patch JSON rules precisely to reopen secure channels.",
-    initialText: ["{","  \"rules\": [","    {\"port\":8080,\"proto\":\"http\"}","  ]","}"],
-    targetText: ["{","  \"rules\": [","    {\"port\":443,\"proto\":\"https\"}","  ]","}"],
+    initialText: ["// firewall_rules.json","{","  \"rules\": [","    {\"port\":8080,\"proto\":\"http\"}","  ]","}"],
+    targetText: ["// firewall_rules.json","{","  \"rules\": [","    {\"port\":443,\"proto\":\"https\"}","  ]","}"],
     loreReveal: "LOG_59: 'Firewall patched. Watch for lateral traces.' - Echo",
     hints: ["ci\" to change strings, cit to change tags."],
-    tasks: []
+    tasks: [
+      {
+        description: "Change the protocol to 'https' and port to 443 (simple edit).",
+        type: "contains",
+        value: "\"proto\":\"https\"",
+        keyHint: "ci\" or :%s"
+      }
+    ]
   },
   8: { // Formerly Level 7
     briefing: "LEDGER: Distributed blocks show inconsistent entries — reconstruct blocks visually to restore ledger continuity.",
@@ -451,11 +458,18 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   },
   13: { // Formerly Level 12
     briefing: "REALITY SYS: System-wide patterns enforce legacy policy — apply controlled global substitutions to flip system alignment.",
-    initialText: ["permission=DENY"],
-    targetText: ["permission=ALLOW"],
+    initialText: ["// policy.conf","permission=DENY"],
+    targetText: ["// policy.conf","permission=ALLOW"],
     loreReveal: "LOG_119: 'Policy rewritten. The system adapts without complaint.' - Echo",
     hints: [":%s/old/new/g to replace globally."],
-    tasks: []
+    tasks: [
+      {
+        description: "Replace permission=DENY with permission=ALLOW using a simple substitution.",
+        type: "contains",
+        value: "permission=ALLOW",
+        keyHint: ":%s"
+      }
+    ]
   },
   14: { // Formerly Level 13
     briefing: "SHELL BRIDGE: External command outputs contain missing fragments — capture and merge shell output into buffers for analysis.",
