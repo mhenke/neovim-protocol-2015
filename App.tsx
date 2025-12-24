@@ -563,8 +563,8 @@ export default function App() {
         const burstSize = keystrokeTimesRef.current.length;
         if (burstSize >= 12) {
             // Busy work detected — surface an Echo historic log (green) once, then clear short-term buffer
-            setDialogSource('echo');
-            setDialogMsg(getRandomDialog('echo', 'idle'));
+            // setDialogSource('echo'); // Busy work detected — surface an Echo historic log (green) once, then clear short-term buffer
+            // setDialogMsg(getRandomDialog('echo', 'idle'));
             const revert = setTimeout(() => { setDialogSource('anchor'); setDialogMsg(getRandomDialog('anchor', 'idle')); }, 3000);
             keystrokeTimesRef.current = [];
             return () => clearTimeout(revert);

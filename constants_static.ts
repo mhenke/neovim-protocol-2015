@@ -4,7 +4,7 @@ import { GeminiLevelResponse } from './types';
 export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   // --- EPISODE 1: THE BREACH (Foundation) ---
   1: {
-    briefing: "AGENT 'Echo' IS DARK. Her last signal is fragmented—and possibly corrupted. Navigate this raw signal log, but be advised: integrity checks on Echo's transmission are failing. Align on key data nodes; establishing a lock on the target word may reveal fragments, or further distortions.",
+    briefing: "AGENT 'Echo' IS DARK. Her last signal is fragmented—and possibly corrupted. Navigate to the log to find key fragments.",
     initialText: [
       "// signal_trace.log",
       "// Agent Echo - Last Transmission",
@@ -73,118 +73,222 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ]
   },
 
-  // --- EPISODE 1 (continued) ---
+  // --- EPISODE 1: New Level 2 (Basic Insert Mode) ---
   2: {
-    briefing: "PROTOCOL ENTRY. The mainframe bureaucracy routes packets through legacy handlers and stale rules. We must inject corrective entries while avoiding integrity checks.",
+    briefing: "THE BREACH: A fragile handshake — repair protocol headers and leave a persistent trace before the watchdog purges temporary buffers.",
     initialText: [
-      "// Protocol Entry Log",
-      "// Date: [REDACTED]",
-      "// Operator: [ANONYMOUS]",
+      "// signal_trace.log",
+      "// Agent Echo - Protocol Log",
       "",
-      "'protocol': 'http',",
-      "port: 8080",
-      "[users: 5]",
-      "<tag>sensor_data</tag>",
-      "config_id: 123",
-      "corrupt_word_here",
-      "delete_me",
+      "PROTOCOL_STATUS: DEACTIVATED",
+      "CONNECTION_ROUTE: UNSECURED",
+      "LOG_BUFFER_STATE: UNINITIALIZED",
       "",
-      "STATUS: OFFLINE",
-      "CONNECTION: INSECURE",
-      "MESSAGE: SYSTEM_INTEGRITY_COMPROMISED",
+      "// INSERT_POINT_A",
+      "// APPEND_POINT_B",
       "",
-      "// --- NEW ENTRY ---"
+      "// NEW_LINE_POINT_C",
+      "",
+      "// END_SESSION"
     ],
     targetText: [
-      "// Protocol Entry Log",
-      "// Date: 2015-12-23",
-      "// Operator: GHOST",
-      "LOG_HEADER: MAIN",
+      "// signal_trace.log",
+      "// Agent Echo - Protocol Log",
       "",
-      "'protocol': 'https',",
-      "(port: 443)",
-      "[users: 10]",
-      "<tag>telemetry</tag>",
-      "{config_id: 456}",
+      "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED", // After Task 1 (I)
+      "CONNECTION_ROUTE: UNSECURED [TOKEN_VALID]",     // After Task 2 (A)
+      "LOG_BUFFER_STATE: NEW_UNINITIALIZED",               // After Task 4 (i)
       "",
-      "STATUS: ONLINE - VERIFIED",
-      "CONNECTION: SECURE",
-      "CRITICAL MESSAGE: SYSTEM_INTEGRITY_OK",
+      "// INSERT_POINT_A",
+      "// APPEND_POINT_B",
+      "LOG_04_ECHO_PING_RECEIVED",                    // After Task 3 (o)
       "",
-      "// --- NEW ENTRY ---",
-      "LOG_START: 2015-12-23"
+      "// NEW_LINE_POINT_C",
+      "",
+      "// END_SESSION"
     ],
-    loreReveal: "LOG_10: 'Protocol entries altered. Echo trace markers present but corrupted—interpret with care.' - Echo",
+    loreReveal: "LOG_09: 'Persistent link secured. Data buffer committed. Echo's presence established.' - Echo",
     hints: [
-      "'i' to insert before cursor, 'a' to append after.",
-      "'o' to open line below, 'O' to open line above.",
-      "Press 'Esc' to exit Insert Mode."
+      "`i` inserts before the cursor. `a` appends after the cursor.",
+      "`I` inserts at the beginning of the line. `A` appends at the end of the line.",
+      "`o` creates a new line below. `O` creates a new line above.",
+      "Press `Esc` to exit Insert Mode and return to Normal Mode.",
+      "Type `:` then `w` and `Enter` to save changes. Type `:` then `q` and `Enter` to quit."
     ],
     tasks: [
       {
-        description: "Change 'http' to 'https' using an appropriate change (ci').",
+        description: "Navigate to 'PROTOCOL_STATUS: DEACTIVATED'. Use `I` to insert 'BYPASS_SEC_0X00: ' at the start of the line. Press `Esc`.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["I", "B", "Y", "P", "A", "S", "S", "_", "S", "E", "C", "_", "0", "X", "0", "0", ":", " ", "Esc"],
+        value: "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED",
+        cursorExact: true,
+        loreFragment: "LOG_04: \"ECHO LOG: Protocol initiated. A spark in the void.\"",
+        keyHint: "I"
+      },
+      {
+        description: "Navigate to 'CONNECTION_ROUTE: UNSECURED'. Use `A` to append ' [TOKEN_VALID]' at the end of the line. Press `Esc`.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["j", "A", " ", "[", "T", "O", "K", "E", "N", "_", "V", "A", "L", "I", "D", "]", "Esc"],
+        value: "CONNECTION_ROUTE: UNSECURED [TOKEN_VALID]",
+        cursorExact: true,
+        loreFragment: "LOG_05: \"ECHO LOG: Link secured. A momentary clarity.\"",
+        keyHint: "A"
+      },
+      {
+        description: "Navigate to '// APPEND_POINT_B'. Use `o` to create a new line below, type 'LOG_04_ECHO_PING_RECEIVED', and press `Esc`.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["j", "j", "j", "o", "L", "O", "G", "_", "0", "4", "_", "E", "C", "H", "O", "_", "P", "I", "N", "G", "_", "R", "E", "C", "E", "I", "V", "E", "D", "Esc"],
+        value: "LOG_04_ECHO_PING_RECEIVED",
+        cursorExact: true,
+        loreFragment: "LOG_06: \"ECHO LOG: A message. A signal. Was it from me?\"",
+        keyHint: "o"
+      },
+      {
+        description: "Navigate to 'LOG_BUFFER_STATE: UNINITIALIZED'. Use `i` to place the cursor before 'UNINITIALIZED', type 'NEW_', and press `Esc`.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["k", "k", "k", "k", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "i", "N", "E", "W", "_", "Esc"],
+        value: "LOG_BUFFER_STATE: NEW_UNINITIALIZED",
+        cursorExact: true,
+        loreFragment: "LOG_07: \"ECHO LOG: State initialized. A new beginning.\"",
+        keyHint: "i"
+      },
+      {
+        description: "From Normal Mode, save your changes by typing `:` then `w` and `Enter`.",
+        type: "run_command",
+        value: ":w",
+        loreFragment: "LOG_08: \"ECHO LOG: Data committed. A fleeting moment of control.\"",
+        keyHint: ":w"
+      },
+      {
+        description: "From Normal Mode, quit the session by typing `:` then `q` and `Enter`.",
+        type: "run_command",
+        value: ":q",
+        loreFragment: "LOG_09: \"ECHO LOG: Connection lost. But the message... it remains.\"",
+        keyHint: ":q"
+      }
+    ]
+  },
+
+  // --- EPISODE 1: Level 3 (Text Objects - formerly Level 2) ---
+  3: {
+    briefing: "R&D SUBSYSTEMS: Legacy configs hide Echo markers — surgically edit protocol fields and metadata to decode buried fragments.",
+    initialText: [
+      "// config_alien.json",
+      "{",
+      "  \"system_status\": \"locked\",",
+      "  \"connection\": {",
+      "    \"protocol\": 'http',",
+      "    \"port\": (8080)",
+      "  },",
+      "  \"users\": [",
+      "    \"user_alpha_5\",",
+      "    \"user_beta_3\"",
+      "  ],",
+      "  \"metadata\": {",
+      "    \"config_id\": {123},",
+      "    \"data_tag\": \"<tag>sensor_data</tag>\"",
+      "    \"critical_message\": \"SYSTEM_INTEGRITY_COMPROMISED\"",
+      "    \"corrupt_word_here\": \"token_stray\"",
+      "    \"delete_me\": \"to_be_removed\"",
+      "  }",
+      "}"
+    ],
+    targetText: [
+      "// config_alien.json",
+      "{",
+      "  \"system_status\": \"locked\",",
+      "  \"connection\": {",
+      "    \"protocol\": 'https',",
+      "    \"port\": (443)",
+      "  },",
+      "  \"users\": [",
+      "    \"user_alpha_10\",",
+      "    \"user_beta_3\"",
+      "  ],",
+      "  \"metadata\": {",
+      "    \"config_id\": {456},",
+      "    \"data_tag\": \"<tag>telemetry</tag>\"",
+      "    \"critical_message\": \"SYSTEM_INTEGRITY_COMPROMISED\"",
+      "  }",
+      "}"
+    ],
+    loreReveal: "LOG_19: 'Protocol reconfigured. Echo's traces found in the altered metadata.' - Echo",
+    hints: [
+      "Type `ci` (change inside) followed by `'` to change text inside single quotes. This enters Insert Mode.",
+      "Type `ci` then `(` to change text inside parentheses.",
+      "Type `ci` then `[` to change text inside square brackets.",
+      "Type `ci` then `t` to change text inside XML/HTML-like tags.",
+      "Type `ci` then `{` to change text inside curly braces.",
+      "Type `di` (delete inside) then `w` to delete the inner word.",
+      "Type `da` (delete around) then `w` to delete a word and its surrounding space.",
+      "`x` deletes a character under the cursor. `u` undoes the last change."
+    ],
+    tasks: [
+      {
+        description: "With the cursor on the line containing 'http', type `ci` then `'` to change the protocol to 'https'.",
         type: "contains",
         value: "'protocol': 'https'",
-        loreFragment: "LOG_20: \"Bureaucratic header patched. Old handlers still log the change as a warning.\"",
+        loreFragment: "LOG_10: \"ECHO LOG: Protocol shift. Security layers blur. Is it me, or the system… adapting?\"",
         keyHint: "ci'"
       },
       {
-        description: "Change port '8080' to '443'.",
+        description: "With the cursor on the line containing '8080', type `ci` then `(` to change the port to '443'.",
         type: "contains",
         value: "(port: 443)",
-        loreFragment: "LOG_21: \"Port redirect applied. Admin comments suppressed. Traces remain.\"",
+        loreFragment: "LOG_11: \"ECHO LOG: Rerouting... phantom connections. A whisper from the old network.\"",
         keyHint: "ci("
       },
       {
-        description: "Increase user count '5' to '10' to meet registry expectations.",
+        description: "With the cursor on the line containing 'user_alpha_5', type `ci` then `[` to change the user count '5' to '10'.",
         type: "contains",
-        value: "[users: 10]",
-        loreFragment: "LOG_22: \"User registry adjusted. An old policy now accepts the new load.\"",
+        value: "\"user_alpha_10\"",
+        loreFragment: "LOG_12: \"ECHO LOG: User count expands. More… entries. Are these new thoughts? Or just noise?\"",
         keyHint: "ci["
       },
       {
-        description: "Replace tag 'sensor_data' with 'telemetry'.",
+        description: "With the cursor on the line containing '<tag>', type `ci` then `t` to change the data tag to 'telemetry'.",
         type: "contains",
         value: "<tag>telemetry</tag>",
-        loreFragment: "LOG_23: \"Tag reclassified. The label masks a deeper tracking routine.\"",
+        loreFragment: "LOG_13: \"ECHO LOG: Tag altered. 'Sensor' to 'telemetry.' A new meaning. Whose definition?\"",
         keyHint: "cit"
       },
       {
-        description: "Update config id '123' to '456'",
+        description: "With the cursor on the line containing '{123}', type `ci` then `{` to change the config ID to '456'.",
         type: "contains",
-        value: "{config_id: 456}",
-        loreFragment: "LOG_24: \"Config ID rotated. Registry checksum passes, but echoes persist.\"",
+        value: "{456}",
+        loreFragment: "LOG_14: \"ECHO LOG: Identity shifted. Config ID... A fragment of a previous self? Or a new one?\"",
         keyHint: "ci{"
       },
       {
-        description: "Delete stray token 'corrupt_word_here'.",
+        description: "With the cursor on 'corrupt_word_here', type `di` then `w` to delete the inner word.",
         type: "missing",
-        value: "corrupt_word_here",
-        loreFragment: "LOG_25: \"Corruption removed. The ledger breathes easier.\"",
+        value: "\"corrupt_word_here\"",
+        loreFragment: "LOG_15: \"ECHO LOG: Erased. A corrupted word. Was it my own? Fading.\"",
         keyHint: "diw"
       },
       {
-        description: "Remove 'delete_me' and surrounding space.",
+        description: "With the cursor on 'delete_me', type `da` then `w` to delete the word and surrounding space.",
         type: "missing",
-        value: "delete_me",
-        loreFragment: "LOG_26: \"Obsolete instructions excised. Subroutines react strangely.\"",
+        value: "\"delete_me\"",
+        loreFragment: "LOG_16: \"ECHO LOG: Obsolete directive removed. The system breathes... a hollow space.\"",
         keyHint: "daw"
       },
       {
         description: "Run a small sequence to correct 'CRITICAL MESSAGE' casing and undo to confirm history.",
         type: "sequence",
         subTasks: [
-          { description: "Delete the leading 'S' using 'x' and then undo with 'u'", type: "missing", value: "YSTEM_INTEGRITY_OK", keyHint: "x" },
-          { description: "Undo deletion with 'u'", type: "contains", value: "SYSTEM_INTEGRITY_OK", keyHint: "u" }
+          { description: "Delete the leading 'S' using 'x'", type: "missing", value: "YSTEM_INTEGRITY_COMPROMISED", keyHint: "x" },
+          { description: "Undo deletion with 'u'", type: "contains", value: "SYSTEM_INTEGRITY_COMPROMISED", keyHint: "u" }
         ],
-        loreFragment: "LOG_27: \"Edit history preserved. Bureaucracy keeps a copy even when you don't want it to.\"",
+        loreFragment: "LOG_17: \"ECHO LOG: Trace of a change. Written, then unwritten. My ghost in the machine.\"",
         keyHint: "x, u"
       }
     ]
   },
 
-  3: {
-    briefing: "SYSTEM FAULT DETECTED. The mainframe's memory banks are exhibiting dynamic, self-correcting behaviors, with compromised log entries triggering latent subroutines. You must swiftly purge these anomalies and duplicate verified data fragments to prevent a system-wide cascade.",
+  // --- EPISODE 1: Level 4 (Deletion/Yank/Paste - formerly Level 3) ---
+  4: {
+    briefing: "FAULT ARCHIVE: Corrupted fault logs are rewriting themselves — purge errors and duplicate verified entries to preserve evidence.",
     initialText: [
       "// System Fault Log",
       "ERROR: CRITICAL_PROCESS_FAIL - URGENT",
@@ -206,7 +310,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "",
       "// END OF LOG"
     ],
-    loreReveal: "LOG_30 SANITIZED: '...undo... dot... right...' [SYNTAX LOOP, ECHO FRAGMENT] - Echo",
+    loreReveal: "LOG_29: 'Data buffer committed. Echo's presence established.' - Echo",
     hints: [
       "`dd` deletes the current line.",
       "`yy` yanks (copies) the current line. `p` pastes the yanked content below the cursor.",
@@ -217,59 +321,63 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "Navigate to the first 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "CRITICAL_PROCESS_FAIL",
-        loreFragment: "LOG_31: \"Urgency metrics reset. The system prioritizes stability over chronological integrity.\"",
+        loreFragment: "LOG_20: \"Urgency metrics reset. The system prioritizes stability over chronological integrity.\"",
         keyHint: "dd"
       },
       {
         description: "Navigate to the next 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "MEMORY_ALLOCATION_FAIL",
-        loreFragment: "LOG_32: \"Memory fault signature neutralized; side effects observed in adjacent sectors.\"",
+        loreFragment: "LOG_21: \"Memory fault signature neutralized; side effects observed in adjacent sectors.\"",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to the 'WARN:' line and use `dd` to delete it.",
         type: "missing",
         value: "UNKNOWN_MODULE_LOAD",
-        loreFragment: "LOG_33: \"Anomaly warning scrubbed. Subroutines realign.\"",
+        loreFragment: "LOG_22: \"Anomaly warning scrubbed. Subroutines realign.\"",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to the final 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "CORRUPT_FILESYSTEM",
-        loreFragment: "LOG_34: \"Filesystem corruption purged. Integrity check initiated.\"",
+        loreFragment: "LOG_23: \"Filesystem corruption purged. Integrity check initiated.\"",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to 'INFO: USER_LOGIN_GHOST' line and use `yy` to yank (copy) it, then `p` to paste it on the line below.",
         type: "run_command",
         value: "yy,p",
-        loreFragment: "LOG_35: \"Login duplicated. Echoes multiply: is this replication or infection?\"",
+        loreFragment: "LOG_24: \"Login duplicated. Echoes multiply: is this replication or infection?\"",
         keyHint: "yy, p"
       }
     ]
   },
 
-  4: {
-    briefing: "ANOMALY: emergent behavior observed. Subversive daemons manipulate theme and metadata. Expect unpredictable responses and cultural drift inside the mainframe.",
+  // --- EPISODE 1: Level 5 (Visual Mode - formerly Level 4) ---
+  5: {
+    briefing: "ARCHIVES: Daemonic metadata mutates logs — excise corrupt tokens with visual precision and restore coherence.",
     initialText: [
       "// Anomaly Report",
       "ALERT: SUBVERSIVE_DAEMON_ACTIVITY",
       "TRACE: kernel_hooked",
       "NOTE: UNUSUAL_PATTERN_DETECTED",
       "",
-      "// INVESTIGATION REQUIRED"
+      "// INVESTIGATION REQUIRED",
+      "CODE: F00D00F0"
     ],
     targetText: [
       "// Anomaly Report",
-      "ALERT: SUBVERSIVE_DAEMON_ACTIVITY",
+      "ALERT:",
+      "TRACE: kernel_hooked",
       "TRACE: kernel_hooked",
       "NOTE: UNUSUAL_PATTERN_DETECTED",
       "",
-      "// INVESTIGATION REQUIRED"
+      "// INVESTIGATION REQUIRED",
+      "CODE: 00F0"
     ],
-    loreReveal: "LOG_40: 'Anomalies escalate. Echo's fragments misalign with system time—origin uncertain.' - Echo",
+    loreReveal: "LOG_39: 'Anomalies escalate. Echo's fragments misalign with system time—origin uncertain.' - Echo",
     hints: [
       "Trust patterns, not first impressions. Visual inspection matters.",
       "Use 'v' to select characters, 'V' for lines, 'Ctrl+v' for blocks."
@@ -279,106 +387,112 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "Select the anomalous token and delete it.",
         type: "missing",
         value: "SUBVERSIVE_DAEMON_ACTIVITY",
-        loreFragment: "LOG_41: \"Daemon token isolated. The culture of the mainframe resists deletion.\"",
+        loreFragment: "LOG_30: \"Daemon token isolated. The culture of the mainframe resists deletion.\"",
         keyHint: "v, d"
       },
       {
         description: "Visual-line yank of the TRACE line and paste it below.",
         type: "run_command",
         value: "V, y, p",
-        loreFragment: "LOG_42: \"Trace duplicated. Replication observed across partitions.\"",
+        loreFragment: "LOG_31: \"Trace duplicated. Replication observed across partitions.\"",
         keyHint: "V, y, p"
+      },
+      {
+        description: "Use block visual mode to delete the 'F00D' token from the anomaly code.",
+        type: "missing",
+        value: "F00D",
+        loreFragment: "LOG_32: \"Block excision successful. The code retains its structure.\"",
+        keyHint: "Ctrl+v, d"
       }
     ]
   },
 
-  // Levels 5-15: preserve existing content and lore numbers (LOG_50 - LOG_153)
-  // These entries are kept compact here but should mirror the gameplay structure used above.
-  5: {
-    briefing: "DATA STREAMS: Search and navigate encrypted packet data and repair corrupted packet entries.",
+  // Levels 6-16: re-indexed from 5-15
+  6: { // Formerly Level 5
+    briefing: "DATA STREAMS: Encrypted packets contain time-sensitive fragments — search and repair streams to recover Echo pings.",
     initialText: ["// data_stream.dat","<packet>...","<packet>...",""],
-    targetText: ["// data_stream.dat","<packet>...","<packet>...",""] ,
-    loreReveal: "LOG_50: 'Data streams cleaned. Echo signature faint, but present.' - Echo",
+    targetText: ["// data_stream.dat","<packet>...","<packet>...",""],
+    loreReveal: "LOG_49: 'Data streams cleaned. Echo signature faint, but present.' - Echo",
     hints: ["Use /pattern to search, n/N to navigate matches."],
     tasks: []
   },
-  6: {
-    briefing: "FIREWALL RULES: Modify firewall rules without breaking JSON structure.",
+  7: { // Formerly Level 6
+    briefing: "FIREWALL: Rule chains block diagnostic probes — patch JSON rules precisely to reopen secure channels.",
     initialText: ["{","  \"rules\": [","    {\"port\":8080,\"proto\":\"http\"}","  ]","}"],
     targetText: ["{","  \"rules\": [","    {\"port\":443,\"proto\":\"https\"}","  ]","}"],
-    loreReveal: "LOG_60: 'Firewall patched. Watch for lateral traces.' - Echo",
+    loreReveal: "LOG_59: 'Firewall patched. Watch for lateral traces.' - Echo",
     hints: ["ci\" to change strings, cit to change tags."],
     tasks: []
   },
-  7: {
-    briefing: "BLOCKCHAIN LEDGER: Reconstruct corrupted blocks visually and apply precise indentation changes.",
+  8: { // Formerly Level 7
+    briefing: "LEDGER: Distributed blocks show inconsistent entries — reconstruct blocks visually to restore ledger continuity.",
     initialText: ["BLOCK 1: VALID | A | 500","BLOCK 2: CORRUPTED | B | 150"],
     targetText: ["BLOCK 1: VALID | A | 500","BLOCK 2: VALID | B | 150"],
-    loreReveal: "LOG_70: 'Ledger corrected; Echo's checksum improves.' - Echo",
+    loreReveal: "LOG_69: 'Ledger corrected; Echo's checksum improves.' - Echo",
     hints: ["Use V and >/< to shift blocks."],
     tasks: []
   },
-  8: {
-    briefing: "NEURAL NET: identify a corrupted function and repair the parameter list.",
+  9: { // Formerly Level 8
+    briefing: "NEURAL MODULE: A malformed function hides a checksum — fix intra-line errors to re-enable runtime checks.",
     initialText: ["def net(x, y):","  pass"],
     targetText: ["def net(x, y):","  return compute(x,y)"],
-    loreReveal: "LOG_80: 'Neural function located and restored. Echo's pattern emerges.' - Echo",
+    loreReveal: "LOG_79: 'Neural function located and restored. Echo's pattern emerges.' - Echo",
     hints: ["Use f/t motions and % for bracket matching."],
     tasks: []
   },
-  9: {
-    briefing: "CONFIG ARRAY: Fix repeated configuration errors efficiently.",
+  10: { // Formerly Level 9
+    briefing: "CONFIG BATCHES: Repetitive misconfigurations propagate — use counts and the dot command to apply efficient batched fixes.",
     initialText: ["arr = [1,2,3,3,4]"],
     targetText: ["arr = [1,2,3,4]"] ,
-    loreReveal: "LOG_90: 'Array stabilized. System coherence improves.' - Echo",
+    loreReveal: "LOG_89: 'Array stabilized. System coherence improves.' - Echo",
     hints: ["Use . to repeat last edit."],
     tasks: []
   },
-  10: {
-    briefing: "CODE ANALYSIS: Analyze and refactor across multiple windows, marking key points.",
+  11: { // Formerly Level 10
+    briefing: "CODELAB: Cross-file references contain Echo signatures — mark, navigate, and refactor code to expose interconnected traces (Episode 3 mastery prepares you).",
     initialText: ["// main.c","int main() {}"],
     targetText: ["// main.c","int main() { return 0; }"],
-    loreReveal: "LOG_100: 'Cross-file analysis completed. Echo registers a heartbeat.' - Echo",
+    loreReveal: "LOG_99: 'Cross-file analysis completed. Echo registers a heartbeat.' - Echo",
     hints: ["Use marks (ma) and jumps ('a)."],
     tasks: []
   },
-  11: {
-    briefing: "INDENTATION: Fix corrupted source formatting across large files.",
+  12: { // Formerly Level 11
+    briefing: "INDENTATION: Formatting noise obscures the release protocol — normalize indentation to reveal hidden structure.",
     initialText: ["function(){\nconsole.log(1)\n}"],
     targetText: ["function(){\n  console.log(1)\n}"],
-    loreReveal: "LOG_110: 'Formatting normalizes. Echo's syntax becomes legible.' - Echo",
+    loreReveal: "LOG_109: 'Formatting normalizes. Echo's syntax becomes legible.' - Echo",
     hints: ["gg=G for full-file indentation (taught later)."],
     tasks: []
   },
-  12: {
-    briefing: "REALITY SYS: Apply global substitutions to propagate a policy change.",
+  13: { // Formerly Level 12
+    briefing: "REALITY SYS: System-wide patterns enforce legacy policy — apply controlled global substitutions to flip system alignment.",
     initialText: ["permission=DENY"],
     targetText: ["permission=ALLOW"],
-    loreReveal: "LOG_120: 'Policy rewritten. The system adapts without complaint.' - Echo",
+    loreReveal: "LOG_119: 'Policy rewritten. The system adapts without complaint.' - Echo",
     hints: [":%s/old/new/g to replace globally."],
     tasks: []
   },
-  13: {
-    briefing: "TERMINAL CAPTURE: Reuse shell output and populate buffers for automation.",
+  14: { // Formerly Level 13
+    briefing: "SHELL BRIDGE: External command outputs contain missing fragments — capture and merge shell output into buffers for analysis.",
     initialText: ["$ uname -a"],
     targetText: ["$ uname -a"],
-    loreReveal: "LOG_130: 'Captured output integrated; Echo learns the host signature.' - Echo",
+    loreReveal: "LOG_129: 'Captured output integrated; Echo learns the host signature.' - Echo",
     hints: ["Use :r !cmd to insert command output."],
     tasks: []
   },
-  14: {
-    briefing: "MACRO SEQUENCE: Record and replay a repetitive decryption sequence.",
+  15: { // Formerly Level 14
+    briefing: "MACRO SEQUENCE: Time-critical decryptions require automation — record macros to reproduce precise edit sequences.",
     initialText: ["q...record...@q"],
     targetText: ["...macro recorded..."],
-    loreReveal: "LOG_140: 'Macro recorded. Echo's protocol extends itself.' - Echo",
+    loreReveal: "LOG_139: 'Macro recorded. Echo's protocol extends itself.' - Echo",
     hints: ["q to record, @q to replay."],
     tasks: []
   },
-  15: {
-    briefing: "FINAL GATE: The final barrier requires mastery of all techniques combined. Decrypt, align, and release the core.",
+  16: { // Formerly Level 15
+    briefing: "FINAL GATE: The Core resists; combine every tool learned to decrypt the Final Gate and release Echo — precision under strict limits.",
     initialText: ["<< FINAL_GATE.lock >>"],
     targetText: ["<< FINAL_GATE.lock >>"],
-    loreReveal: "LOG_150: 'Final sequence queued. Echo awaits release.' - Echo",
+    loreReveal: "LOG_149: 'Final sequence queued. Echo awaits release.' - Echo",
     hints: ["Combine all skills learned across episodes."],
     tasks: []
   }
