@@ -185,9 +185,9 @@ You are creating mission lore for **NeoVim Protocol 2015**, an educational game 
 
 ## Core Principles
 
-### 1. **One _New_ Skill Per _Teaching_ Level**
+### 1. **Skill Introduction Flexibility**
 
-'Teaching' levels should introduce exactly ONE new NeoVim command or concept to minimize cognitive load. More advanced 'Challenge' or 'Workflow' levels may combine multiple previously learned skills to test mastery.
+Teaching levels may introduce multiple related NeoVim commands or concepts together when pedagogically appropriate (for example, the Basic Navigation cluster: h/j/k/l, w/b, 0/$, gg/G). This approach supports teaching coherent workflows without forcing artificial fragmentation; 'Challenge' or 'Workflow' levels may still combine and rigorously test multiple previously learned skills.
 
 | NeoVim Action                          | Narrative Frame (2015 Cyberpunk)                                         |
 | :------------------------------------- | :----------------------------------------------------------------------- |

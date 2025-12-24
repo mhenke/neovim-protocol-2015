@@ -22,7 +22,6 @@ export interface LevelConfig {
   targetFile?: string; // For :e command mechanic
   timeLimit?: number; // Seconds (Episode 2)
   maxKeystrokes?: number; // Count (Episode 3)
-  idealKeystrokes?: number; // For "Ghost" par score
 }
 
 export type TaskType = 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'command_and_cursor_on' | 'sequence' | 'verify_key_sequence';

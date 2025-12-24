@@ -34,40 +34,35 @@ export const CURRICULUM: LevelConfig[] = [
     filename: "signal_trace.log",
     objective: "Decrypt network traffic by navigating the signal patterns",
     newKeys: ['h', 'j', 'k', 'l', 'w', 'b', '0', '$', 'gg', 'G'],
-    mechanics: ['nav_basic', 'nav_word', 'nav_line', 'nav_file'],
-    idealKeystrokes: 15
+    mechanics: ['nav_basic', 'nav_word', 'nav_line', 'nav_file']
   },
   {
     id: 2, episode: 1, episodeTitle: "THE BREACH",
     filename: "protocol_entry.log",
     objective: "Inject new data and make basic corrections to system logs.",
     newKeys: ['i', 'a', 'o', 'O', 'A', 'I', 'Esc', 'x', 'r', 'cw', 'ciw', 'C'],
-    mechanics: ['insert_mode', 'editing'],
-    idealKeystrokes: 25
+    mechanics: ['insert_mode', 'editing']
   },
   {
     id: 3, episode: 1, episodeTitle: "THE BREACH",
     filename: "system_fault.log",
     objective: "Purge compromised log entries and duplicate clean ones, recovering from errors.",
     newKeys: ['dd', 'D', 'dw', 'yy', 'p', 'P', 'u', 'Ctrl+r', '.'],
-    mechanics: ['line_manipulation', 'undo_redo', 'repeat_last_action'],
-    idealKeystrokes: 25
+    mechanics: ['line_manipulation', 'undo_redo', 'repeat_last_action']
   },
   {
     id: 4, episode: 1, episodeTitle: "THE BREACH",
     filename: "data_stream.dat",
     objective: "Search and navigate through encrypted packet data, and replace corrupted data.",
     newKeys: ['/pattern', '?pattern', 'n', 'N', '*', '#', ':nohl', ':s/old/new/g', ':%s/old/new/g'],
-    mechanics: ['search', 'replace'],
-    idealKeystrokes: 25
+    mechanics: ['search', 'replace']
   },
   {
     id: 5, episode: 1, episodeTitle: "THE BREACH",
     filename: "exfiltration.sh",
     objective: "Save the backdoor script and open multiple files for data extraction",
     newKeys: [':w', ':q', ':wq', ':q!', ':e', ':sp', ':vsp', 'Ctrl+w h/j/k/l', ':ls', ':bn', ':bp'],
-    mechanics: ['file_operations', 'window_management', 'buffer_management'],
-    idealKeystrokes: 20
+    mechanics: ['file_operations', 'window_management', 'buffer_management']
   },
 
   // --- EPISODE 2: THE TRACE (Efficiency) ---
@@ -78,7 +73,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['ci"', "ci'", 'ci(', 'ci{', 'ci[', 'cit', 'diw', 'daw'],
     mechanics: ['text_objects'],
     timeLimit: 120,
-    idealKeystrokes: 20
   },
   {
     id: 7, episode: 2, episodeTitle: "THE TRACE",
@@ -87,7 +81,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['v', 'V', 'Ctrl+v', 'd', 'y', '>', '<'],
     mechanics: ['visual_mode', 'visual_line_mode', 'visual_block_mode', 'indent'],
     timeLimit: 100,
-    idealKeystrokes: 22
   },
   {
     id: 8, episode: 2, episodeTitle: "THE TRACE",
@@ -96,7 +89,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['f', 't', 'F', 'T', ';', ',', '%'],
     mechanics: ['find_char', 'match_bracket'],
     timeLimit: 80,
-    idealKeystrokes: 18
   },
   {
     id: 9, episode: 2, episodeTitle: "THE TRACE",
@@ -105,7 +97,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['.', '5j', '3dd', '2yy'],
     mechanics: ['dot_command', 'counts'],
     timeLimit: 60,
-    idealKeystrokes: 10
   },
   {
     id: 10, episode: 2, episodeTitle: "THE TRACE",
@@ -113,8 +104,6 @@ export const CURRICULUM: LevelConfig[] = [
     objective: "Analyze and refactor C++ codebase across multiple windows, marking key points for navigation.",
     newKeys: ['Ctrl+u', 'Ctrl+d', 'ma', "'a", "``a``", 'Ctrl+o', 'Ctrl+i'],
     mechanics: ['scrolling', 'marks', 'jump_list'],
-    maxKeystrokes: 40,
-    idealKeystrokes: 25
   },
 
   // --- EPISODE 3: THE CORE (Mastery) ---
@@ -125,7 +114,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['>>', '<<', '==', 'gg=G', 'J', 'gJ'],
     mechanics: ['indent', 'auto_indent', 'join_lines'],
     maxKeystrokes: 30,
-    idealKeystrokes: 15
   },
   {
     id: 12, episode: 3, episodeTitle: "THE CORE",
@@ -134,7 +122,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['&'],
     mechanics: ['substitute'],
     maxKeystrokes: 25,
-    idealKeystrokes: 15
   },
   {
     id: 13, episode: 3, episodeTitle: "THE CORE",
@@ -143,7 +130,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['!!', ':r !cmd', 'Ctrl+f'],
     mechanics: ['shell_integration', 'command_line_mode'],
     maxKeystrokes: 30,
-    idealKeystrokes: 15
   },
   {
     id: 14, episode: 3, episodeTitle: "THE CORE",
@@ -152,7 +138,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['q', '@q', '@@', 'Q'],
     mechanics: ['macros'],
     maxKeystrokes: 20,
-    idealKeystrokes: 10
   },
   {
     id: 15, episode: 3, episodeTitle: "THE CORE",
@@ -161,7 +146,6 @@ export const CURRICULUM: LevelConfig[] = [
     newKeys: ['ALL'],
     mechanics: ['mastery'],
     maxKeystrokes: 60,
-    idealKeystrokes: 40
   }
 ];
 

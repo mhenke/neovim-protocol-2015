@@ -86,7 +86,7 @@ export const generateLevel = async (config: LevelConfig, loreLog: string[]): Pro
   if (config.timeLimit) {
     constraints += `- CRITICAL CONSTRAINT: TIME LIMIT ${config.timeLimit}s. Keep tasks immediate and text concise.`;
   }
-  if (config.maxKeystrokes) {
+  if (config.maxKeystrokes && config.episode === 3) {
     constraints += `- CRITICAL CONSTRAINT: KEYSTROKE LIMIT ${config.maxKeystrokes}. The initialText must be solvable with minimal moves. Do not generate long files.`;
   }
   if (config.episode === 3) {

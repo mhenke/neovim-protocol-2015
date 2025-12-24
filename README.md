@@ -12,7 +12,7 @@ The application uses **Google Gemini 1.5 Flash** to dynamically generate hacking
 *   **Immersive Simulation**: A custom-built Vim engine in TypeScript (not WASM) supporting Normal, Insert, Visual, and Command modes.
 *   **AI-Driven Levels**: The `@google/genai` SDK generates unique file contents (logs, hex dumps, code) and tasks for every level based on the current difficulty curve.
 *   **Narrative Progression**: A 3-Episode arc (Foundation, Efficiency, Mastery) with unfolding lore.
-*   **Performance Metrics**: Tracks time remaining and keystroke counts to grade your efficiency; levels may suggest a keystroke target but it is advisory rather than mandatory.
+*   **Performance Metrics**: Tracks time remaining and keystroke counts to grade your efficiency; keystroke targets are advisory for Episodes 1–2, and hard maximum keystroke limits are enforced only for Episode 3 (Mastery) levels.
 *   **Retro UI**: CRT scanlines, screen flicker, and glitch text effects powered by TailwindCSS.
 
 ## 🕹️ Controls & Mechanics
@@ -38,7 +38,7 @@ The application uses **Google Gemini 1.5 Flash** to dynamically generate hacking
 *   **Lvl 6-10**: Text Objects (`ciw`, `di"`), Visual Mode (`v`), Block selection, and Counts (`5j`, `d2w`).
 
 ### Episode 3: THE CORE (Mastery)
-*Focus: Complex Manipulation (Keystroke Limits)*
+*Focus: Complex Manipulation (Keystroke max limits enforced)*
 *   **Lvl 11-15**: Registers (`"ay`), Macros (`q`, `@`), Global Substitution (`:%s`), and Advanced Motions (`f`, `t`).
 
 ## 🛠️ Installation & Setup

@@ -53,13 +53,13 @@ To ensure every level and task in NeoVim Protocol 2015 is educational, immersive
 
 ## 2. Sequential & Logical Flow
 - Does the order of tasks match the player's expected learning progression?
-- Are new skills introduced one at a time, with prior skills reinforced but not overloaded?
+- Does each level introduce a clear set of related core skills when pedagogically appropriate, with prior skills reinforced?
 - Is the sequence of actions required by the player logical and discoverable?
 
 ## 3. Learning Curve & Skill Mastery
 - Does each level introduce only one new core skill (except for challenge/mastery levels)?
 - Are tasks scaffolded to build confidence before increasing complexity?
-- Is the optimal solution achievable and clearly communicated? (Provide an optional keystroke target for guidance)
+- Is the optimal solution achievable and clearly communicated? (Provide an optional keystroke target for guidance; hard max limits are enforced only in Episode 3.)
 
 ## 4. Feedback & Engagement
 - Are micro-rewards, narrative feedback, and system responses present after each task?
@@ -91,3 +91,5 @@ If a task fails any of these criteria, revise it for clarity, authenticity, and 
   - The `/` key now routes to in-game search in NORMAL mode and will not trigger browser find; update any level instructions that previously assumed browser search behavior.
 
 Ensure tests cover these updated behaviors (history clearing, dialog dismissal, and `/` key handling) when validating tasks.
+
+- Recent Policy Update (2025-12-24T20:36:13.362Z): Removed the 'Ghost Par' / idealKeystrokes metric from the codebase and docs; keystroke targets remain advisory for Episodes 1–2, while hard maximum keystroke limits are enforced only in Episode 3 levels. THEATRE.md was updated to allow introducing related skill clusters per teaching level instead of a strict single-new-skill rule.

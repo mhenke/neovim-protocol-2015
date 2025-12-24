@@ -11,7 +11,7 @@ Principles
 
 ### LEVEL 1: SIGNAL WARMUP: INITIAL CONTACT
 
-**Episode:** 1 - THE SEARCH (Awakening/Breach)
+**Episode:** 1 - THE BREACH (Awakening/Breach)
 **Core Skill:** Basic Navigation (`h/j/k/l`)
 **Supporting Skills:** Word Navigation (`w/b`), Line Navigation (`0/$`)
 **Difficulty Indicator:** Dynamic (tasks target efficient movement, no strict limit)
@@ -82,11 +82,11 @@ Use fundamental NeoVim movement commands to traverse a corrupted log file, pinpo
 
 #### LEADS TO:
 
-Level 2: signal_trace.log (Episode 1 - THE SEARCH)
+Level 2: protocol_entry.log (Episode 1 - THE BREACH)
 
 ---
 
-### Episode 1 — THE SEARCH (Awakening/Breach) - Level Design Guidelines
+### Episode 1 — THE BREACH (Awakening/Breach) - Level Design Guidelines
 
 This episode focuses on the player's initial entry into the mainframe, searching for Echo's traces. Levels in this episode should build upon basic navigation, introducing fundamental editing commands diegetically.
 
@@ -96,11 +96,11 @@ This episode focuses on the player's initial entry into the mainframe, searching
 
 ---
 
-#### Example: Level 2: `signal_trace.log` (First Level of Episode 1)
+#### Example: Level 1: `signal_trace.log` (First Level of Episode 1)
 
 ### LEVEL 2: LOG INJECTION: PROTOCOL ESTABLISHMENT
 
-**Episode:** 1 - THE SEARCH (Awakening/Breach)
+**Episode:** 1 - THE BREACH (Awakening/Breach)
 **Core Skill:** Basic Insert Mode (`i`, `a`, `o`)
 **Supporting Skills:** Basic Navigation (`h/j/k/l`, `w/b`, `0/$`)
 **Difficulty Indicator:** Keystrokes: Target efficiency.
@@ -171,7 +171,7 @@ SIGNAL TRACE: INITIAL CONTACT (Basic Navigation)
 
 #### LEADS TO:
 
-Level 3: protocol_entry.log (Episode 1 - THE SEARCH)
+Level 2: protocol_entry.log (Episode 1 - THE BREACH)
 
 Episode 2 — The Trace (Efficiency)
 - Levels: firewall_rules.json, blockchain_ledger.dat, neural_net.py, config_array.ini, code_analysis.cpp

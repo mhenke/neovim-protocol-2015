@@ -34,7 +34,7 @@ The Rules of Engagement (Strict Constraints):
 
         Good: "The firewall log contains a false flag. Delete the entry '0x4F_USER_ADMIN'."
 
-    Keystroke Golf: Track keystroke efficiency for player feedback, but do not enforce a single "par" value as a hard requirement. Use keystroke targets as guidance in documentation and level hints rather than a mandatory design constraint.
+    Keystroke Golf: Track keystroke efficiency for player feedback. Use keystroke targets as guidance in documentation and level hints.
 
     Sequencing Audit:
 

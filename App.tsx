@@ -937,8 +937,8 @@ export default function App() {
 
     if (gameState.status !== 'PLAYING') return;
 
-    // Check Keystroke Limit
-    const limit = currentLevel.config.maxKeystrokes;
+    // Check Keystroke Limit (only enforced in Episode 3)
+    const limit = currentLevel.config.maxKeystrokes && currentLevel.config.episode === 3 ? currentLevel.config.maxKeystrokes : undefined;
     const isExceeded = limit && (gameState.keystrokeCount + 1 > limit);
     if (isExceeded) {
         setGameState(prev => ({ ...prev, status: 'GAMEOVER', message: 'KEYSTROKE LIMIT EXCEEDED' }));
