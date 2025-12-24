@@ -118,12 +118,19 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
+        description: "Move the cursor to the 'P' in 'PROTOCOL_STATUS' and confirm location.",
+        type: "cursor_on",
+        value: "PROTOCOL_STATUS",
+        loreFragment: "LOG_03: \"ECHO: I was editing this file when they cut the link. The header is half-written — if you find this line, stand where I stood. — Echo\"",
+        keyHint: "j"
+      },
+      {
         description: "Insert a persistent bypass header at the start of the PROTOCOL_STATUS line using `I`, then press `Esc`.",
         type: "verify_key_sequence",
         expectedKeySequence: ["I", "B", "Y", "P", "A", "S", "S", "_", "S", "E", "C", "_", "0", "X", "0", "0", ":", " ", "Escape|Esc"],
         value: "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED",
         cursorExact: true,
-        loreFragment: "LOG_04: \"ECHO LOG: Transmission interrupted mid-write. Persistent header recovered.\"",
+        loreFragment: "LOG_04: \"ECHO: I started this header — it was meant to mask our handshake. They found me mid-write. This is my mark. — Echo\"",
         keyHint: "I"
       },
       {
@@ -132,7 +139,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         expectedKeySequence: ["j", "A", " ", "[", "T", "O", "K", "E", "N", "=", "V", "A", "L", "I", "D", "]", "Esc"],
         value: "CONNECTION_ROUTE: UNSECURED [TOKEN=VALID]",
         cursorExact: true,
-        loreFragment: "LOG_05: \"ECHO LOG: Link secured. Token appended.\"",
+        loreFragment: "LOG_05: \"ECHO: Tokens change. I adapted the format on the fly. Leave the token exactly as written; it will open the handshake. — Echo\"",
         keyHint: "A"
       },
       {
@@ -141,14 +148,14 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         expectedKeySequence: ["j", "j", "j", "o", "L", "O", "G", "_", "0", "4", "_", "E", "C", "H", "O", "_", "P", "I", "N", "G", "_", "R", "E", "C", "E", "I", "V", "E", "D", "Esc"],
         value: "LOG_04_ECHO_PING_RECEIVED",
         cursorExact: true,
-        loreFragment: "LOG_06: \"ECHO LOG: CGI ping injected. Heartbeat registered.\"",
+        loreFragment: "LOG_06: \"ECHO: I couldn't send the heartbeat — I wrote the line but never saw the return. If it registers, we know I'm still here. — Echo\"",
         keyHint: "o"
       },
       {
         description: "Persist your changes with `:w` to commit the CGI update.",
         type: "run_command",
         value: ":w",
-        loreFragment: "LOG_08: \"ECHO LOG: CGI updated and committed. Persistence confirmed.\"",
+        loreFragment: "LOG_08: \"ECHO: One save. One small proof that I existed. Commit it, and they'll remember my echo. — Echo\"",
         keyHint: ":w"
       }
     ]
