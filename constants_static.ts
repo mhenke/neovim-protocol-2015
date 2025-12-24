@@ -37,40 +37,43 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
-        description: "Use 'j' to move down and 'k' to move up. Navigate to the 'STATUS' line in the log.",
+        description: "Use 'j' and 'l' to move the cursor to the 'A' in 'Agent' on the '// Agent Echo - Last Transmission' line.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["j", "k"],
-        value: "STATUS: Connection to main server... OFFLINE.",
+        expectedKeySequence: ["j", "l"],
+        value: "// Agent Echo - Last Transmission",
+        cursor: 3,
+        cursorExact: true,
         loreFragment: "LOG_00: 'Backdoor found. I have breached the R&D perimeter. The static is alive.'",
-        keyHint: "j, k"
+        keyHint: "j, l"
       },
       {
-        description: "Use 'w' to jump forward by word. Practice on the 'OFFLINE.' line.",
+        description: "Use 'j' to reach the 'STATUS' line, then use 'w' four times to jump to 'server...'.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["w"],
-        value: "OFFLINE.",
+        expectedKeySequence: ["j", "w", "w", "w", "w"],
+        value: "server...",
         loreFragment: "LOG_01: 'Connection mapped. The silence is intentional.'",
-        keyHint: "w"
+        keyHint: "j, w, w, w, w"
       },
       {
-        description: "Use 'b' to jump backwards by word. Try this on the 'OFFLINE.' line to return to 'Connection'.",
+        description: "Use 'b' to jump back to 'server...' from 'OFFLINE.'.",
         type: "verify_key_sequence",
         expectedKeySequence: ["b"],
-        value: "Connection",
+        value: "server...",
         loreFragment: "LOG_02: 'Backtracked. Sometimes the answer is behind you.'",
         keyHint: "b"
       },
       {
-        description: "Use '0' to go to the start of the line. Make sure your cursor is at the very beginning of the line: '[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].'",
-        type: "cursor_on",
+        description: "Use 'j' to reach the '[MISALIGNED]' line, then '0' to go to the start of the line.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["j", "0"],
         value: "[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].",
-        cursor: 0,
         loreFragment: "LOG_03: 'Zeroed in. The beginning always holds the key.'",
-        keyHint: "0"
+        keyHint: "j, 0"
       },
       {
-        description: "Use 'gg' to jump to the top of the file, then use '$' to move your cursor to the end of the first line: '// signal_trace.log'.",
-        type: "cursor_on",
+        description: "Use 'gg' to jump to the top, then '$' to reach the end of '// signal_trace.log'.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["gg", "$"],
         value: "// signal_trace.log",
         cursor: "end",
         loreFragment: "LOG_FINAL: 'End of line reached. Ready for injection.'",
@@ -127,7 +130,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "ERROR: CORRUPT_FILESYSTEM",
       "INFO: DATA_PURGE_COMPLETE",
       "",
-      "// END OF LOG"
+        description: "Use 'j' to reach the 'STATUS' line, then use 'w' twice to jump to 'server...'.",
     ],
     targetText: [
       "// System Fault Log",
@@ -394,7 +397,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       {
         description: "Switch back to 'exfiltration.sh' (buffer 1) and paste the key.",
         type: "contains",
-        value: "KEY=0xDEADBEEF",
+            description: "Use 'w' twice to jump from 'server...' to 'OFFLINE.' on the same line.",
         loreFragment: "LOG_42: 'Key inserted. The script is almost ready.'",
         keyHint: ":b1, p"
       },
