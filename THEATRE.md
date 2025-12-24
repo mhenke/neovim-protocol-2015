@@ -1,3 +1,11 @@
+# Codebase Principle: Smooth Learning Curve for NeoVim
+
+The codebase is designed to provide a smooth, progressive learning curve that focuses on teaching core NeoVim navigation and editing skills. Each level introduces new concepts in a logical sequence, minimizing busywork and maximizing educational value. This approach is critical to player engagement and mastery, ensuring that the experience is both accessible to newcomers and rewarding for returning users.
+
+**Key Points:**
+- Early levels focus on simple navigation (j/k), then introduce word movement (w/b), line navigation (0/$), and file navigation (G/gg).
+- Tasks are structured to reinforce learning, not just completion.
+- The narrative and mechanics reinforce each other to support player growth and motivation.
 ## Player Experience & Motivation
 
 ### Emotional Journey & Learning Curve

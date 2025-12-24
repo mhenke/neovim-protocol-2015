@@ -1,3 +1,8 @@
+## Codebase Review: Learning Curve
+
+- [ ] Does the level/task structure provide a smooth, progressive learning curve for NeoVim skills?
+- [ ] Are new concepts introduced in a logical, accessible order?
+- [ ] Is busywork minimized and educational value maximized?
 ---
 
 **Design/Narrative Gaps Checklist:**

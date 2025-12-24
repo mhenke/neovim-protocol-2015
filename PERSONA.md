@@ -1,3 +1,6 @@
+# Codebase Learning Principle
+
+It is a critical design goal that the codebase provides a smooth, progressive learning curve focused on NeoVim skills. The structure of each level is intentional: players are introduced to new commands and concepts in a logical, non-overwhelming order. This ensures that learning NeoVim is engaging, accessible, and central to the experience.
 ## Narrative & Design Alignment: Player, Echo, and World
 
 ### Player Experience & Motivation

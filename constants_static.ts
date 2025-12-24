@@ -37,31 +37,31 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
-        description: "Navigate through the log segments using 'j' (down) and 'k' (up) to reach the 'STATUS' line. Then use 'w' to move word by word to 'OFFLINE.'. This task requires you to use 'j', 'k', and 'w' during navigation.",
+        description: "Use 'j' to move down and 'k' to move up. Navigate to the 'STATUS' line in the log.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["j", "k", "w"],
-        value: "OFFLINE.",
+        expectedKeySequence: ["j", "k"],
+        value: "STATUS: Connection to main server... OFFLINE.",
         loreFragment: "LOG_00: 'Backdoor found. I have breached the R&D perimeter. The static is alive.'",
-        keyHint: "j, k, w"
+        keyHint: "j, k"
       },
       {
-        description: "From 'OFFLINE.', use 'b' to move backwards to 'Connection'. Then use '0' to jump to the start of the line and '$' to jump to the end of the line. This task requires you to use 'b', '0', and '$'.",
+        description: "Use 'w' to jump forward by word and 'b' to jump backward by word. Practice on the 'OFFLINE.' line.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["b", "0", "$"],
-        value: "[2015-12-23 18:00:02]",
+        expectedKeySequence: ["w", "b"],
+        value: "OFFLINE.",
         loreFragment: "LOG_01: 'Connection mapped. The silence is intentional.'",
-        keyHint: "b, 0, $"
+        keyHint: "w, b"
       },
       {
-        description: "Move to the 'NODE: ALPHA.' part of the last transmission. Use 'l' and 'h' for precise cursor placement to engage the data lock on the 'A' of 'ALPHA'. This task requires you to use 'l' and 'h'.",
+        description: "Use '0' to go to the start of the line and '$' to go to the end. Try this on any log line.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["l", "h"],
-        value: "ALPHA.",
+        expectedKeySequence: ["0", "$"],
+        value: "[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].",
         loreFragment: "LOG_02: 'Node ALPHA engaged. Shadows flicker at the edge of the log.'",
-        keyHint: "l, h"
+        keyHint: "0, $"
       },
       {
-        description: "Perform a final verification pass. Navigate to '// END OF TRANSMISSION' using 'G', then move up to '// signal_trace.log' using 'gg'.",
+        description: "Navigate to the bottom of the log with 'G', then to the top with 'gg'.",
         type: "sequence",
         subTasks: [
           { type: "run_command", value: "G", loreFragment: "LOG_03: 'End of transmission confirmed. The breach is real.'", keyHint: "G" },
@@ -89,102 +89,25 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// Protocol Entry Log",
       "// Date: 2015-12-23",
       "// Operator: GHOST",
-      {
-        description: "Change 'locked' to 'open' using 'ci"'.",
-        type: "contains",
-        value: "\"status\": \"open\"",
-        loreFragment: "LOG_60: 'Status: open. The first lock yields. A pattern emerges.'",
-        keyHint: "ci\""
-      },
-      {
-        description: "Change 'http' to 'https' using 'ci''.",
-        type: "contains",
-        value: "'protocol': 'https'",
-        loreFragment: "LOG_61: 'Protocol upgraded. The channel is now secure—someone is watching.'",
-        keyHint: "ci'"
-      },
-      {
-        description: "Change '8080' to '443' using 'ci('.",
-        type: "contains",
-        value: "(port: 443)",
-        loreFragment: "LOG_62: 'Port redirected. The signal narrows, clarity increases.'",
-        keyHint: "ci("
-      },
-      {
-        description: "Change '5' to '10' using 'ci['.",
-        type: "contains",
-        value: "[users: 10]",
-        loreFragment: "LOG_63: 'User count adjusted. More are awakening.'",
-        keyHint: "ci["
-      },
-      {
-        description: "Change 'sensor_data' to 'telemetry' using 'cit'.",
-        type: "contains",
-        value: "<tag>telemetry</tag>",
-        loreFragment: "LOG_64: 'Tag reclassified. The data is not what it seems.'",
-        keyHint: "cit"
-      },
-      {
-        description: "Change '123' to '456' using 'ci{'.",
-        type: "contains",
-        value: "{config_id: 456}",
-        loreFragment: "LOG_65: 'Configuration ID updated. The system is self-aware.'",
-        keyHint: "ci{"
-      },
-      {
-        description: "Delete 'corrupt_word_here' using 'diw'.",
-        type: "missing",
-        value: "corrupt_word_here",
-        loreFragment: "LOG_66: 'Corruption deleted. The core is purifying itself.'",
-        keyHint: "diw"
-      },
-      {
-        description: "Delete 'delete_me' and the surrounding space using 'daw'.",
-        type: "missing",
-        value: "delete_me",
-        loreFragment: "LOG_67: 'Unwanted data removed. The system is almost whole.'",
-        keyHint: "daw"
-      }
-        type: "contains",
-        value: "CRITICAL MESSAGE:",
-        loreFragment: "LOG_15: 'Critical message flagged. Eyes everywhere.'",
-        keyHint: "I"
-      },
-      {
-        description: "From 'CRITICAL MESSAGE', delete the first 'S' using 'x'. Then undo.",
-        type: "sequence",
-        subTasks: [
-          {
-            description: "Delete the 'S' character",
-            type: "missing",
-            value: "YSTEM_INTEGRITY_OK",
-            keyHint: "x"
-          },
-          {
-            description: "Undo the deletion",
-            type: "contains",
-            value: "SYSTEM_INTEGRITY_OK",
-            keyHint: "u"
-          }
-        ],
-        loreFragment: "LOG_16: 'Deletion reversed. System memory is never truly clean.'",
-        keyHint: "x, u"
-      },
-      {
-        description: "Move to 'INSECURE', change 'I' to 'S' using 'r'.",
-        type: "contains",
-        value: "SECURE",
-        loreFragment: "LOG_17: 'Security breach patched. Shadows recede.'",
-        keyHint: "r"
-      },
-      {
-        description: "Change 'COMPROMISED' to 'OK' using 'C'.",
-        type: "contains",
-        value: "SYSTEM_INTEGRITY_OK",
-        loreFragment: "LOG_18: 'Integrity restored. For now.'",
-        keyHint: "C"
-      }
-    ]
+      "LOG_HEADER: MAIN",
+      "",
+      "STATUS: ONLINE - VERIFIED",
+      "CONNECTION: SECURE",
+      "CRITICAL MESSAGE: SYSTEM_INTEGRITY_OK",
+      "",
+      "// --- NEW ENTRY ---",
+      "LOG_START: 2015-12-23"
+    ],
+    loreReveal: "ENTRY LOGS ALTERED. 'Basic edits are the foundation. Every master starts here.' - Echo",
+    hints: [
+      "'i' to insert before cursor, 'a' to append after.",
+      "'o' to open line below, 'O' to open line above.",
+      "'A' to append at end of line, 'I' to insert at start of line.",
+      "'x' to delete character, 'r' to replace character.",
+      "'cw' to change word, 'ciw' to change inner word, 'C' to change to end of line.",
+      "Press 'Esc' to exit Insert Mode."
+    ],
+    tasks: []
   },
   3: {
     briefing: "SYSTEM FAULT. Compromised log entries must be purged and clean ones duplicated to obscure our presence. We must operate quickly and precisely.",
