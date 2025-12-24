@@ -101,7 +101,7 @@ This episode focuses on the player's initial entry into the mainframe, searching
 ### LEVEL 2: LOG INJECTION: PROTOCOL ESTABLISHMENT
 
 **Episode:** 1 - THE BREACH (Awakening/Breach)
-**Core Skill:** Basic Insert Mode (`i`, `a`, `o`, `I`, `A`, `Esc`), Save/Quit (`:w`, `:q`)
+**Core Skill:** Basic Insert Mode (`i`, `a`, `o`, `I`, `Esc`), Save/Quit (`:w`, `:q`)
 **Supporting Skills:** Basic Navigation (`h/j/k/l`, `w/b`, `0/$`)
 **Difficulty Indicator:** Keystrokes: advisory
 
@@ -115,57 +115,51 @@ SIGNAL STABILIZED. Your initial trace confirmed Echo's presence. Now, to establi
 
 #### TECHNICAL OBJECTIVE (1 clear sentence)
 
-Insert new log entries and append critical parameters, then save and exit the `signal_trace.log` file.
+Insert new protocol headers and append critical parameters, then save and exit the `protocol_header.cfg` file.
 
 ---
 
-#### TASK PROGRESSION (6 micro-goals)
+#### TASK PROGRESSION (5 micro-goals)
 
 **Task 1: Insert Bypass Command**
 
-- Metaphor: "Insert a stealth bypass command at the start of the critical log block."
-- Mechanic: "Navigate to 'PROTOCOL_STATUS: DEACTIVATED'. Use `I` to insert 'BYPASS_SEC_0X00: ' at the start of the line. Press `Esc`."
-- Check: Line starts with 'BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED'.
+- Metaphor: "Insert a stealth bypass command."
+- Mechanic: "Navigate to 'STATUS: DEACTIVATED'. Use `i` to insert 'ACTIVE' before 'DEACTIVATED'. Press `Esc`."
+- Check: Line is 'STATUS: ACTIVATED'.
 
 **Task 2: Append Authentication Token**
 
-- Metaphor: "Append an authentication token to an existing protocol entry."
-- Mechanic: "Navigate to 'CONNECTION_ROUTE: UNSECURED'. Use `A` to append ' [TOKEN_VALID]' at the end of the line. Press `Esc`."
-- Check: Line ends with 'UNSECURED [TOKEN_VALID]'.
+- Metaphor: "Append an authentication token."
+- Mechanic: "Navigate to 'ROUTE: UNSECURED'. Use `a` to append '_SECURE'. Press `Esc`."
+- Check: Line is 'ROUTE: UNSECURED_SECURE'.
 
 **Task 3: Create New Log Entry**
 
-- Metaphor: "Generate a new, unflagged log entry to mask your activity."
-- Mechanic: "Navigate to '// APPEND_POINT_B'. Use `o` to create a new line below, type 'LOG_04_ECHO_PING_RECEIVED', and press `Esc`."
-- Check: New line 'LOG_04_ECHO_PING_RECEIVED' exists.
+- Metaphor: "Generate a new, unflagged log entry."
+- Mechanic: "Navigate to '// APPEND_POINT'. Use `o` to create a new line below, type 'LOG_04_PING', and press `Esc`."
+- Check: New line 'LOG_04_PING' exists.
 
 **Task 4: Initialize Log Buffer State**
 
-- Metaphor: "Activate the log buffer by inserting a new state prefix."
-- Mechanic: "Navigate to 'LOG_BUFFER_STATE: UNINITIALIZED'. Use `i` to place the cursor before 'UNINITIALIZED', type 'NEW_', and press `Esc`."
-- Check: Line is 'LOG_BUFFER_STATE: NEW_UNINITIALIZED'.
+- Metaphor: "Activate the log buffer."
+- Mechanic: "Navigate to 'BUFFER: UNINITIALIZED'. Use `I` to insert 'INIT: '. Press `Esc`."
+- Check: Line is 'INIT: BUFFER: UNINITIALIZED'.
 
-**Task 5: Commit Protocols**
+**Task 5: Commit and Exit**
 
-- Metaphor: "Commit your injected bypass protocols to the active system buffer."
-- Mechanic: "From Normal Mode, type `:` then `w` and `Enter` to save the changes."
-- Check: Command `:w` executed successfully.
-
-**Task 6: Secure Exit**
-
-- Metaphor: "Securely close the connection to the log stream, leaving no trace."
-- Mechanic: "From Normal Mode, type `:` then `q` and `Enter` to quit the session."
-- Check: Command `:q` executed successfully.
+- Metaphor: "Commit your changes and securely exit."
+- Mechanic: "Type `:w` and `Enter` to save. Then type `:q` and `Enter` to quit."
+- Check: Commands `:w` and `:q` executed successfully.
 
 ---
 
 #### HINT STRATEGY
 
 **Explicit Hint (H key):**
-"`i` inserts before the cursor. `a` appends after the cursor. `I` inserts at the beginning of the line. `A` appends at the end of the line. `o` creates a new line below. `O` creates a new line above. Press `Esc` to exit Insert Mode and return to Normal Mode. Type `:` then `w` and `Enter` to save changes. Type `:` then `q` and `Enter` to quit."
+"`i` inserts before the cursor. `a` appends after the cursor. `o` creates a new line below. `I` inserts at the beginning of the line. Press `Esc` to exit Insert Mode. Type `:w` to save. Type `:q` to quit."
 
 **Environmental Clue:**
-"PROTOCOL: INITIATING PURGE CYCLE. Log activity monitored. Stealth required."
+"PURGE CYCLE: IMMINENT. Commit changes to prevent data loss."
 
 ---
 
