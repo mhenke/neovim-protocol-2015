@@ -121,7 +121,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "Move the cursor to the 'P' in 'PROTOCOL_STATUS' and confirm location.",
         type: "cursor_on",
         value: "PROTOCOL_STATUS",
-        loreFragment: "LOG_03: \"ECHO: I was editing this file when they cut the link. The header is half-written — if you find this line, stand where I stood. — Echo\"",
+        loreFragment: "LOG_03: \"I was editing this file when they cut the link. The header is half-written — if you find this line, stand where I stood.\" - Echo",
         keyHint: "j"
       },
       {
@@ -130,7 +130,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         expectedKeySequence: ["I", "B", "Y", "P", "A", "S", "S", "_", "S", "E", "C", "_", "0", "X", "0", "0", ":", " ", "Escape|Esc"],
         value: "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED",
         cursorExact: true,
-        loreFragment: "LOG_04: \"ECHO: I started this header — it was meant to mask our handshake. They found me mid-write. This is my mark. — Echo\"",
+        loreFragment: "LOG_04: \"I started this header — it was meant to mask our handshake. They found me mid-write. This is my mark.\" - Echo",
         keyHint: "I"
       },
       {
@@ -139,7 +139,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         expectedKeySequence: ["j", "A", " ", "[", "T", "O", "K", "E", "N", "=", "V", "A", "L", "I", "D", "]", "Esc"],
         value: "CONNECTION_ROUTE: UNSECURED [TOKEN=VALID]",
         cursorExact: true,
-        loreFragment: "LOG_05: \"ECHO: Tokens change. I adapted the format on the fly. Leave the token exactly as written; it will open the handshake. — Echo\"",
+        loreFragment: "LOG_05: \"Tokens change. I adapted the format on the fly. Leave the token exactly as written; it will open the handshake.\" - Echo",
         keyHint: "A"
       },
       {
@@ -148,14 +148,14 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         expectedKeySequence: ["j", "j", "j", "o", "L", "O", "G", "_", "0", "4", "_", "E", "C", "H", "O", "_", "P", "I", "N", "G", "_", "R", "E", "C", "E", "I", "V", "E", "D", "Esc"],
         value: "LOG_04_ECHO_PING_RECEIVED",
         cursorExact: true,
-        loreFragment: "LOG_06: \"ECHO: I couldn't send the heartbeat — I wrote the line but never saw the return. If it registers, we know I'm still here. — Echo\"",
+        loreFragment: "LOG_06: \"I couldn't send the heartbeat — I wrote the line but never saw the return. If it registers, we know I'm still here.\" - Echo",
         keyHint: "o"
       },
       {
         description: "Persist your changes with `:w` to commit the CGI update.",
         type: "run_command",
         value: ":w",
-        loreFragment: "LOG_08: \"ECHO: One save. One small proof that I existed. Commit it, and they'll remember my echo. — Echo\"",
+        loreFragment: "LOG_08: \"One save. One small proof that I existed. Commit it, and they'll remember my echo.\" - Echo",
         keyHint: ":w"
       }
     ]
@@ -313,35 +313,35 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "Navigate to the first 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "CRITICAL_PROCESS_FAIL",
-        loreFragment: "LOG_20: \"ECHO: I watched the alarms spike — I cut the noise to buy time. If this line disappears, remember I tried. — Echo\"",
+        loreFragment: "LOG_20: \"I watched the alarms spike — I cut the noise to buy time. If this line disappears, remember I tried.\" - Echo",
         keyHint: "dd"
       },
       {
         description: "Navigate to the next 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "MEMORY_ALLOCATION_FAIL",
-        loreFragment: "LOG_21: \"ECHO: Memory scorched beneath the surface. I ripped the corrupt trace out and hoped it wouldn't come back. It did. — Echo\"",
+        loreFragment: "LOG_21: \"Memory scorched beneath the surface. I ripped the corrupt trace out and hoped it wouldn't come back. It did.\" - Echo",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to the 'WARN:' line and use `dd` to delete it.",
         type: "missing",
         value: "UNKNOWN_MODULE_LOAD",
-        loreFragment: "LOG_22: \"ECHO: Warnings screamed in hex; I scrubbed what I could. The system learns — it adapts to the cuts. — Echo\"",
+        loreFragment: "LOG_22: \"Warnings screamed in hex; I scrubbed what I could. The system learns — it adapts to the cuts.\" - Echo",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to the final 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "CORRUPT_FILESYSTEM",
-        loreFragment: "LOG_23: \"ECHO: I purged the corrupt sectors with a trembling hand. The integrity check stared back like a judge. — Echo\"",
+        loreFragment: "LOG_23: \"I purged the corrupt sectors with a trembling hand. The integrity check stared back like a judge.\" - Echo",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to 'INFO: USER_LOGIN_GHOST' line and use `yy` to yank (copy) it, then `p` to paste it on the line below.",
         type: "run_command",
         value: "yy,p",
-        loreFragment: "LOG_24: \"ECHO: I copied the ghost of a login to hide the gap. Replication or survival — I don't know which. Remember the copy. — Echo\"",
+        loreFragment: "LOG_24: \"I copied the ghost of a login to hide the gap. Replication or survival — I don't know which. Remember the copy.\" - Echo",
         keyHint: "yy, p"
       }
     ]
@@ -379,21 +379,21 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "Select the anomalous token and delete it.",
         type: "missing",
         value: "SUBVERSIVE_DAEMON_ACTIVITY",
-        loreFragment: "LOG_30: \"ECHO: This daemon burrowed into our tags. I carved it out and felt the system flinch. It remembered me. — Echo\"",
+        loreFragment: "LOG_30: \"This daemon burrowed into our tags. I carved it out and felt the system flinch. It remembered me.\" - Echo",
         keyHint: "v, d"
       },
       {
         description: "Visual-line yank of the TRACE line and paste it below.",
         type: "run_command",
         value: "V, y, p",
-        loreFragment: "LOG_31: \"ECHO: I duplicated the trace to confuse the watchers. Little echoes ripple — maybe one will survive. — Echo\"",
+        loreFragment: "LOG_31: \"I duplicated the trace to confuse the watchers. Little echoes ripple — maybe one will survive.\" - Echo",
         keyHint: "V, y, p"
       },
       {
         description: "Use block visual mode to delete the 'F00D' token from the anomaly code.",
         type: "missing",
         value: "F00D",
-        loreFragment: "LOG_32: \"Block excision successful. The code retains its structure.\"",
+        loreFragment: "LOG_32: \"I excised the corrupt block and left a scar. The code still breathes — but differently now.\" - Echo",
         keyHint: "Ctrl+v, d"
       }
     ]
