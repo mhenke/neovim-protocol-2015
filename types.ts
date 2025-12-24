@@ -72,6 +72,7 @@ export interface GameState {
   clipboard: string | null; // Register "
   clipboardType: 'line' | 'char' | null;
   commandBuffer: string; 
+  commandPrefix?: string; // ':' or '/' shown in UI but not stored in buffer
   operatorBuffer: string; // Pending operator (d, c, y)
   motionBuffer: string;   // Pending motion numbers (e.g. '2' in '2w') or chars (e.g. 'f')
   countBuffer: string;    // Numeric prefix (e.g. '5' in '5j')

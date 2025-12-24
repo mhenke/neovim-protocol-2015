@@ -98,80 +98,198 @@ This episode focuses on the player's initial entry into the mainframe, searching
 
 #### Example: Level 1: `signal_trace.log` (First Level of Episode 1)
 
-### LEVEL 2: LOG INJECTION: PROTOCOL ESTABLISHMENT
+### LEVEL 2: PROTOCOL RECONFIGURATION: TEXT OBJECTS
 
 **Episode:** 1 - THE BREACH (Awakening/Breach)
-**Core Skill:** Basic Insert Mode (`i`, `a`, `o`)
-**Supporting Skills:** Basic Navigation (`h/j/k/l`, `w/b`, `0/$`)
-**Difficulty Indicator:** Keystroke guidance: advisory for Episodes 1–2; Episode 3 enforces hard max limits.
+**Core Skill:** Text Objects (`ci"`, `ci(`, `ci[`, `cit`, `ci{`), Deletion (`diw`, `daw`), Undo (`u`)
+**Supporting Skills:** Basic Navigation, Insert Mode
+**Difficulty Indicator:** Keystrokes: advisory
 
 ---
 
-#### NARRATIVE HOOK
+#### NARRATIVE HOOK (2-3 sentences)
 
-"SIGNAL STABILIZED. Your initial trace has confirmed Echo's presence, but the system is actively attempting to sever the connection. You need to inject a series of bypass protocols directly into the mainframe's log stream to establish a persistent link and prevent further data loss. Time is critical: the system's automated purge routines are cycling."
-
----
-
-#### TECHNICAL OBJECTIVE
-
-Insert new log entries and append critical parameters within the `signal_trace.log` file to bypass a security protocol.
+SYSTEM PROTOCOL INTRUSION. An alien configuration file, `config_alien.json`, is actively resisting your bypass attempts. Its parameters are locked within complex delimiters. You must precisely target and reconfigure critical values using specialized text manipulation to establish a backdoor before the mainframe purges your connection.
 
 ---
 
-#### TASK PROGRESSION
+#### TECHNICAL OBJECTIVE (1 clear sentence)
 
-**Task 1: Inject Bypass Command**
+Use Neovim's text objects to modify configuration parameters within specific delimiters and perform precise data deletions.
 
-- Metaphor: "Insert a stealth bypass command at the start of the critical log block."
-- Mechanic: "Navigate to the designated log line. Use `I` to enter Insert Mode at the beginning of the line, then type 'BYPASS_SEC_0X00: ' and exit Insert Mode with `Esc`."
-- Check: Designated line starts with 'BYPASS_SEC_0X00: '.
+---
 
-**Task 2: Append Authentication Token**
+#### TASK PROGRESSION (8 micro-goals)
 
-- Metaphor: "Append an authentication token to an existing protocol entry."
-- Mechanic: "Navigate to the end of the next log line. Use `A` to enter Insert Mode at the end of the line, then type ' [TOKEN_VALID]' and exit Insert Mode with `Esc`."
-- Check: Designated line ends with ' [TOKEN_VALID]'.
+**Task 1: Change Connection Protocol**
 
-**Task 3: Create New Log Entry**
+- Metaphor: "Override a network protocol from an insecure standard to an encrypted one."
+- Mechanic: "Navigate to the 'protocol' field. Use `ci'` to change 'http' to 'https'."
+- Check: `'protocol': 'https'` is present.
 
-- Metaphor: "Generate a new, unflagged log entry to mask your activity."
-- Mechanic: "Navigate to a blank line. Use `o` to create a new line below and enter Insert Mode, then type 'LOG_00_ECHO_PING_RECEIVED' and exit Insert Mode with `Esc`."
-- Check: A new line `LOG_00_ECHO_PING_RECEIVED` exists at the correct position.
+**Task 2: Adjust System Port**
+
+- Metaphor: "Reroute a critical system port to a secure, less monitored channel."
+- Mechanic: "Navigate to the 'port' field. Use `ci(` to change '8080' to '443'."
+- Check: `'port': '443'` is present.
+
+**Task 3: Elevate User Privileges**
+
+- Metaphor: "Escalate user privileges by modifying a user count value."
+- Mechanic: "Navigate to the 'user_alpha_5' entry. Use `ci[` to change '5' to '10'."
+- Check: `'user_alpha_10'` is present.
+
+**Task 4: Reclassify Data Tag**
+
+- Metaphor: "Reclassify a sensitive data tag within an XML-like structure to evade monitoring."
+- Mechanic: "Navigate to the `<tag>sensor_data</tag>`. Use `cit` to change 'sensor_data' to 'telemetry'."
+- Check: `<tag>telemetry</tag>` is present.
+
+**Task 5: Update Configuration ID**
+
+- Metaphor: "Rotate a configuration ID to mask your presence."
+- Mechanic: "Navigate to the 'config_id' field. Use `ci{` to change '123' to '456'."
+- Check: `'config_id': '456'` is present.
+
+**Task 6: Purge Stray Token**
+
+- Metaphor: "Eliminate a stray, non-functional token that could flag your activity."
+- Mechanic: "Navigate to 'corrupt_word_here'. Use `diw` to delete the inner word."
+- Check: `corrupt_word_here` is missing.
+
+**Task 7: Remove Redundant Entry**
+
+- Metaphor: "Remove a redundant log entry and its surrounding space."
+- Mechanic: "Navigate to 'delete_me'. Use `daw` to delete the word and its adjacent space."
+- Check: `delete_me` is missing.
+
+**Task 8: Correct Critical Message Casing and Confirm Undo**
+
+- Metaphor: "Temporarily alter a critical system message to confirm write access, then revert to original state, verifying history."
+- Mechanic: "Navigate to 'SYSTEM_INTEGRITY_COMPROMISED'. Use `x` to change 'S' to 's', then `u` to undo."
+- Check: The text 'SYSTEM_INTEGRITY_COMPROMISED' is present and unchanged after the sequence.
 
 ---
 
 #### HINT STRATEGY
 
 **Explicit Hint (H key):**
-"`i` inserts before the cursor, `a` appends after. `I` inserts at the start of the line, `A` appends at the end. `o` creates a new line below and enters Insert Mode, `O` creates a new line above. Press `Esc` to exit Insert Mode."
+"`ci'` changes text inside single quotes. `ci(` changes text inside parentheses. `ci[` changes text inside square brackets. `cit` changes text inside XML/HTML-like tags. `ci{` changes text inside curly braces. `diw` deletes the inner word. `daw` deletes a word and its trailing space. `x` deletes a character under the cursor. `u` undoes the last change."
 
 **Environmental Clue:**
-"PROTOCOL: INITIATING PURGE CYCLE. Log activity monitored. Stealth required."
+"FILE INTRUSION: config_alien.json. Parameters are delimited by various brackets and quotes common in 2015 config files."
 
 ---
 
 #### SUCCESS MESSAGE
 
-"PROTOCOL ESTABLISHED."
-"Bypass protocols injected. Persistent link secured. Echo trace sustained."
+"PROTOCOL RECONFIGURED."
+"Alien configuration bypassed. Backdoor established. Prepare for data injection."
 
 ---
 
-#### FAILURE CONDITIONS
+#### FAILURE CONDITIONS (if applicable)
 
-"PURGE COMPLETE."
-"Security protocols detected anomalous activity. Log segment purged. Connection lost."
+"INTEGRITY VIOLATION."
+"Configuration altered incorrectly. Protocol integrity violated. Connection purge initiated."
 
 ---
 
 #### BUILDS ON:
 
-SIGNAL TRACE: INITIAL CONTACT (Basic Navigation)
+Level 1: SIGNAL WARMUP (Basic Navigation)
 
 #### LEADS TO:
 
-Level 2: protocol_entry.log (Episode 1 - THE BREACH)
+Level 3: DATA PURGE (Deletion, Yanking/Pasting)
+---
+
+#### LEADS TO:
+
+Level 3: DATAPACKET EXFILTRATION (Episode 1 - THE BREACH)
+
+---
+
+### LEVEL 3: DATA PURGE: ANOMALY MANAGEMENT
+
+**Episode:** 1 - THE BREACH (Awakening/Breach)
+**Core Skill:** Deletion (`dd`, `D`, `dw`), Yanking/Pasting (`yy`, `p`)
+**Supporting Skills:** Basic Navigation, Insert Mode
+**Difficulty Indicator:** Keystrokes: advisory
+
+---
+
+#### NARRATIVE HOOK (2-3 sentences)
+
+SYSTEM FAULT DETECTED. The mainframe's memory banks are exhibiting dynamic, self-correcting behaviors, with compromised log entries triggering latent subroutines. You must swiftly purge these anomalies and duplicate verified data fragments to prevent a system-wide cascade.
+
+---
+
+#### TECHNICAL OBJECTIVE (1 clear sentence)
+
+Delete specific corrupted log entries and duplicate a verified status line within the current buffer.
+
+---
+
+#### TASK PROGRESSION (3-5 micro-goals)
+
+**Task 1: Purge Critical Process Failure**
+
+- Metaphor: "Eliminate a critical process failure entry that signals a system vulnerability."
+- Mechanic: "Navigate to the line 'ERROR: CRITICAL_PROCESS_FAIL - URGENT' and use `dd` to delete the entire line."
+- Check: Line containing "CRITICAL_PROCESS_FAIL" is missing.
+
+**Task 2: Truncate Memory Allocation Error**
+
+- Metaphor: "Truncate a lingering memory allocation error message to stabilize the log."
+- Mechanic: "Navigate to 'ERROR: MEMORY_ALLOCATION_FAIL - URGENT' and use `D` to delete from the cursor to the end of the line."
+- Check: The remaining part of the line "- URGENT" is missing.
+
+**Task 3: Remove Error Prefix**
+
+- Metaphor: "Scrub an 'ERROR:' prefix from a log entry, reclassifying it as a minor warning."
+- Mechanic: "Navigate to the 'ERROR:' prefix on a relevant line and use `dw` to delete the word."
+- Check: The "ERROR:" prefix is missing from the line.
+
+**Task 4: Replicate Verified Login Event**
+
+- Metaphor: "Duplicate a successful user login event to reinforce system stability metrics."
+- Mechanic: "Navigate to the 'INFO: USER_LOGIN_GHOST' line and use `yy` to yank (copy) it, then `p` to paste it on the line below."
+- Check: A duplicate line 'INFO: USER_LOGIN_GHOST' exists below the original.
+
+---
+
+#### HINT STRATEGY
+
+**Explicit Hint (H key):**
+"`dd` deletes the current line. `D` deletes from the cursor to the end of the line. `dw` deletes a word. `yy` yanks (copies) the current line. `p` pastes the yanked content below the cursor. `u` can undo your last action."
+
+**Environmental Clue:**
+"ANOMALY STATUS: Fluctuating. System integrity at 60%. Prioritize data consolidation."
+
+---
+
+#### SUCCESS MESSAGE
+
+"DATA SANITIZED."
+"Corrupted logs purged. Verified data replicated. Mainframe stability restored."
+
+---
+
+#### FAILURE CONDITIONS (if applicable)
+
+"MEMORY OVERLOAD."
+"Uncontrolled anomalies have led to memory overflow. System reset initiated. Previous progress lost."
+
+---
+
+#### BUILDS ON:
+
+Level 2: LOG INJECTION (Basic Insert Mode)
+
+#### LEADS TO:
+
+Level 4: EMERGENT BEHAVIOR (Visual Mode)
 
 Episode 2 — The Trace (Efficiency)
 - Levels: firewall_rules.json, blockchain_ledger.dat, neural_net.py, config_array.ini, code_analysis.cpp

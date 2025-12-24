@@ -185,9 +185,19 @@ You are creating mission lore for **NeoVim Protocol 2015**, an educational game 
 
 ## Core Principles
 
+---
+
+## Core Principles
+
+### 0. **Source of Truth for Level Definitions**
+
+For all active game content, including level briefings, initial text, target text, tasks, hints, and lore fragments, the **codebase (specifically `constants_static.ts`) serves as the primary and definitive source of truth**. While `LEVEL.md` and other documentation files describe the design intent and pedagogical goals, any discrepancies between documentation and code must be resolved by aligning the documentation with the code's current implementation. Developers and auditors should always consult `constants_static.ts` first for the current state of a level.
+
+---
+
 ### 1. **Skill Introduction Flexibility**
 
-Teaching levels may introduce multiple related NeoVim commands or concepts together when pedagogically appropriate (for example, the Basic Navigation cluster: h/j/k/l, w/b, 0/$, gg/G). This approach supports teaching coherent workflows without forcing artificial fragmentation; 'Challenge' or 'Workflow' levels may still combine and rigorously test multiple previously learned skills.
+Teaching levels may introduce multiple related NeoVim commands or concepts together when pedagogically appropriate (for example, the Basic Navigation cluster: h/j/k/l, w/b, 0/$, gg/G). This approach supports teaching coherent workflows without forcing artificial fragmentation; 'Challenge' or 'Workflow' levels may still combine and rigorously rigorously test multiple previously learned skills.
 
 | NeoVim Action                          | Narrative Frame (2015 Cyberpunk)                                         |
 | :------------------------------------- | :----------------------------------------------------------------------- |

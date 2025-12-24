@@ -443,6 +443,7 @@ export default function App() {
     text: STATIC_LEVELS[1].initialText, // Ensure initial text is never empty
     cursor: { x: 0, y: 0 },
     commandBuffer: '',
+    commandPrefix: undefined,
     operatorBuffer: '',
     motionBuffer: '',
     countBuffer: '',
@@ -790,13 +791,8 @@ export default function App() {
     setIsLoading(true);
     
     try {
-      // Map curriculum ID to static level data. Warmup (id=1) uses WARMUP_LEVEL; other levels map to STATIC_LEVELS with an offset because STATIC_LEVELS was generated prior to warmup insertion.
-      let staticLevelData: any = null;
-      if (config.id === 1) {
-          staticLevelData = WARMUP_LEVEL;
-      } else {
-          staticLevelData = STATIC_LEVELS[config.id - 1];
-      }
+      // Map curriculum ID to static level data. STATIC_LEVELS keys map directly to curriculum IDs.
+      let staticLevelData: any = STATIC_LEVELS[config.id] || STATIC_LEVELS[config.id - 1];
       if (!staticLevelData) {
         throw new Error(`No static level data found for level ID: ${config.id}`);
       }
@@ -990,19 +986,23 @@ export default function App() {
         // TAB Completion for :e
         if (e.key === 'Tab') {
             e.preventDefault();
-            if (prev.commandBuffer.startsWith(':e ')) {
-                const input = prev.commandBuffer.slice(3).trim();
+            const fullCmd = (prev.commandPrefix || '') + prev.commandBuffer;
+            if (fullCmd.startsWith(':e ')) {
+                const input = fullCmd.slice(3).trim();
                 const target = currentLevel.config.targetFile;
                 // Simple prefix match auto-completion
                 if (target && target.startsWith(input)) {
-                    return { ...newState, commandBuffer: `:e ${target}` };
+                    // store without prefix in commandBuffer but show completed value without prefix
+                    const completed = `:e ${target}`;
+                    return { ...newState, commandBuffer: completed.slice((prev.commandPrefix||'').length), commandPrefix: prev.commandPrefix };
                 }
             }
             return newState;
         }
 
         if (e.key === 'Enter') {
-          const cmd = prev.commandBuffer.trim();
+          const fullCmd = ((prev.commandPrefix || '') + prev.commandBuffer).trim();
+          const cmd = fullCmd;
           let msg = '';
           let mode = VimMode.NORMAL;
           let layout: 'single' | 'vsplit' | 'hsplit' = prev.viewLayout;
@@ -1010,7 +1010,7 @@ export default function App() {
           if (cmd === ':w' || cmd === ':wq' || cmd === ':x') {
              const allDone = currentLevel.tasks.every(t => t.completed);
              if (allDone) {
-                 return { ...newState, status: 'SUCCESS', mode: VimMode.NORMAL, commandBuffer: '' };
+                 return { ...newState, status: 'SUCCESS', mode: VimMode.NORMAL, commandBuffer: '', commandPrefix: undefined };
              } else {
                  msg = 'E503: PRIMARY DIRECTIVE INCOMPLETE';
              }
@@ -1027,7 +1027,7 @@ export default function App() {
           } else if (cmd.startsWith(':e ')) {
                const file = cmd.slice(3).trim();
                if (currentLevel.config.mechanics.includes('file_open') && file === currentLevel.config.targetFile) {
-                    return { ...newState, status: 'SUCCESS', mode: VimMode.NORMAL, commandBuffer: '', message: 'FILE ACCESSED' };
+                    return { ...newState, status: 'SUCCESS', mode: VimMode.NORMAL, commandBuffer: '', commandPrefix: undefined, message: 'FILE ACCESSED' };
                }
                msg = `E403: Access Denied to '${file}'`;
           } else if (cmd.startsWith(':sp') || cmd.startsWith(':vsp') || cmd.startsWith(':tabnew')) {
@@ -1047,6 +1047,7 @@ export default function App() {
               ...newState, 
               mode: mode, 
               commandBuffer: '', 
+              commandPrefix: undefined,
               message: msg, 
               viewLayout: layout,
               lastExecutedCommand: cmd 
@@ -1236,8 +1237,8 @@ export default function App() {
         }
 
         // Command
-        case ':': return { ...newState, mode: VimMode.COMMAND, commandBuffer: ':', countBuffer: '' };
-        case '/': return { ...newState, mode: VimMode.COMMAND, commandBuffer: '/', countBuffer: '' };
+        case ':': return { ...newState, mode: VimMode.COMMAND, commandPrefix: ':', commandBuffer: '', countBuffer: '' };
+        case '/': return { ...newState, mode: VimMode.COMMAND, commandPrefix: '/', commandBuffer: '', countBuffer: '' };
       }
       
       // Handle 'f' and 't' completion
@@ -1475,7 +1476,7 @@ export default function App() {
                             </span>
                             {gameState.countBuffer && <span className="text-white text-xs">{gameState.countBuffer}</span>}
                             {gameState.operatorBuffer && <span className="text-yellow-500 text-xs">OP:{gameState.operatorBuffer}</span>}
-                            {gameState.commandBuffer && <span className="text-white text-xs">{gameState.commandBuffer}</span>}
+                            {(gameState.commandPrefix || gameState.commandBuffer) && <span className="text-white text-xs">{(gameState.commandPrefix || '') + gameState.commandBuffer}</span>}
                         </div>
                         <div className="flex gap-4 text-xs text-gray-400 items-center">
                             {gameState.message && <span className="text-[#cc7832] italic text-xs mr-4 truncate max-w-[300px]">[{gameState.message}]</span>}

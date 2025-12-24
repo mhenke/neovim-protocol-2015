@@ -81,6 +81,14 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// Date: [REDACTED]",
       "// Operator: [ANONYMOUS]",
       "",
+      "'protocol': 'http',",
+      "port: 8080",
+      "[users: 5]",
+      "<tag>sensor_data</tag>",
+      "config_id: 123",
+      "corrupt_word_here",
+      "delete_me",
+      "",
       "STATUS: OFFLINE",
       "CONNECTION: INSECURE",
       "MESSAGE: SYSTEM_INTEGRITY_COMPROMISED",
@@ -92,6 +100,12 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// Date: 2015-12-23",
       "// Operator: GHOST",
       "LOG_HEADER: MAIN",
+      "",
+      "'protocol': 'https',",
+      "(port: 443)",
+      "[users: 10]",
+      "<tag>telemetry</tag>",
+      "{config_id: 456}",
       "",
       "STATUS: ONLINE - VERIFIED",
       "CONNECTION: SECURE",
@@ -170,7 +184,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   },
 
   3: {
-    briefing: "SYSTEM FAULT. The mainframe's memory banks are a dynamic, self-correcting entity. Compromised log entries trigger latent subroutines. Purge these anomalies and duplicate verified data.",
+    briefing: "SYSTEM FAULT DETECTED. The mainframe's memory banks are exhibiting dynamic, self-correcting behaviors, with compromised log entries triggering latent subroutines. You must swiftly purge these anomalies and duplicate verified data fragments to prevent a system-wide cascade.",
     initialText: [
       "// System Fault Log",
       "ERROR: CRITICAL_PROCESS_FAIL - URGENT",
@@ -187,44 +201,51 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// System Fault Log",
       "INFO: SYSTEM_BOOT_SUCCESS",
       "INFO: USER_LOGIN_GHOST",
+      "INFO: USER_LOGIN_GHOST", // Duplicated line
       "INFO: DATA_PURGE_COMPLETE",
       "",
       "// END OF LOG"
     ],
     loreReveal: "LOG_30 SANITIZED: '...undo... dot... right...' [SYNTAX LOOP, ECHO FRAGMENT] - Echo",
     hints: [
-      "'dd' to delete a line, 'D' to delete to end of line.",
-      "'dw' to delete a word.",
-      "'yy' to yank (copy) a line, 'p' to paste after, 'P' to paste before.",
-      "'u' to undo, 'Ctrl+r' to redo."
+      "`dd` deletes the current line.",
+      "`yy` yanks (copies) the current line. `p` pastes the yanked content below the cursor.",
+      "`u` can undo your last action."
     ],
     tasks: [
       {
-        description: "Delete the line 'ERROR: CRITICAL_PROCESS_FAIL - URGENT'.",
+        description: "Navigate to the first 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "CRITICAL_PROCESS_FAIL",
         loreFragment: "LOG_31: \"Urgency metrics reset. The system prioritizes stability over chronological integrity.\"",
         keyHint: "dd"
       },
       {
-        description: "From 'ERROR: MEMORY_ALLOCATION_FAIL - URGENT', delete to the end of the line.",
+        description: "Navigate to the next 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
-        value: "- URGENT",
+        value: "MEMORY_ALLOCATION_FAIL",
         loreFragment: "LOG_32: \"Memory fault signature neutralized; side effects observed in adjacent sectors.\"",
-        keyHint: "D"
+        keyHint: "j, dd"
       },
       {
-        description: "Delete the 'ERROR:' prefix from a line.",
+        description: "Navigate to the 'WARN:' line and use `dd` to delete it.",
         type: "missing",
-        value: "ERROR:",
-        loreFragment: "LOG_33: \"Error signature neutralized. Residual data echoes persist within the sector.\"",
-        keyHint: "dw"
+        value: "UNKNOWN_MODULE_LOAD",
+        loreFragment: "LOG_33: \"Anomaly warning scrubbed. Subroutines realign.\"",
+        keyHint: "j, dd"
       },
       {
-        description: "Duplicate a successful login line using yank/paste.",
+        description: "Navigate to the final 'ERROR:' line and use `dd` to delete it.",
+        type: "missing",
+        value: "CORRUPT_FILESYSTEM",
+        loreFragment: "LOG_34: \"Filesystem corruption purged. Integrity check initiated.\"",
+        keyHint: "j, dd"
+      },
+      {
+        description: "Navigate to 'INFO: USER_LOGIN_GHOST' line and use `yy` to yank (copy) it, then `p` to paste it on the line below.",
         type: "run_command",
         value: "yy,p",
-        loreFragment: "LOG_34: \"Login duplicated. Echoes multiply: is this replication or infection?\"",
+        loreFragment: "LOG_35: \"Login duplicated. Echoes multiply: is this replication or infection?\"",
         keyHint: "yy, p"
       }
     ]
