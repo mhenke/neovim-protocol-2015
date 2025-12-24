@@ -34,7 +34,7 @@ The Rules of Engagement (Strict Constraints):
 
         Good: "The firewall log contains a false flag. Delete the entry '0x4F_USER_ADMIN'."
 
-    Keystroke Golf (The Ghost Metric): Every level must include a "Ghost Par." This is the optimal number of keystrokes required to complete the task. (e.g., "Ghost Par: 4 keys").
+    Keystroke Golf: Track keystroke efficiency for player feedback, but do not enforce a single "par" value as a hard requirement. Use keystroke targets as guidance in documentation and level hints rather than a mandatory design constraint.
 
     Sequencing Audit:
 
@@ -58,7 +58,7 @@ Your Output Format: For each level provided, output the following:
 
         The Task: (The specific Vim actions, rewritten to be diegetic)
 
-        Ghost Par: (The optimal keystroke count for the core task)
+        Keystroke Target: (A suggested keystroke count for guidance; not mandatory)
 
         Success Metric: (The objective outcome)
 

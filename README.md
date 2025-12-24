@@ -12,7 +12,7 @@ The application uses **Google Gemini 1.5 Flash** to dynamically generate hacking
 *   **Immersive Simulation**: A custom-built Vim engine in TypeScript (not WASM) supporting Normal, Insert, Visual, and Command modes.
 *   **AI-Driven Levels**: The `@google/genai` SDK generates unique file contents (logs, hex dumps, code) and tasks for every level based on the current difficulty curve.
 *   **Narrative Progression**: A 3-Episode arc (Foundation, Efficiency, Mastery) with unfolding lore.
-*   **Performance Metrics**: Tracks time remaining and keystroke counts to grade your efficiency against the "Ghost Par".
+*   **Performance Metrics**: Tracks time remaining and keystroke counts to grade your efficiency; levels may suggest a keystroke target but it is advisory rather than mandatory.
 *   **Retro UI**: CRT scanlines, screen flicker, and glitch text effects powered by TailwindCSS.
 
 ## 🕹️ Controls & Mechanics

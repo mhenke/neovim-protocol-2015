@@ -59,7 +59,7 @@ To ensure every level and task in NeoVim Protocol 2015 is educational, immersive
 ## 3. Learning Curve & Skill Mastery
 - Does each level introduce only one new core skill (except for challenge/mastery levels)?
 - Are tasks scaffolded to build confidence before increasing complexity?
-- Is the optimal solution (Ghost Par) achievable and clearly communicated?
+- Is the optimal solution achievable and clearly communicated? (Provide an optional keystroke target for guidance)
 
 ## 4. Feedback & Engagement
 - Are micro-rewards, narrative feedback, and system responses present after each task?
