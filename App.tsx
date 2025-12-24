@@ -207,6 +207,10 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
             The year is 2015. Aethelgard Biologics has scrubbed their servers. 
             The mouse is disabled. The GUI is gone.
           </p>
+          <p className="text-xs text-gray-500 mt-3">
+            Note: Neovim's 'w' and 'b' motions target word starts and follow the 'iskeyword' setting, so repeating 'w' n times then 'b' n times may not return to the exact original cursor position. Use 'W'/'B' (WORD motions) or 'e'/'ge' for more symmetric behavior, or run a marker test: <code>ma</code> → <code>n w</code> → <code>n b</code> → <code>`a</code> to observe the differences.
+          </p>
+          <div className="text-[10px] text-gray-400 mt-2">Last synced: 2025-12-24T15:43:19.795Z</div>
         </div>
 
         {/* Terminal Output */}

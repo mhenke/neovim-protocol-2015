@@ -5,7 +5,18 @@ import { GameState, Cursor, VimMode } from '../types';
 
 const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
 
-const isWordChar = (char: string) => /[\w]/.test(char);
+// Configurable isWordChar to match Neovim's iskeyword
+let iskeywordPattern = /[a-zA-Z0-9_]/; // Default Neovim iskeyword
+export function setIsKeyword(pattern: string) {
+    // Accepts Vim-style pattern, e.g. 'a-z,A-Z,0-9,_'
+    // Converts to JS regex
+    const jsPattern = pattern
+        .replace(/([a-zA-Z])-([a-zA-Z])/g, (m, a, b) => `${a}-${b}`)
+        .replace(/,/g, '')
+        .replace(/_/g, '_');
+    iskeywordPattern = new RegExp(`[${jsPattern}]`);
+}
+const isWordChar = (char: string) => iskeywordPattern.test(char);
 
 // --- Core Logic ---
 
@@ -148,36 +159,50 @@ export const handleTextObject = (state: GameState, action: 'd' | 'c', object: 'w
 
     // Word
     if (object === 'w') {
-        // Find start of word
+        // Find start of word (respect iskeyword)
         while (start > 0 && isWordChar(line[start - 1])) start--;
         // Find end of word
         while (end < line.length && isWordChar(line[end])) end++;
     }
-    // Parens
+    // Parens (support nesting, single-line)
     else if (object === '(' || object === ')') {
-        start = line.lastIndexOf('(', x);
-        end = line.indexOf(')', x);
-        if (start === -1 || end === -1) return { ...state, message: 'No matching parens' };
-        start++; // Inner
-    }
-    // Quotes
-    else if (object === '"') {
-        // Simple heuristic for quotes
-        start = line.lastIndexOf('"', x);
-        end = line.indexOf('"', x + 1); // Look forward from current pos if we are not inside?
-        
-        // If we are inside
-        if (start !== -1) {
-             const nextQuote = line.indexOf('"', start + 1);
-             if (nextQuote !== -1 && x <= nextQuote) {
-                 end = nextQuote;
-                 start++; // Inner
-             } else {
-                 return { ...state, message: 'No matching quotes' };
-             }
-        } else {
-            return { ...state, message: 'No matching quotes' };
+        // Find innermost (..), respecting nesting
+        let depth = 0;
+        let foundStart = -1, foundEnd = -1;
+        // Search left for matching '('
+        for (let i = x; i >= 0; i--) {
+            if (line[i] === ')') depth++;
+            if (line[i] === '(') {
+                if (depth === 0) { foundStart = i; break; }
+                depth--;
+            }
         }
+        // Search right for matching ')'
+        depth = 0;
+        for (let i = x; i < line.length; i++) {
+            if (line[i] === '(') depth++;
+            if (line[i] === ')') {
+                depth--;
+                if (depth === 0) { foundEnd = i; break; }
+            }
+        }
+        if (foundStart === -1 || foundEnd === -1 || foundStart >= foundEnd) return { ...state, message: 'No matching parens' };
+        start = foundStart + 1;
+        end = foundEnd;
+    }
+    // Quotes (support nested, single-line)
+    else if (object === '"') {
+        // Find nearest enclosing quotes
+        let left = -1, right = -1;
+        for (let i = x; i >= 0; i--) {
+            if (line[i] === '"') { left = i; break; }
+        }
+        for (let i = x + 1; i < line.length; i++) {
+            if (line[i] === '"') { right = i; break; }
+        }
+        if (left === -1 || right === -1 || left >= right) return { ...state, message: 'No matching quotes' };
+        start = left + 1;
+        end = right;
     }
 
     if (start >= end) return { ...state, operatorBuffer: '' }; // Invalid range

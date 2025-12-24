@@ -130,7 +130,6 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "ERROR: CORRUPT_FILESYSTEM",
       "INFO: DATA_PURGE_COMPLETE",
       "",
-        description: "Use 'j' to reach the 'STATUS' line, then use 'w' twice to jump to 'server...'.",
     ],
     targetText: [
       "// System Fault Log",
