@@ -154,7 +154,7 @@ const DialogInterjector = ({ message, source }: { message: string, source: Dialo
 };
 import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
 import { CURRICULUM, INITIAL_LORE, EPISODE_CONTEXT } from './constants';
-import { STATIC_LEVELS } from './constants_static';
+import STATIC_LEVELS from './constants_static';
 import * as fs from './utils/fsHelpers';
 
 // --- Utility Components ---
@@ -426,8 +426,21 @@ const checkKeySequence = (history: string[], sequence: string[]): boolean => {
     if (history.length === 0) return false;
 
     // Check if every key in the expected sequence is present in the history
-    // This allows for other keys to be pressed in between specific sequence commands, focusing on exposure to the keys.
-    return sequence.every(key => history.includes(key));
+    // Support alternative keys using '|' (e.g., 'i|I' matches either 'i' or 'I')
+    return sequence.every((key, seqIdx) => {
+        if (key.includes('|')) {
+            return key.split('|').some(k => history.includes(k));
+        }
+        if (key === '<inserted>') {
+            // Require at least one printable character typed between a prior insert key (i/I) and the next Escape
+            const insertIdx = history.findIndex(h => h === 'i' || h === 'I');
+            if (insertIdx === -1) return false;
+            const escIdx = history.findIndex((h, i) => i > insertIdx && (h === 'Escape' || h === 'Esc'));
+            if (escIdx === -1) return false;
+            return history.slice(insertIdx + 1, escIdx).some(h => h.length === 1 && h !== ' ');
+        }
+        return history.includes(key);
+    });
 };
 
 // --- Main App ---
