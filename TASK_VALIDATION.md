@@ -4,6 +4,9 @@
 - Issue: Subsequent tasks did not follow naturally from the cursor's new position, breaking logical progression.
 	- Fix: Adjusted all following tasks to start from the previous task's end position, ensuring a smooth, sequential learning experience.
 ## 14. Recent Issue & Fix Log (Continued)
+### [2025-12-24] Standardization Requirements
+- All `keyHint` fields must only show the keybinding (e.g., `w`, `l`, `gg $`), not the amount or sequence count.
+- Task descriptions must not use 'Use ... to' or similar prefixes; they should state the action directly (e.g., 'Move the cursor to the ...').
 - Issue: Task 2 required an exact cursor index for 'w' motion, which does not match Neovim's natural repeated word navigation.
 	- Fix: Updated the task to allow repeated 'w' motions from the start of the line to reach the target word, removing strict cursor index.
 - Issue: Task validation was too rigid for word motions, blocking authentic Neovim usage.

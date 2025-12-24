@@ -3,7 +3,7 @@ import { GeminiLevelResponse } from './types';
 export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   // --- EPISODE 1: THE BREACH (Foundation) ---
   1: {
-    briefing: "AGENT 'ECHO' IS DARK. Her last signal was fragmented. We need you to navigate the raw signal log and align on key data nodes to decrypt her final message. The cursor must be on the target word to establish a lock.",
+    briefing: "AGENT 'ECHO' IS DARK. Her last signal was fragmented. We need you to navigate the raw signal log and align on key data nodes to decrypt her final message. You must be on the target word to establish a lock.",
     initialText: [
       "// signal_trace.log",
       "// Agent Echo - Last Transmission",
@@ -37,47 +37,47 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
-        description: "Use 'j' and 'l' to move the cursor to the 'A' in 'Agent' on the '// Agent Echo - Last Transmission' line.",
+        description: "Move to the 'A' in 'Agent' on the '// Agent Echo - Last Transmission' line.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["j", "l"],
-        value: "// Agent Echo - Last Transmission",
+        expectedKeySequence: ["j", "l", "l", "l"],
+        value: "Agent Echo - Last Transmission",
         cursor: 3,
         cursorExact: true,
         loreFragment: "LOG_00: 'Backdoor found. I have breached the R&D perimeter. The static is alive.'",
-        keyHint: "j, l"
+        keyHint: "l"
       },
       {
-        description: "Use 'j' to reach the 'STATUS' line, then use 'w' four times to jump to 'server...'.",
+        description: "Jump to the first word on the 'STATUS' line.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["j", "w", "w", "w", "w"],
-        value: "server...",
+        expectedKeySequence: ["j", "w"],
+        value: "STATUS",
         loreFragment: "LOG_01: 'Connection mapped. The silence is intentional.'",
-        keyHint: "j, w, w, w, w"
+        keyHint: "w"
       },
       {
-        description: "Use 'b' to jump back to 'server...' from 'OFFLINE.'.",
+        description: "Jump to 'server...' from the end of the 'OFFLINE.' line.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["b"],
+        expectedKeySequence: ["$", "b"],
         value: "server...",
         loreFragment: "LOG_02: 'Backtracked. Sometimes the answer is behind you.'",
-        keyHint: "b"
+        keyHint: "$ b"
       },
       {
-        description: "Use 'j' to reach the '[MISALIGNED]' line, then '0' to go to the start of the line.",
+        description: "Go to the start of the '[MISALIGNED]' line.",
         type: "verify_key_sequence",
         expectedKeySequence: ["j", "0"],
         value: "[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].",
         loreFragment: "LOG_03: 'Zeroed in. The beginning always holds the key.'",
-        keyHint: "j, 0"
+        keyHint: "0"
       },
       {
-        description: "Use 'gg' to jump to the top, then '$' to reach the end of '// signal_trace.log'.",
+        description: "Go to the end of the '// signal_trace.log' line from the top of the file.",
         type: "verify_key_sequence",
         expectedKeySequence: ["gg", "$"],
         value: "// signal_trace.log",
         cursor: "end",
         loreFragment: "LOG_FINAL: 'End of line reached. Ready for injection.'",
-        keyHint: "gg, $"
+        keyHint: "gg $"
       }
     ]
   },
@@ -282,7 +282,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     hints: [
       "Search forward with '/pattern' and backward with '?pattern'.",
       "Navigate search results with 'n' (next) and 'N' (previous).",
-      "Search for the word under the cursor with '*' (forward) or '#' (backward).",
+      "Search for the word under the target with '*' (forward) or '#' (backward).",
       "Replace on a single line with ':s/old/new/g'.",
       "Replace globally with ':%s/old/new/g'.",
       "Clear search highlighting with ':nohl'."
@@ -775,7 +775,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
-        description: "Move the cursor 5 lines down from the start using '5j'.",
+        description: "Move 5 lines down from the start using '5j'.",
         type: "command_and_cursor_on",
         command: "5j",
         value: "setting_f = error",
@@ -783,7 +783,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "5j"
       },
       {
-        description: "Move the cursor 3 lines up from the current position using '3k'.",
+        description: "Move 3 lines up from the current position using '3k'.",
         type: "command_and_cursor_on",
         command: "3k",
         value: "setting_c = false",
