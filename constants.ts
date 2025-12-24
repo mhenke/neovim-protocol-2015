@@ -35,85 +35,68 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 1, episode: 1, episodeTitle: "THE BREACH",
     filename: "signal_trace.log",
-    objective: "Decrypt network traffic by navigating signal patterns using h, j, k, l, w, b, 0, $, gg, and G.",
+    objective: "Decrypt network traffic by navigating the signal patterns  ",
     newKeys: ['h', 'j', 'k', 'l', 'w', 'b', '0', '$', 'gg', 'G'],
     mechanics: ['nav_basic', 'nav_word', 'nav_line', 'nav_file'],
     idealKeystrokes: 15
   },
   {
     id: 2, episode: 1, episodeTitle: "THE BREACH",
-    filename: "sector_map.xml",
-    objective: "Inject false coordinates into the sector mapping system using i, a, o, O, A, I, and Esc.",
-    newKeys: ['i', 'a', 'o', 'O', 'A', 'I', 'Esc'],
-    mechanics: ['insert_mode', 'append_mode', 'open_line'],
-    idealKeystrokes: 20
+    filename: "security_hub.log",
+    objective: "Disable security protocols and purge compromised logs.",
+    newKeys: ['i', 'a', 'o', 'O', 'A', 'I', 'Esc', 'x', 'r', 'cw', 'ciw', 'C', 'dd', 'D', 'yy', 'p', 'P', 'u', 'Ctrl+r'],
+    mechanics: ['insert_mode', 'editing', 'line_manipulation', 'undo_redo'],
+    idealKeystrokes: 40
   },
   {
     id: 3, episode: 1, episodeTitle: "THE BREACH",
-    filename: "security_router.conf",
-    objective: "Disable security protocols by editing configuration values using x, r, cw, ciw, and C.",
-    newKeys: ['x', 'r', 'cw', 'ciw', 'C'],
-    mechanics: ['delete_char', 'replace_char', 'change_word', 'change_inner_word', 'change_to_line_end'],
-    idealKeystrokes: 12
-  },
-  {
-    id: 4, episode: 1, episodeTitle: "THE BREACH",
-    filename: "access_log_ECHO-7.purged",
-    objective: "Purge compromised log entries and duplicate clean ones using dd, D, yy, p, P, u, and Ctrl+r.",
-    newKeys: ['dd', 'D', 'yy', 'p', 'P', 'u', 'Ctrl+r'],
-    mechanics: ['delete_line', 'yank_line', 'paste', 'undo', 'redo'],
+    filename: "data_stream.dat",
+    objective: "Search and navigate through encrypted packet data, and replace corrupted data.",
+    newKeys: ['/pattern', '?pattern', 'n', 'N', '*', '#', ':nohl', ':s/old/new/g', ':%s/old/new/g'],
+    mechanics: ['search', 'replace'],
     idealKeystrokes: 25
   },
   {
-    id: 5, episode: 1, episodeTitle: "THE BREACH",
+    id: 4, episode: 1, episodeTitle: "THE BREACH",
     filename: "exfiltration.sh",
-    objective: "Save the backdoor script and open multiple files for data extraction using :w, :q, :wq, :q!, :e, :ls, :bn, and :bp.",
-    newKeys: [':w', ':q', ':wq', ':q!', ':e filename', ':ls', ':bn', ':bp'],
-    mechanics: ['command_mode', 'file_management', 'buffer_management'],
-    idealKeystrokes: 18
+    objective: "Save the backdoor script and open multiple files for data extraction",
+    newKeys: [':w', ':q', ':wq', ':q!', ':e', ':sp', ':vsp', 'Ctrl+w hjkl', ':ls', ':b<num>'],
+    mechanics: ['file_operations', 'window_management', 'buffer_management'],
+    idealKeystrokes: 20
   },
 
   // --- EPISODE 2: THE TRACE (Efficiency) ---
   {
-    id: 6, episode: 2, episodeTitle: "THE TRACE",
+    id: 5, episode: 2, episodeTitle: "THE TRACE",
     filename: "firewall_rules.json",
-    objective: "Modify firewall rules without breaking JSON structure using text objects like ci\", ci{, and diw.",
+    objective: "Modify firewall rules without breaking JSON/code structure",
     newKeys: ['ci"', "ci'", 'ci(', 'ci{', 'ci[', 'cit', 'diw', 'daw'],
     mechanics: ['text_objects'],
     timeLimit: 120,
     idealKeystrokes: 20
   },
   {
-    id: 7, episode: 2, episodeTitle: "THE TRACE",
-    filename: "packet_stream.dat",
-    objective: "Search and navigate through encrypted packet data using /, ?, n, N, *, #, and :nohl.",
-    newKeys: ['/pattern', '?pattern', 'n', 'N', '*', '#', ':nohl'],
-    mechanics: ['search', 'search_word'],
-    timeLimit: 90,
-    idealKeystrokes: 15
-  },
-  {
-    id: 8, episode: 2, episodeTitle: "THE TRACE",
+    id: 6, episode: 2, episodeTitle: "THE TRACE",
     filename: "blockchain_ledger.dat",
-    objective: "Extract and manipulate transaction blocks visually using v, V, Ctrl+v, d, y, >, and <.",
+    objective: "Extract and manipulate transaction blocks visually",
     newKeys: ['v', 'V', 'Ctrl+v', 'd', 'y', '>', '<'],
     mechanics: ['visual_mode', 'visual_line_mode', 'visual_block_mode', 'indent'],
     timeLimit: 100,
     idealKeystrokes: 22
   },
   {
-    id: 9, episode: 2, episodeTitle: "THE TRACE",
+    id: 7, episode: 2, episodeTitle: "THE TRACE",
     filename: "neural_net.py",
-    objective: "Fix corrupted neural network code with precision targeting using f, t, F, T, ;, ,, and %.",
+    objective: "Fix corrupted neural network code with precision targeting",
     newKeys: ['f', 't', 'F', 'T', ';', ',', '%'],
     mechanics: ['find_char', 'match_bracket'],
     timeLimit: 80,
     idealKeystrokes: 18
   },
   {
-    id: 10, episode: 2, episodeTitle: "THE TRACE",
+    id: 8, episode: 2, episodeTitle: "THE TRACE",
     filename: "config_array.ini",
-    objective: "Fix repeated configuration errors efficiently using the . command and counts with operators (e.g., 5j, 3dd).",
+    objective: "Fix repeated configuration errors efficiently",
     newKeys: ['.', '5j', '3dd', '2yy'],
     mechanics: ['dot_command', 'counts'],
     timeLimit: 60,
@@ -122,45 +105,45 @@ export const CURRICULUM: LevelConfig[] = [
 
   // --- EPISODE 3: THE CORE (Mastery) ---
   {
-    id: 11, episode: 3, episodeTitle: "THE CORE",
+    id: 9, episode: 3, episodeTitle: "THE CORE",
     filename: "code_analysis.cpp",
-    objective: "Analyze and refactor C++ codebase across multiple windows using :sp, :vsp, Ctrl+w, and scroll with Ctrl+u/d.",
-    newKeys: [':sp', ':vsp', 'Ctrl+w h/j/k/l', 'Ctrl+w c', 'Ctrl+u', 'Ctrl+d'],
-    mechanics: ['splits', 'window_navigation', 'scrolling'],
+    objective: "Analyze and refactor C++ codebase across multiple windows",
+    newKeys: ['Ctrl+w h/j/k/l', 'Ctrl+w c', 'Ctrl+u', 'Ctrl+d'],
+    mechanics: ['window_navigation', 'scrolling'],
     maxKeystrokes: 40,
     idealKeystrokes: 25
   },
   {
-    id: 12, episode: 3, episodeTitle: "THE CORE",
+    id: 10, episode: 3, episodeTitle: "THE CORE",
     filename: "quantum_state.sys",
-    objective: "Mark quantum states and navigate between entangled positions using marks (ma, 'a) and the jump list (Ctrl+o, Ctrl+i).",
+    objective: "Mark quantum states and navigate between entangled positions",
     newKeys: ['ma', "'a", "``a``", 'Ctrl+o', 'Ctrl+i'],
     mechanics: ['marks', 'jump_list'],
     maxKeystrokes: 35,
     idealKeystrokes: 20
   },
   {
-    id: 13, episode: 3, episodeTitle: "THE CORE",
+    id: 11, episode: 3, episodeTitle: "THE CORE",
     filename: "source_code.js",
-    objective: "Indent and format corrupted source code using >>, <<, ==, gg=G, and join lines with J/gJ.",
+    objective: "Indent and format corrupted source code",
     newKeys: ['>>', '<<', '==', 'gg=G', 'J', 'gJ'],
     mechanics: ['indent', 'auto_indent', 'join_lines'],
     maxKeystrokes: 30,
     idealKeystrokes: 15
   },
   {
-    id: 14, episode: 3, episodeTitle: "THE CORE",
+    id: 12, episode: 3, episodeTitle: "THE CORE",
     filename: "reality.sys",
-    objective: "Rewrite reality itself through mass find-and-replace using :s, :%s, and the & command.",
+    objective: "Rewrite reality itself through mass find-and-replace",
     newKeys: [':s/old/new/g', ':%s/old/new/g', ':%s/old/new/gc', '&'],
     mechanics: ['substitute'],
     maxKeystrokes: 25,
     idealKeystrokes: 15
   },
   {
-    id: 15, episode: 3, episodeTitle: "THE CORE",
+    id: 13, episode: 3, episodeTitle: "THE CORE",
     filename: "FINAL_GATE.lock",
-    objective: "The final barrier requires mastery of all techniques combined. Navigate splits, search/replace, use marks, text objects, visual block, format code, and use counts and dot command.",
+    objective: "The final barrier requires mastery of all techniques combined",
     newKeys: ['ALL'],
     mechanics: ['mastery'],
     maxKeystrokes: 60,
