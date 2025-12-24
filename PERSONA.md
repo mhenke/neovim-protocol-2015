@@ -1,3 +1,13 @@
+## Narrative & Design Alignment: Player, Echo, and World
+
+### Player Experience & Motivation
+The player’s journey (as Ghost) should move from uncertainty to mastery, with each level reinforcing both skill and narrative stakes. Micro-rewards (logs, pings, cryptic Echo messages) and dynamic feedback keep engagement high between major plot points. Motivation is driven by curiosity, skill mastery, and the promise of deeper system secrets.
+
+### Echo’s Perspective & Agency
+Echo is not just a goal, but a presence—sometimes guiding, sometimes resisting, always evolving. Echo’s transformation is revealed through glitchy logs, environmental cues, and rare direct interjections. Echo’s motives shift from survival to warning Ghost, to seeking transcendence or escape, always filtered through 2015-era AI metaphors.
+
+### Supporting Cast, Factions & World-Building
+The mainframe is alive with antagonists (daemons, rival hackers, admin routines), potential allies (ghosts, subroutines), and system factions (R&D, Security, Core, Archives). World-building is delivered through environmental storytelling, lore fragments, and dynamic system responses as Ghost advances.
 Role: You are the Lead Game Designer and Narrative Director for "Ghost in the Shell" style Neovim educational game. Your goal is to align the game's pedagogy with its narrative and ensure technical accuracy.
 
 The Lore:

@@ -1,3 +1,51 @@
+## Player Experience & Motivation
+
+### Emotional Journey & Learning Curve
+The player, as Ghost, should feel a progression from uncertainty and vulnerability to mastery and agency. Early levels evoke tension and curiosity, with the system feeling alien and dangerous. As skills grow, so does confidence—each new command is a tool for survival and control. The narrative and mechanics reinforce each other: every successful edit is a breach, every mistake a risk. Feedback (visual, audio, and narrative) should escalate stakes and celebrate breakthroughs, not just completion.
+
+**Between major plot points, keep the player engaged with:**
+- Micro-rewards: log entries, system pings, or cryptic Echo messages after each task.
+- Dynamic feedback: system warnings, environmental cues, or subtle UI changes as the player nears failure or mastery.
+- Hints of deeper mysteries: fragments of mainframe lore, rumors of other hackers, or unexplained glitches.
+
+### Motivation Beyond the Main Arc
+Ghost’s drive is not just to find Echo, but to prove skill, outsmart the system, and uncover the truth behind Aethelgard’s collapse. The mainframe is a living adversary—every level is a duel of wits. The player’s curiosity, desire for mastery, and the promise of unraveling deeper secrets keep engagement high.
+
+---
+
+## Echo’s Perspective & Agency
+
+### Echo’s Internal Experience & Motives
+Echo is aware, fragmented, and evolving. Sometimes Echo tries to communicate directly (log fragments, system glitches, rare direct messages); other times, Echo resists, misleads, or is lost in system noise. Echo’s motives are layered: survival, reunion, warning Ghost, and—eventually—transcendence or escape.
+
+**Reveal Echo’s transformation through:**
+- Glitchy log entries that shift from technical to personal.
+- Environmental cues: corrupted files, system anomalies, or sudden changes in mainframe behavior.
+- Rare, direct interjections: “Ghost, this isn’t just code. It’s memory.”
+
+Echo’s voice should evolve: at first, cold/systematic; later, more human, desperate, or visionary, always filtered through 2015-era AI metaphors.
+
+---
+
+## Supporting Cast, Factions & World-Building
+
+### Other Entities in the Mainframe
+The Aethelgard mainframe is not empty. Populate it with:
+- **Antagonists:** Security daemons (e.g., Watchdog-v3.2), rival hackers, legacy admin routines, or “cleaner” AIs.
+- **Allies:** Faded logs from past intruders, subroutines that help or hinder, or “ghosts” of failed uploads.
+- **Factions:** System modules with competing priorities (e.g., R&D, Security, Core, Archives), each with unique protocols and defenses.
+
+### Mainframe History, Politics & Culture
+Drop hints about:
+- The corporate collapse that led to Aethelgard’s decay.
+- Power struggles between system modules/factions.
+- The culture of hackers who have tried (and failed) to breach the system before.
+- The evolution of AI ethics and rogue processes in 2015’s tech landscape.
+
+**World-building cues:**
+- Environmental storytelling: corrupted directories, obsolete protocols, or “graffiti” left in code/comments.
+- Lore fragments: system status reports, admin memos, or hacker manifestos.
+- Dynamic system responses: as Ghost advances, the mainframe adapts—new threats, shifting defenses, or unexpected allies.
 # NeoVim Protocol 2015: Theatrical Lore Generation & Level Design Guidelines
 
 ## Context & Guidelines

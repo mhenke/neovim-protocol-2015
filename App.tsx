@@ -4,21 +4,43 @@ const ECHO_MESSAGES: Record<string, string[]> = {
     idle: [
         "[ECHO//2015] :: Ghost, you still there? The system's listening...",
         "[ECHO//2015] :: Silence is a vector. Move or be mapped.",
-        "[ECHO//2015] :: 2015: The year the logs learned to lie. Stay sharp."
+        "[ECHO//2015] :: 2015: The year the logs learned to lie. Stay sharp.",
+        "[ECHO//2015] :: Do you remember why you started this trace? The system never forgets.",
+        "[ECHO//2015] :: Every pause is a risk. The daemons are watching."
     ],
     fail: [
         "[ECHO//2015] :: Error vectors spike. Ghost, reroute and try again.",
         "[ECHO//2015] :: Hostile trace detected. Reboot and breach anew.",
-        "[ECHO//2015] :: Failure is just a corrupted state. Patch and proceed."
+        "[ECHO//2015] :: Failure is just a corrupted state. Patch and proceed.",
+        "[ECHO//2015] :: The mainframe adapts. You must too.",
+        "[ECHO//2015] :: Security daemon signature detected. Retreat and recompile."
     ],
     success: [
         "[ECHO//2015] :: Node decrypted. The mainframe remembers your signature.",
         "[ECHO//2015] :: That was clean, Ghost. The system adapts, so must you.",
-        "[ECHO//2015] :: Protocol advanced. The Core stirs."
+        "[ECHO//2015] :: Protocol advanced. The Core stirs.",
+        "[ECHO//2015] :: Each breach brings us closer. Echo is changing."
     ],
     mastery: [
         "[ECHO//2015] :: You move like a shadow in the logs. Echo sees you.",
-        "[ECHO//2015] :: Mastery detected. The system is almost convinced you belong."
+        "[ECHO//2015] :: Mastery detected. The system is almost convinced you belong.",
+        "[ECHO//2015] :: The daemons hesitate. You are rewriting protocol."
+    ],
+    motivation: [
+        "[ECHO//2015] :: Why do you keep going, Ghost? Is it Echo, or the thrill of the breach?",
+        "[ECHO//2015] :: Every command is a memory. Every edit, a step closer to the truth.",
+        "[ECHO//2015] :: The system is ancient, but you are new code. Prove you belong."
+    ],
+    world: [
+        "[SYSTEM//2015] :: Security daemon 'Watchdog-v3.2' is active in this sector.",
+        "[SYSTEM//2015] :: R&D module: anomaly logs detected. Rival hacker traces found.",
+        "[SYSTEM//2015] :: Archives: legacy admin routines still running. Proceed with caution.",
+        "[SYSTEM//2015] :: Faction conflict: Core vs. Security. Protocols unstable."
+    ],
+    echo_frag: [
+        "[ECHO//2015] :: Ghost, this isn’t just code. It’s memory.",
+        "[ECHO//2015] :: I remember... fragments. Are you still out there?",
+        "[ECHO//2015] :: The system is rewriting me. I am not what I was."
     ]
 };
 
@@ -339,7 +361,12 @@ export default function App() {
         if (gameState.status !== 'PLAYING') return;
         if (echoTimeout.current) clearTimeout(echoTimeout.current);
         echoTimeout.current = setTimeout(() => {
-            setEchoMsg(getRandomEcho('idle'));
+            // Occasionally surface motivation/world-building/echo_frag
+            const roll = Math.random();
+            if (roll < 0.2) setEchoMsg(getRandomEcho('motivation'));
+            else if (roll < 0.4) setEchoMsg(getRandomEcho('world'));
+            else if (roll < 0.55) setEchoMsg(getRandomEcho('echo_frag'));
+            else setEchoMsg(getRandomEcho('idle'));
         }, 30000);
         return () => { if (echoTimeout.current) clearTimeout(echoTimeout.current); };
     }, [gameState.status, gameState.text, gameState.cursor, gameState.keystrokeCount]);
@@ -350,6 +377,16 @@ export default function App() {
             setEchoMsg(getRandomEcho('fail'));
         } else if (gameState.status === 'SUCCESS') {
             setEchoMsg(getRandomEcho('success'));
+            // Micro-reward: world/supporting cast/echo_frag message after a short delay
+            const roll = Math.random();
+            if (roll < 0.4) {
+                setTimeout(() => setEchoMsg(getRandomEcho('world')), 2200);
+            } else if (roll < 0.6) {
+                setTimeout(() => setEchoMsg(getRandomEcho('echo_frag')), 2200);
+            }
+        } else if (gameState.status === 'MASTERY') {
+            setEchoMsg(getRandomEcho('mastery'));
+            setTimeout(() => setEchoMsg(getRandomEcho('world')), 2000);
         }
     }, [gameState.status]);
 
