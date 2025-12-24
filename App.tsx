@@ -296,13 +296,17 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
 
         {/* Introduction Context */}
         <div className="text-gray-400 text-sm leading-relaxed max-w-xl mb-6">
-                    <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed text-lg">
-  Ghost, pay attention. The year is 2015. Aethelgard Biologics has scrubbed their servers. 
-  I’m <span className="text-white font-bold">Anchor</span>. 
-  I’ll be in your ear providing real-time intel, tactical feedback, and the tools you need to breach their firewall. 
-  We haven’t heard from <span className="text-green-400 font-bold">Echo</span> in 72 hours. 
-  Let's get to work.
-</p>
+    <div className="max-w-2xl mx-auto mb-2">
+        <span className="font-mono text-[#33ff00] text-xl md:text-2xl uppercase tracking-widest block mb-2">
+            <GlitchText text="Ghost, listen up." className="inline-block" />
+        </span>
+        <span className="font-mono text-[#33ff00] text-base md:text-lg block mb-2">
+            The year is 2015. Aethelgard Biologics has scrubbed their servers.
+        </span>
+        <span className="font-mono text-gray-300 text-base md:text-lg block">
+            I’m <span className="text-white font-bold">Anchor</span>. I’ll be in your ear providing real-time intel, and tactical feedback. We haven’t heard from <span className="text-green-400 font-bold">Echo</span> in 72 hours. Let's get to work.
+        </span>
+    </div>
           <p className="text-xs text-gray-500 mt-3">
 
           </p>
@@ -312,7 +316,7 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
         {/* Terminal Output */}
         <div 
             ref={scrollRef}
-            className="w-full bg-black/90 border border-[#33ff00]/30 p-6 font-mono text-sm text-left shadow-[0_0_30px_rgba(51,255,0,0.1)] mb-8 h-[36rem] overflow-y-auto rounded-sm backdrop-blur-sm"
+            className="w-full bg-black/90 border border-[#33ff00]/30 p-6 font-mono text-sm text-left shadow-[0_0_30px_rgba(51,255,0,0.1)] mb-8 h-[24rem] overflow-y-auto rounded-sm backdrop-blur-sm"
         >
             {terminalLines.map((line, i) => (
                 <div key={i} className="mb-2 leading-relaxed text-[#33ff00] animate-fadeIn break-words border-l-2 border-transparent pl-2">
