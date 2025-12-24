@@ -1,4 +1,6 @@
- The Story Arc:
+ Note (2025-12-24T23:42:28.629Z): This project is a mystery sci-fi thriller with a major twist — Echo is uploaded, not captured. Update documentation and levels to foreground investigative, suspenseful tone and a reveal-driven arc.
+
+The Story Arc:
 
 
 

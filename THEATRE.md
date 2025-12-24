@@ -1,3 +1,5 @@
+Note (2025-12-24T23:42:28.629Z): This project is a mystery sci-fi thriller with a major twist — Echo is uploaded, not captured. Update documentation and levels to foreground investigative, suspenseful tone and a reveal-driven arc.
+
 # Codebase Principle: Smooth Learning Curve for NeoVim
 
 The codebase is designed to provide a smooth, progressive learning curve that focuses on teaching core NeoVim navigation and editing skills. Each level introduces new concepts in a logical sequence, minimizing busywork and maximizing educational value. This approach is critical to player engagement and mastery, ensuring that the experience is both accessible to newcomers and rewarding for returning users.
