@@ -142,10 +142,13 @@ const DIALOG_STYLES: Record<DialogSource, { border: string; text: string; label:
 
 const DialogInterjector = ({ message, source }: { message: string, source: DialogSource }) => {
     const style = DIALOG_STYLES[source];
+    const posClass = source === 'anchor' ? 'fixed bottom-20 left-6' : source === 'echo' ? 'fixed top-6 left-6' : source === 'relay' ? 'fixed bottom-20 right-6' : 'fixed bottom-20 right-6';
+    const widthClass = source === 'anchor' ? 'max-w-md' : 'max-w-sm';
+    const baseClasses = `${posClass} z-40 ${widthClass} bg-black/70 p-3 shadow-lg animate-fadeIn pointer-events-none backdrop-blur-sm border border-gray-700`;
     return (
-        <div className="fixed bottom-6 left-6 z-50 max-w-md bg-black/90 p-4 shadow-lg animate-fadeIn pointer-events-none" style={{ borderLeft: `4px solid ${style.border}` }}>
-            <div className="text-xs font-mono tracking-widest mb-1" style={{ color: style.labelColor }}>{style.label}</div>
-            <div className="text-sm font-mono leading-relaxed" style={{ color: style.text }}>{message}</div>
+        <div className={baseClasses} style={{ borderLeft: `4px solid ${style.border}` }}>
+            <div className="text-[10px] font-mono tracking-widest mb-1" style={{ color: style.labelColor }}>{style.label}</div>
+            <div className="text-sm font-mono leading-relaxed whitespace-pre-wrap break-words" style={{ color: style.text }}>{message}</div>
         </div>
     );
 };
@@ -310,7 +313,7 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
           <p className="text-xs text-gray-500 mt-3">
 
           </p>
-          <div className="text-[10px] text-gray-400 mt-2">Last synced: 2025-12-24T18:35:40.591Z</div>
+          <div className="text-[10px] text-gray-400 mt-2">Last synced: 2025-12-24T19:30:29.566Z</div>
         </div>
 
         {/* Terminal Output */}
@@ -903,6 +906,11 @@ export default function App() {
     if (e.key === 'F3' || (e.altKey && e.key === '3')) { e.preventDefault(); setGameState(prev => ({ ...prev, activeDialog: 'HINTS' })); return; }
 
     if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+      e.preventDefault();
+    }
+
+    // Prevent browser "find" action when pressing '/' unless in insert mode
+    if (e.key === '/' && gameState.mode !== VimMode.INSERT) {
       e.preventDefault();
     }
 
