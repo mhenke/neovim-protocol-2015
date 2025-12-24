@@ -1,5 +1,8 @@
 # Neovim-Exact Game Keybinding Implementation Guide
 
+## Narrative Note: LoreFragments as Echo Logs
+All `loreFragment` fields in the curriculum are now written as Echo's logs—Echo is not able to communicate in real time at this stage of the story. These logs are Echo's own voice, providing context and narrative flavor after each task. Real-time communication (e.g., a "handler" or unknown helper) may be introduced in future story arcs, but for now, all narrative feedback is from Echo's perspective, not as generic mission logs.
+
 This document provides **complete mechanics** for implementing all 15 game levels with 100% Neovim fidelity. Includes key parsing, state machine, cursor simulation, validation logic, and edge cases. Use Lua pseudocode for game engine integration.[1][2]
 
 ## Core Keybinding State Machine

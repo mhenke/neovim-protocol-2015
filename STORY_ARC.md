@@ -1,6 +1,9 @@
  The Story Arc:
 
 
+
+> **Narrative Note:** In Episode 1, Echo's presence is only felt through logs—fragmented, technical, and never as real-time dialog. Echo cannot communicate live until a future episode.
+
 Episode 1 (The Search):
 
 You are "Ghost". You are looking for "Echo", your partner who vanished

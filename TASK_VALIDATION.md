@@ -68,6 +68,8 @@ To ensure every level and task in NeoVim Protocol 2015 is educational, immersive
 
 ## 5. Narrative & Ludonarrative Consistency
 - Do all tasks reinforce the story, world-building, and character motivations?
+- Are all `loreFragment` fields written as Echo's logs (Echo's voice, not generic mission logs)?
+- Echo cannot communicate in real time at this stage; all loreFragments are post-action logs. Real-time comms (e.g., a handler or unknown helper) may be introduced in future arcs.
 - Are Echo’s interjections, system messages, and lore fragments used to deepen immersion?
 - Is there any ludonarrative dissonance (mechanics that contradict the story)?
 

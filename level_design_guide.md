@@ -13,7 +13,7 @@ Each level is defined as an object in `constants_static.ts` with the following p
 - `briefing`: Sets the story for the level and provides a clear objective for the user.
 - `initialText`: The starting content of the file for the level. This is a critical part of the level design and must be carefully crafted to support the tasks.
 - `targetText`: The expected final state of the file. This is used for validation of editing tasks.
-- `loreReveal`: A narrative reward for completing the level. This should be a satisfying piece of the story.
+- `loreReveal`: A narrative reward for completing the level. This should be a satisfying piece of the story. All `loreFragment` fields must be written as Echo's logs—fragmented, technical, and never as real-time dialog or generic mission logs. Echo cannot communicate live until a future episode; all narrative feedback is post-action, in Echo's glitchy, 2015-era AI voice.
 - `hints`: An array of strings that provide guidance to the user. This should include the new keys for the level.
 - `tasks`: An array of task objects that the user needs to complete.
 

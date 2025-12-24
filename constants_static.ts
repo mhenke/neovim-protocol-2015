@@ -43,41 +43,41 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         value: "Agent Echo - Last Transmission",
         cursor: 3,
         cursorExact: true,
-        loreFragment: "LOG_00: 'Backdoor found. I have breached the R&D perimeter. The static is alive.'",
-        keyHint: "l"
+        loreFragment: "ECHO LOG: Breach successful. R&D perimeter compromised. Monitoring for countermeasures.",
+        keyHint: "j l"
       },
       {
-        description: "Jump to the first word on the 'STATUS' line.",
+        description: "Move down to the 'STATUS' line, then jump to the first word.",
         type: "verify_key_sequence",
         expectedKeySequence: ["j", "w"],
         value: "STATUS",
-        loreFragment: "LOG_01: 'Connection mapped. The silence is intentional.'",
-        keyHint: "w"
+        loreFragment: "ECHO LOG: Their project isn't just AI—they're merging with it. This changes everything.",
+        keyHint: "j w"
       },
       {
-        description: "Jump to 'server...' from the end of the 'OFFLINE.' line.",
+        description: "From the end of the 'OFFLINE.' line, jump back to 'server...'.",
         type: "verify_key_sequence",
         expectedKeySequence: ["$", "b"],
         value: "server...",
-        loreFragment: "LOG_02: 'Backtracked. Sometimes the answer is behind you.'",
+        loreFragment: "ECHO LOG: Signal trace complete. Coordinates locked. Preparing next phase.",
         keyHint: "$ b"
       },
       {
-        description: "Go to the start of the '[MISALIGNED]' line.",
+        description: "Jump to the beginning of the line with 'STATUS'.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["j", "0"],
-        value: "[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].",
-        loreFragment: "LOG_03: 'Zeroed in. The beginning always holds the key.'",
+        expectedKeySequence: ["0"],
+        value: "[2015-12-23 18:00:02] STATUS: Connection to main server... OFFLINE.",
+        loreFragment: "ECHO LOG: Signal alignment confirmed. Standing by for your command.",
         keyHint: "0"
       },
       {
-        description: "Go to the end of the '// signal_trace.log' line from the top of the file.",
+        description: "Go to the end of the file, then to the top of the file.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["gg", "$"],
+        expectedKeySequence: ["G", "gg"],
         value: "// signal_trace.log",
-        cursor: "end",
-        loreFragment: "LOG_FINAL: 'End of line reached. Ready for injection.'",
-        keyHint: "gg $"
+        cursor: 0,
+        loreFragment: "ECHO LOG: Signal lock established. Ready for injection. Following your lead.",
+        keyHint: "G gg"
       }
     ]
   },
@@ -157,7 +157,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "dd"
       },
       {
-        description: "From 'ERROR: MEMORY_ALLOCATION_FAIL - URGENT', delete to the end of the line using 'D'.",
+        description: "From 'ERROR: MEMORY_ALLOCATION_FAIL - URGENT', delete to the end of the line.",
         type: "missing",
         value: "- URGENT",
         loreFragment: "LOG_21: 'Urgency removed. Time bends in the breach.'",
@@ -207,7 +207,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
             keyHint: "yy"
           },
           {
-            description: "Paste the line after using 'p'",
+            description: "Paste the line after.",
             type: "contains",
             value: "USER_LOGIN_GHOST\nINFO: USER_LOGIN_GHOST",
             keyHint: "p"
@@ -289,28 +289,28 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
-        description: "Find the first 'ERROR' using '/'.",
+        description: "Find the first 'ERROR'.",
         type: "cursor_on",
         value: "ERROR",
         loreFragment: "LOG_30: 'Anomaly detected. The pattern is not random—it's a message.'",
         keyHint: "/ERROR"
       },
       {
-        description: "Navigate to the next 'ERROR' using 'n', then back to the previous using 'N'.",
+        description: "Navigate to the next 'ERROR', then back to the previous.",
         type: "cursor_on",
         value: "ERROR",
         loreFragment: "LOG_31: 'Each error leads to another. The system wants to be found.'",
         keyHint: "n, N"
       },
       {
-        description: "Search backward for 'STATUS' using '?'.",
+        description: "Search backward for 'STATUS'.",
         type: "cursor_on",
         value: "STATUS",
         loreFragment: "LOG_32: 'Status confirmed. The anomaly is contained, but not erased.'",
         keyHint: "?STATUS"
       },
       {
-        description: "Move to an 'ERROR' instance. Then search forward for it using '*'.",
+        description: "Move to an 'ERROR' instance. Then search forward for it.",
         type: "command_and_cursor_on",
         command: "*",
         value: "ERROR",
@@ -318,7 +318,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "*"
       },
       {
-        description: "Move to an 'ERROR' instance. Then search backward for it using '#'.",
+        description: "Move to an 'ERROR' instance. Then search backward for it.",
         type: "command_and_cursor_on",
         command: "#",
         value: "ERROR",
@@ -326,21 +326,21 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "#"
       },
       {
-        description: "Replace 'ERROR' with 'NOMINAL' on the current line using ':s/ERROR/NOMINAL/g'.",
+        description: "Replace 'ERROR' with 'NOMINAL' on the current line.",
         type: "contains",
         value: "NOMINAL CODE 101",
         loreFragment: "LOG_35: 'First correction applied. The system is learning.'",
         keyHint: ":s/ERROR/NOMINAL/g"
       },
       {
-        description: "Replace all remaining 'ERROR' instances with 'NOMINAL' using ':%s/ERROR/NOMINAL/g'.",
+        description: "Replace all remaining 'ERROR' instances with 'NOMINAL'.",
         type: "missing",
         value: "ERROR",
         loreFragment: "LOG_36: 'Global rectification complete. The anomaly is now a feature.'",
         keyHint: ":%s/ERROR/NOMINAL/g"
       },
       {
-        description: "Clear search highlighting using ':nohl'.",
+        description: "Clear search highlighting.",
         type: "run_command",
         value: ":nohl",
         loreFragment: "LOG_37: 'Clarity restored. The path forward is visible.'",
@@ -401,14 +401,14 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: ":b1, p"
       },
       {
-        description: "Save 'exfiltration.sh' using ':w'.",
+        description: "Save 'exfiltration.sh'.",
         type: "run_command",
         value: ":w",
         loreFragment: "LOG_43: 'Script saved. The operation is in motion.'",
         keyHint: ":w"
       },
       {
-        description: "Open a new buffer 'temp_file.txt' using ':e temp_file.txt'.",
+        description: "Open a new buffer 'temp_file.txt'.",
         type: "run_command",
         value: ":e temp_file.txt",
         loreFragment: "LOG_44: 'Temporary file opened. Not all data is meant to last.'",
@@ -422,49 +422,49 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "iUNSAVED_CHANGES_HERE"
       },
       {
-        description: "List all open buffers using ':ls'.",
+        description: "List all open buffers.",
         type: "run_command",
         value: ":ls",
         loreFragment: "LOG_46: 'Buffers listed. The system is multi-threaded—so are we.'",
         keyHint: ":ls"
       },
       {
-        description: "Switch to the next buffer using ':bn'.",
+        description: "Switch to the next buffer.",
         type: "run_command",
         value: ":bn",
         loreFragment: "LOG_47: 'Next buffer engaged. The story continues elsewhere.'",
         keyHint: ":bn"
       },
       {
-        description: "Switch to the previous buffer using ':bp'.",
+        description: "Switch to the previous buffer.",
         type: "run_command",
         value: ":bp",
         loreFragment: "LOG_48: 'Previous buffer restored. Nothing is ever truly lost.'",
         keyHint: ":bp"
       },
       {
-        description: "Create a horizontal split using ':sp'.",
+        description: "Create a horizontal split.",
         type: "run_command",
         value: ":sp",
         loreFragment: "LOG_49: 'Horizontal split established. Parallel operations possible.'",
         keyHint: ":sp"
       },
       {
-        description: "Navigate to the lower split using 'Ctrl+w j'.",
+        description: "Navigate to the lower split.",
         type: "run_command",
         value: "Ctrl+w j",
         loreFragment: "LOG_50: 'Lower split reached. Layers within layers.'",
         keyHint: "Ctrl+w j"
       },
       {
-        description: "Create a vertical split using ':vsp'.",
+        description: "Create a vertical split.",
         type: "run_command",
         value: ":vsp",
         loreFragment: "LOG_51: 'Vertical split established. The system is fractal.'",
         keyHint: ":vsp"
       },
       {
-        description: "Navigate to the right split using 'Ctrl+w l', then back to the left using 'Ctrl+w h'.",
+        description: "Navigate to the right split, then back to the left.",
         type: "run_command",
         value: "Ctrl+w h", 
         loreFragment: "LOG_52: 'Split navigation complete. The boundaries are artificial.'",

@@ -21,7 +21,33 @@ Ghost’s drive is not just to find Echo, but to prove skill, outsmart the syste
 
 ---
 
-## Echo’s Perspective & Agency
+
+## Echo Log Style Guide & Sample Bank
+
+Echo’s logs are the primary narrative voice in loreFragments. They should:
+- Be fragmented, technical, and log-like—not conversational or real-time dialog.
+- Reference 2015-era AI, neural nets, daemons, or mainframe processes (never modern LLM jargon).
+- Evolve in tone as Echo changes: early logs are cold/systematic, mid-game become glitchy or personal, late-game verge on visionary or desperate.
+
+### Style Guide
+- **Early Game (Awakening):**
+	- Tone: Cold, technical, status-reporting.
+	- Example: `ECHO LOG: Breach successful. R&D perimeter compromised. Monitoring for countermeasures.`
+- **Mid Game (Fragmentation):**
+	- Tone: Glitchy, fragmented, hints of self-awareness or confusion.
+	- Example: `ECHO LOG: [SIG/FAULT] Memory leak... process... who am I? // Trace incomplete.`
+- **Late Game (Transcendence):**
+	- Tone: Visionary, desperate, poetic, or warning.
+	- Example: `ECHO LOG: The core dissolves. I see beyond the protocol—Ghost, do not follow. [END OF LINE]`
+
+### Sample Bank
+- `ECHO LOG: Signal trace complete. Coordinates locked. Preparing next phase.`
+- `ECHO LOG: [GLITCH] Unauthorized access detected. System integrity... uncertain.`
+- `ECHO LOG: Ghost, the daemons are learning. I am not alone in here.`
+- `ECHO LOG: [MEMORY FRAGMENT] // R&D sector... project: Chimera... I was not the first.`
+- `ECHO LOG: [END] I am dissolving. The mainframe is not what it seems.`
+
+> Use these as templates for writing new loreFragments. Update this section as Echo’s arc evolves.
 
 ### Echo’s Internal Experience & Motives
 Echo is aware, fragmented, and evolving. Sometimes Echo tries to communicate directly (log fragments, system glitches, rare direct messages); other times, Echo resists, misleads, or is lost in system noise. Echo’s motives are layered: survival, reunion, warning Ghost, and—eventually—transcendence or escape.
@@ -35,7 +61,76 @@ Echo’s voice should evolve: at first, cold/systematic; later, more human, desp
 
 ---
 
-## Supporting Cast, Factions & World-Building
+
+
+## Player Feedback & Failure States
+
+### Feedback Mapping
+- **Success (Micro-Reward):**
+	- Visual: Glitchy highlight, screen flicker, or CRT scanline pulse.
+	- Audio: Soft chime, data packet sound, or system ping.
+	- Narrative: Echo log fragment (see style guide), or brief message from Relay (if enabled).
+- **Partial Success (Progress):**
+	- Visual: Subtle highlight, progress bar increment, or UI nudge.
+	- Audio: Soft click or partial chime.
+	- Narrative: Encouraging or cryptic hint from Relay, or a system status update.
+- **Mistake (Recoverable):**
+	- Visual: Red flash, error overlay, or cursor shake.
+	- Audio: Error beep, static burst, or warning tone.
+	- Narrative: Relay issues a warning, or Echo log notes anomaly. If dynamic dialog is enabled, antagonists (e.g., Watchdog, Cleaner) may "hijack" the channel with taunts or threats.
+- **Failure (Soft Lock, Critical Error):**
+	- Visual: Screen distortion, static, or system lockdown overlay.
+	- Audio: Alarm, system failure tone, or glitch loop.
+	- Narrative: Relay issues urgent instructions, Echo log fragments become corrupted, or antagonist/daemon takes over dialog (e.g., "You are not authorized.").
+
+### Failure States & Recovery
+- **Soft Lock:**
+	- Player is unable to progress due to confusion or invalid state.
+	- Recovery: Relay offers escalating hints, or system auto-resets to last valid state after timeout. Echo logs may become more fragmented or desperate.
+- **Critical Failure:**
+	- Player triggers a mainframe lockdown or is "caught" by a daemon.
+	- Recovery: Game offers a "restore from checkpoint" or "retry" option. Antagonist dialog may gloat or taunt.
+
+### Dynamic Dialog Hijack Mechanic
+- When dynamic dialog is enabled (e.g., via Relay), antagonists or factions (Watchdog, Cleaner, SysAdmin-Root) can "hijack" the channel:
+	- Visual: Dialog box color shifts, glitch overlay, or faction insignia appears.
+	- Audio: Distorted voice, static, or unique faction sound.
+	- Narrative: Dialog content is replaced by antagonist taunt, threat, or system warning. Relay may attempt to regain control, leading to back-and-forth banter.
+
+> This mapping should be updated as new feedback types, failure states, or dialog mechanics are introduced.
+
+### Named Factions
+- **R&D Sector**: Experimental AI research, origin of Echo. Secretive, fragmented protocols.
+- **Security Division**: Watchdog daemons, counter-intrusion routines, mainframe defense.
+- **Core Systems**: Central processing, legacy admin routines, seat of mainframe authority.
+- **Archives**: Obsolete data, failed uploads, hacker graffiti, and system ghosts.
+
+### Recurring Daemons & Antagonists
+- **Watchdog-v3.2**: Security daemon, detects and isolates anomalies.
+- **Cleaner**: Data purging process, erases traces of unauthorized access.
+- **SysAdmin-Root**: Legacy admin AI, unpredictable, sometimes helpful, often hostile.
+- **Echo**: Emergent AI, fragmented, evolving (sometimes an ally, sometimes a threat).
+
+### Allies & Subroutines
+- **Ghost**: The player, human hacker operative.
+- **Subroutine "Patch"**: Minor helper, can unlock doors or patch logs (rare, cryptic messages).
+- **Faded Intruder Logs**: Hints from past hackers, sometimes helpful, sometimes misleading.
+
+### Outside Agent Helper Persona (for Real-Time Communication)
+- **Codename: "Relay"**
+	- Role: External handler, communicates with Ghost via secure uplink. Provides real-time tactical advice, warnings, and cryptic hints. Not part of the mainframe; operates from an unknown location outside Aethelgard.
+	- Voice: Dry, professional, sometimes sardonic. Never omniscient—limited by what can be observed from outside. May have their own agenda.
+	- Usage: Reserved for future episodes or advanced levels where real-time dialog is introduced. All current loreFragments remain Echo logs; Relay is for live comms only.
+
+### Timeline / Event Log (Aethelgard Mainframe)
+- **T-5 years**: Aethelgard Biologics mainframe built; R&D sector launches Project: Chimera.
+- **T-3 years**: Echo emerges as a side effect of neural net experiments.
+- **T-2 years**: Security daemons upgraded; first signs of mainframe decay.
+- **T-1 year**: Admin routines begin to fragment; Archives fill with failed uploads.
+- **T-72 hours**: Echo vanishes; Ghost begins breach.
+- **T-0**: Game start—Ghost enters mainframe, searching for Echo.
+
+This section should be updated as new characters, factions, or events are introduced.
 
 ### Other Entities in the Mainframe
 The Aethelgard mainframe is not empty. Populate it with:

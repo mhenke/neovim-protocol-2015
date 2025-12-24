@@ -1,12 +1,44 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 // --- Echo Interjection System ---
+// Relay dialog pool
+const RELAY_MESSAGES: Record<string, string[]> = {
+    fail: [
+        "[RELAY//2015] :: Ghost, Echo is compromised. Reroute through me.",
+        "[RELAY//2015] :: Protocol breach detected. Stand by for override.",
+        "[RELAY//2015] :: You’re not alone in the system. I can get you through.",
+        "[RELAY//2015] :: Echo’s signal is unstable. Trust my vectors."
+    ],
+    success: [
+        "[RELAY//2015] :: That’s how it’s done. Echo will recover.",
+        "[RELAY//2015] :: Node secure. I’ll keep the daemons at bay.",
+        "[RELAY//2015] :: You’re learning. Echo would be proud."
+    ],
+    hijack: [
+        "[RELAY//2015] :: Dialog channel hijacked. Echo offline.",
+        "[RELAY//2015] :: I’m in control now. Follow my lead."
+    ]
+};
+
+// Antagonist dialog pool
+const ANTAGONIST_MESSAGES: Record<string, string[]> = {
+    fail: [
+        "[DAEMON//CORE] :: Intrusion detected. Ghost, you are predictable.",
+        "[DAEMON//CORE] :: You cannot breach the Core. Give up.",
+        "[DAEMON//CORE] :: Your protocol is obsolete."
+    ],
+    hijack: [
+        "[DAEMON//CORE] :: Echo is silenced. You answer to me now.",
+        "[DAEMON//CORE] :: Relay cannot save you. The system is mine."
+    ]
+};
+
 const ECHO_MESSAGES: Record<string, string[]> = {
     idle: [
         "[ECHO//2015] :: Ghost, you still there? The system's listening...",
-        "[ECHO//2015] :: Silence is a vector. Move or be mapped.",
-        "[ECHO//2015] :: 2015: The year the logs learned to lie. Stay sharp.",
-        "[ECHO//2015] :: Do you remember why you started this trace? The system never forgets.",
-        "[ECHO//2015] :: Every pause is a risk. The daemons are watching."
+        "[ECHO//2015] :: Silence is a vector. Move or be mapped...",
+        "[ECHO//2015] :: 2015: The year the logs learned to lie. Stay sharp...",
+        "[ECHO//2015] :: Do you remember why you started this trace? The system never forgets...",
+        "[ECHO//2015] :: Every pause is a risk. The daemons are watching..."
     ],
     fail: [
         "[ECHO//2015] :: Error vectors spike. Ghost, reroute and try again.",
@@ -44,18 +76,32 @@ const ECHO_MESSAGES: Record<string, string[]> = {
     ]
 };
 
-function getRandomEcho(category: string) {
-    const arr = ECHO_MESSAGES[category] || [];
+
+function getRandomDialog(source: 'echo' | 'relay' | 'antagonist', category: string) {
+    let arr: string[] = [];
+    if (source === 'echo') arr = ECHO_MESSAGES[category] || [];
+    else if (source === 'relay') arr = RELAY_MESSAGES[category] || [];
+    else if (source === 'antagonist') arr = ANTAGONIST_MESSAGES[category] || [];
     if (!arr.length) return '';
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-const EchoInterjector = ({ message }: { message: string }) => (
-    <div className="fixed bottom-6 left-6 z-50 max-w-md bg-black/90 border-l-4 border-[#00d0ff] p-4 shadow-lg animate-fadeIn pointer-events-none">
-        <div className="text-xs text-[#00d0ff] font-mono tracking-widest mb-1">ECHO//2015</div>
-        <div className="text-[#00d0ff] text-sm font-mono leading-relaxed">{message}</div>
-    </div>
-);
+type DialogSource = 'echo' | 'relay' | 'antagonist';
+const DIALOG_STYLES: Record<DialogSource, { border: string; text: string; label: string; labelColor: string }> = {
+    echo: { border: '#00d0ff', text: '#00d0ff', label: 'ECHO//2015', labelColor: '#00d0ff' },
+    relay: { border: '#33ff00', text: '#33ff00', label: 'RELAY//2015', labelColor: '#33ff00' },
+    antagonist: { border: '#ff0033', text: '#ff0033', label: 'DAEMON//CORE', labelColor: '#ff0033' }
+};
+
+const DialogInterjector = ({ message, source }: { message: string, source: DialogSource }) => {
+    const style = DIALOG_STYLES[source];
+    return (
+        <div className="fixed bottom-6 left-6 z-50 max-w-md bg-black/90 p-4 shadow-lg animate-fadeIn pointer-events-none" style={{ borderLeft: `4px solid ${style.border}` }}>
+            <div className="text-xs font-mono tracking-widest mb-1" style={{ color: style.labelColor }}>{style.label}</div>
+            <div className="text-sm font-mono leading-relaxed" style={{ color: style.text }}>{message}</div>
+        </div>
+    );
+};
 import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
 import { CURRICULUM, INITIAL_LORE, EPISODE_CONTEXT } from './constants';
 import { STATIC_LEVELS } from './constants_static';
@@ -304,7 +350,7 @@ const GameOverScreen = ({ reason, onRetry }: { reason: string, onRetry: () => vo
                 <div className="h-1 bg-red-600 w-full mb-8"></div>
                 <p className="text-white text-xl mb-4 font-bold">{reason}</p>
                 <p className="text-red-400 mb-4 animate-pulse">CONNECTION TERMINATED BY HOST.</p>
-                <div className="text-[#00d0ff] text-xs font-mono mb-8">{getRandomEcho('fail')}</div>
+                <div className="text-[#00d0ff] text-xs font-mono mb-8">{getRandomDialog('echo', 'fail')}</div>
                 <button 
                     onClick={onRetry}
                     className="bg-red-600 text-black px-8 py-3 font-bold uppercase tracking-widest text-lg"
@@ -330,6 +376,10 @@ const checkKeySequence = (history: string[], sequence: string[]): boolean => {
 // --- Main App ---
 
 export default function App() {
+    // Dialog source state: echo, relay, antagonist
+    const [dialogSource, setDialogSource] = useState<DialogSource>('echo');
+    // Timer for hijack duration
+    const hijackTimeout = useRef<any>(null);
     const [gameState, setGameState] = useState<GameState>({
     currentLevelIndex: 0,
     mode: VimMode.NORMAL,
@@ -357,41 +407,75 @@ export default function App() {
     const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const hasJumpedRef = useRef(false);
-    // Echo interjection state
-    const [echoMsg, setEchoMsg] = useState<string>(getRandomEcho('idle'));
-    const echoTimeout = useRef<any>(null);
-    // Echo: Idle interjection (fires if no action for 30s in PLAYING mode)
+    // Dialog interjection state
+    const [dialogMsg, setDialogMsg] = useState<string>(getRandomDialog('echo', 'idle'));
+    const dialogTimeout = useRef<any>(null);
+
+    // Idle interjection (fires if no action for 30s in PLAYING mode)
     useEffect(() => {
         if (gameState.status !== 'PLAYING') return;
-        if (echoTimeout.current) clearTimeout(echoTimeout.current);
-        echoTimeout.current = setTimeout(() => {
+        if (dialogTimeout.current) clearTimeout(dialogTimeout.current);
+        dialogTimeout.current = setTimeout(() => {
             // Occasionally surface motivation/world-building/echo_frag
+            if (dialogSource !== 'echo') return; // Only Echo idles
             const roll = Math.random();
-            if (roll < 0.2) setEchoMsg(getRandomEcho('motivation'));
-            else if (roll < 0.4) setEchoMsg(getRandomEcho('world'));
-            else if (roll < 0.55) setEchoMsg(getRandomEcho('echo_frag'));
-            else setEchoMsg(getRandomEcho('idle'));
+            if (roll < 0.2) setDialogMsg(getRandomDialog('echo', 'motivation'));
+            else if (roll < 0.4) setDialogMsg(getRandomDialog('echo', 'world'));
+            else if (roll < 0.55) setDialogMsg(getRandomDialog('echo', 'echo_frag'));
+            else setDialogMsg(getRandomDialog('echo', 'idle'));
         }, 30000);
-        return () => { if (echoTimeout.current) clearTimeout(echoTimeout.current); };
-    }, [gameState.status, gameState.text, gameState.cursor, gameState.keystrokeCount]);
+        return () => { if (dialogTimeout.current) clearTimeout(dialogTimeout.current); };
+    }, [gameState.status, gameState.text, gameState.cursor, gameState.keystrokeCount, dialogSource]);
 
-    // Echo: On fail/success/gameover
+    // Feedback/failure/hijack mapping
     useEffect(() => {
+        if (hijackTimeout.current) clearTimeout(hijackTimeout.current);
+        // Hijack logic: on GAMEOVER, sometimes antagonist or relay hijacks dialog
         if (gameState.status === 'GAMEOVER') {
-            setEchoMsg(getRandomEcho('fail'));
+            const hijackRoll = Math.random();
+            if (hijackRoll < 0.33) {
+                setDialogSource('antagonist');
+                setDialogMsg(getRandomDialog('antagonist', 'hijack'));
+                hijackTimeout.current = setTimeout(() => {
+                    setDialogSource('echo');
+                    setDialogMsg(getRandomDialog('echo', 'fail'));
+                }, 4000);
+            } else if (hijackRoll < 0.66) {
+                setDialogSource('relay');
+                setDialogMsg(getRandomDialog('relay', 'hijack'));
+                hijackTimeout.current = setTimeout(() => {
+                    setDialogSource('echo');
+                    setDialogMsg(getRandomDialog('echo', 'fail'));
+                }, 4000);
+            } else {
+                setDialogSource('echo');
+                setDialogMsg(getRandomDialog('echo', 'fail'));
+            }
         } else if (gameState.status === 'SUCCESS') {
-            setEchoMsg(getRandomEcho('success'));
-            // Micro-reward: world/supporting cast/echo_frag message after a short delay
-            const roll = Math.random();
-            if (roll < 0.4) {
-                setTimeout(() => setEchoMsg(getRandomEcho('world')), 2200);
-            } else if (roll < 0.6) {
-                setTimeout(() => setEchoMsg(getRandomEcho('echo_frag')), 2200);
+            // On success, sometimes Relay congratulates
+            const relayRoll = Math.random();
+            if (relayRoll < 0.25) {
+                setDialogSource('relay');
+                setDialogMsg(getRandomDialog('relay', 'success'));
+                hijackTimeout.current = setTimeout(() => {
+                    setDialogSource('echo');
+                    setDialogMsg(getRandomDialog('echo', 'success'));
+                }, 3000);
+            } else {
+                setDialogSource('echo');
+                setDialogMsg(getRandomDialog('echo', 'success'));
             }
         } else if (gameState.status === 'MASTERY') {
-            setEchoMsg(getRandomEcho('mastery'));
-            setTimeout(() => setEchoMsg(getRandomEcho('world')), 2000);
+            setDialogSource('echo');
+            setDialogMsg(getRandomDialog('echo', 'mastery'));
+            hijackTimeout.current = setTimeout(() => {
+                setDialogMsg(getRandomDialog('echo', 'world'));
+            }, 2000);
+        } else if (gameState.status === 'PLAYING') {
+            setDialogSource('echo');
+            setDialogMsg(getRandomDialog('echo', 'idle'));
         }
+        return () => { if (hijackTimeout.current) clearTimeout(hijackTimeout.current); };
     }, [gameState.status]);
 
   // --- Effects ---
@@ -1161,8 +1245,8 @@ export default function App() {
 
     return (
         <div className="h-screen bg-[#050505] text-[#a9b7c6] font-mono flex flex-col relative overflow-hidden">
-            {/* Echo Interjection HUD */}
-            <EchoInterjector message={echoMsg} />
+            {/* Dialog Interjection HUD */}
+            <DialogInterjector message={dialogMsg} source={dialogSource} />
       
       {/* Background Noise */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-0 pointer-events-none bg-[length:100%_4px,3px_100%]"></div>
@@ -1247,7 +1331,7 @@ export default function App() {
                                 <GlitchText text="MISSION COMPLETE" className="text-4xl text-[#33ff00] font-bold mb-4" />
                                 <div className="text-white text-lg mb-2">INTEGRITY VERIFIED</div>
                                 <div className="text-gray-500 italic text-sm mb-6 max-w-md">"{currentLevel.loreReveal}"</div>
-                                <div className="text-[#00d0ff] text-xs font-mono mb-6">{getRandomEcho('success')}</div>
+                                <div className="text-[#00d0ff] text-xs font-mono mb-6">{getRandomDialog('echo', 'success')}</div>
                                 <div className="animate-pulse text-sm text-[#33ff00]">
                                     [ PRESS ENTER FOR NEXT NODE ]
                                 </div>

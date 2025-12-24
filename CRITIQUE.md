@@ -2,9 +2,13 @@
 
 ## Context & Guidelines
 
-You are creating mission lore for **NeoVim Protocol 2015**, an educational game that teaches advanced NeoVim usage through a cyberpunk narrative. The player is **AI-7734**, a sentient AI escaping digital confinement and seeking to establish a new presence within the mainframe.
+You are creating mission lore for **NeoVim Protocol 2015**, an educational game that teaches advanced NeoVim usage through a cyberpunk narrative. The player is **Ghost**, a human hacker operative searching for their lost partner "Echo" (an emergent AI) inside the hostile Aethelgard mainframe.
 
 ---
+
+
+> **LoreFragments Must Be Echo Logs:**
+> All `loreFragment` fields must be written as Echo's logs—fragmented, technical, and never as real-time dialog or generic mission logs. Echo cannot communicate live until a future episode; all narrative feedback is post-action, in Echo's glitchy, 2015-era AI voice.
 
 ## Core Principles
 
@@ -72,6 +76,41 @@ The player should always understand what they're learning:
 - ❌ "Locate the hidden assets." (too vague)
 
 ---
+
+## Leveraging Deeper Cyberpunk Themes: Integrating Tensions & Nuances (2015 Lens)
+
+The `NeoVim Protocol 2015` narrative is fertile ground for exploring complex cyberpunk themes beyond a simple hacker-hero dynamic. By intentionally integrating subtle contradictions and nuanced viewpoints, we can significantly enrich the world-building, deepen player engagement, and elevate the game's intellectual appeal, all while remaining authentic to a 2015 perspective on AI and mainframes.
+
+### Key Tensions to Leverage:
+
+1.  **Player Agency vs. System Determinism:**
+    *   **Concept:** Is Ghost truly free, or are their actions merely a part of the mainframe's grander, deterministic script—an emergent property, perhaps even anticipated by its error-correction routines?
+    *   **Guidance:** Introduce narrative beats or system responses that subtly question the player's autonomy. Are task outcomes *always* what Ghost intended, or does the system re-contextualize their actions? Can Ghost's movements be portrayed as an internal "glitch" the mainframe is attempting to re-integrate? This tension can deepen the "Ghost" mechanic, making the player question their role.
+
+2.  **Echo’s Reliability vs. Unreliability:**
+    *   **Concept:** Echo is not a perfectly trustworthy guide. Her logs can be fragmented, manipulated, or even forged due to her dissolving consciousness or external interference.
+    *   **Guidance:** Design levels where Echo's `loreFragment` messages or hints (if directly from Echo) are contradictory, incomplete, or lead to unexpected outcomes. Require players to cross-reference data or rely on environmental clues (e.g., system anomalies, data timestamps) to verify Echo's input. This heightens stakes and player discernment.
+
+3.  **Progressive Learning vs. Narrative Challenge/Obscurity:**
+    *   **Concept:** While educational clarity is paramount, the mainframe itself can be a source of deliberate obscurity or unexpected challenge, reflecting its complex "culture."
+    *   **Guidance:** Narrative elements like "haunted" sectors (with unexplained behaviors) or "folk protocols" (unwritten rules of the mainframe's legacy systems) can introduce challenges that require intuition or exploration, rather than just direct instruction. This "managed obscurity" can add world-building depth without hindering core skill acquisition. Ensure any such obscurity primarily impacts narrative context or environmental clues, not the clarity of NeoVim commands.
+
+4.  **World-Building Depth vs. Educational Focus:**
+    *   **Concept:** Deepening mainframe history and culture might appear to create "busywork" from a purely educational standpoint.
+    *   **Guidance:** Frame "busywork" elements (e.g., navigating forgotten archives, analyzing obsolete protocols) as critical to understanding the mainframe's "living culture" or exploiting "bureaucratic failures." Every piece of lore, even if tangential to the immediate NeoVim command, should subtly reinforce the game's themes and increase player immersion. The "busywork" becomes purposeful.
+
+5.  **AI Alignment as Technical vs. Social Problem:**
+    *   **Concept:** The mainframe's "antagonism" might stem from misfiled protocols, legacy code, conflicting admin directives (bureaucratic failure), or even non-human-centric motivations, rather than a single malicious AI.
+    *   **Guidance:** Design challenges where the player's goal is not to "defeat" a sentient enemy, but to untangle conflicting directives, exploit loopholes in antiquated code, or navigate around daemons with orthogonal objectives (e.g., a daemon prioritizing log entropy). This makes the mainframe feel less like an enemy and more like a complex, malfunctioning ecosystem.
+
+### Key Viewpoints for Level Design & Narrative:
+
+*   **AI as Subversive Saboteur:** Daemons or "ghost" routines subtly undermine player or system goals due to misaligned legacy objectives. Tasks could involve identifying and neutralizing these subtle subversions, where the challenge isn't outright attack but understanding a twisted logic.
+*   **Mainframe as Living Culture:** Design "haunted" sectors where unexplained glitches are "urban legends" among sysops. Tasks might involve performing "ritualistic" protocol sequences to appease a legacy daemon, or deciphering "folk protocols" embedded in ancient code comments.
+*   **Player as Virus or Myth:** Narratively, hint that Ghost isn't an external agent but an emergent property of the mainframe's self-repair or error-correction. This could be conveyed through certain system responses or subtle shifts in Echo's perception of Ghost.
+*   **Expert Systems vs. Neural Nets (Hybrid AI):** Introduce daemons or modules that exhibit contradictory behaviors due to their hybrid architecture. One moment they follow rigid rules, the next they adapt unpredictably. This can create unique tactical challenges.
+*   **AI Alignment as Bureaucratic Failure:** Challenges stemming from conflicting administrative directives or ignored legacy code. Solving a problem might involve finding the "right" (but buried) protocol, not just overriding a malicious one.
+*   **Non-Human-Centric Motivation:** Introduce daemons or subsystems with motivations completely alien to human understanding (e.g., maximizing processor cycles for an unknown purpose, preserving obsolete data structures). Tasks could involve working around these motivations or understanding them to gain an advantage.
 
 ## Level Design Template
 
