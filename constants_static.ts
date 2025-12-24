@@ -117,11 +117,19 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
-        description: "Echo started writing a bypass header but was interrupted. Press `i` or `I`, type a short fragment (one or two chars), then press `Esc`.",
+        description: "Press 'i', insert a short fragment (one or two chars), then press `Esc` to return to Normal Mode.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["i|I", "<inserted>", "Escape|Esc"],
+        expectedKeySequence: ["i", "<inserted>", "Escape|Esc"],
         loreFragment: "LOG_04: \"ECHO LOG: Transmission interrupted mid-write. Partial fragment recovered.\"",
-        keyHint: "i / I"
+        keyHint: "i"
+      },
+
+      {
+        description: "Press 'I' to insert at the first non-blank of the line, add a short fragment (one or two chars), then press `Esc`.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["I", "<inserted>", "Escape|Esc"],
+        loreFragment: "LOG_04: \"ECHO LOG: Transmission interrupted mid-write. Partial fragment recovered.\"",
+        keyHint: "I"
       },
 
 
