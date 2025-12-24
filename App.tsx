@@ -1,4 +1,39 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+// --- Echo Interjection System ---
+const ECHO_MESSAGES: Record<string, string[]> = {
+    idle: [
+        "[ECHO//2015] :: Ghost, you still there? The system's listening...",
+        "[ECHO//2015] :: Silence is a vector. Move or be mapped.",
+        "[ECHO//2015] :: 2015: The year the logs learned to lie. Stay sharp."
+    ],
+    fail: [
+        "[ECHO//2015] :: Error vectors spike. Ghost, reroute and try again.",
+        "[ECHO//2015] :: Hostile trace detected. Reboot and breach anew.",
+        "[ECHO//2015] :: Failure is just a corrupted state. Patch and proceed."
+    ],
+    success: [
+        "[ECHO//2015] :: Node decrypted. The mainframe remembers your signature.",
+        "[ECHO//2015] :: That was clean, Ghost. The system adapts, so must you.",
+        "[ECHO//2015] :: Protocol advanced. The Core stirs."
+    ],
+    mastery: [
+        "[ECHO//2015] :: You move like a shadow in the logs. Echo sees you.",
+        "[ECHO//2015] :: Mastery detected. The system is almost convinced you belong."
+    ]
+};
+
+function getRandomEcho(category: string) {
+    const arr = ECHO_MESSAGES[category] || [];
+    if (!arr.length) return '';
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+const EchoInterjector = ({ message }: { message: string }) => (
+    <div className="fixed bottom-6 left-6 z-50 max-w-md bg-black/90 border-l-4 border-[#00d0ff] p-4 shadow-lg animate-fadeIn pointer-events-none">
+        <div className="text-xs text-[#00d0ff] font-mono tracking-widest mb-1">ECHO//2015</div>
+        <div className="text-[#00d0ff] text-sm font-mono leading-relaxed">{message}</div>
+    </div>
+);
 import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
 import { CURRICULUM, INITIAL_LORE, EPISODE_CONTEXT } from './constants';
 import { STATIC_LEVELS } from './constants_static';
@@ -235,15 +270,15 @@ const GameOverScreen = ({ reason, onRetry }: { reason: string, onRetry: () => vo
         return () => window.removeEventListener('keydown', handleKey);
     }, [onRetry]);
 
+    // Echo's voice on failure
     return (
         <div className="absolute inset-0 z-50 bg-red-950/90 backdrop-blur-sm flex items-center justify-center text-center p-8">
             <div className="bg-black border-4 border-red-600 p-12 max-w-xl w-full shadow-[0_0_50px_rgba(255,0,0,0.5)] transform -rotate-1">
                 <h2 className="text-6xl font-bold text-red-600 mb-2 tracking-tighter">FATAL ERROR</h2>
                 <div className="h-1 bg-red-600 w-full mb-8"></div>
-                
                 <p className="text-white text-xl mb-4 font-bold">{reason}</p>
-                <p className="text-red-400 mb-12 animate-pulse">CONNECTION TERMINATED BY HOST.</p>
-
+                <p className="text-red-400 mb-4 animate-pulse">CONNECTION TERMINATED BY HOST.</p>
+                <div className="text-[#00d0ff] text-xs font-mono mb-8">{getRandomEcho('fail')}</div>
                 <button 
                     onClick={onRetry}
                     className="bg-red-600 text-black px-8 py-3 font-bold uppercase tracking-widest text-lg"
@@ -269,7 +304,7 @@ const checkKeySequence = (history: string[], sequence: string[]): boolean => {
 // --- Main App ---
 
 export default function App() {
-  const [gameState, setGameState] = useState<GameState>({
+    const [gameState, setGameState] = useState<GameState>({
     currentLevelIndex: 0,
     mode: VimMode.NORMAL,
     text: STATIC_LEVELS[1].initialText, // Ensure initial text is never empty
@@ -293,9 +328,30 @@ export default function App() {
     commandHistory: [], // NEW: Initialize as empty array
   });
 
-  const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const hasJumpedRef = useRef(false);
+    const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const hasJumpedRef = useRef(false);
+    // Echo interjection state
+    const [echoMsg, setEchoMsg] = useState<string>(getRandomEcho('idle'));
+    const echoTimeout = useRef<any>(null);
+    // Echo: Idle interjection (fires if no action for 30s in PLAYING mode)
+    useEffect(() => {
+        if (gameState.status !== 'PLAYING') return;
+        if (echoTimeout.current) clearTimeout(echoTimeout.current);
+        echoTimeout.current = setTimeout(() => {
+            setEchoMsg(getRandomEcho('idle'));
+        }, 30000);
+        return () => { if (echoTimeout.current) clearTimeout(echoTimeout.current); };
+    }, [gameState.status, gameState.text, gameState.cursor, gameState.keystrokeCount]);
+
+    // Echo: On fail/success/gameover
+    useEffect(() => {
+        if (gameState.status === 'GAMEOVER') {
+            setEchoMsg(getRandomEcho('fail'));
+        } else if (gameState.status === 'SUCCESS') {
+            setEchoMsg(getRandomEcho('success'));
+        }
+    }, [gameState.status]);
 
   // --- Effects ---
 
@@ -1062,8 +1118,10 @@ export default function App() {
   // Find the first uncompleted task for highlighting
   const activeTaskIndex = currentLevel.tasks.findIndex(t => !t.completed);
 
-  return (
-    <div className="h-screen bg-[#050505] text-[#a9b7c6] font-mono flex flex-col relative overflow-hidden">
+    return (
+        <div className="h-screen bg-[#050505] text-[#a9b7c6] font-mono flex flex-col relative overflow-hidden">
+            {/* Echo Interjection HUD */}
+            <EchoInterjector message={echoMsg} />
       
       {/* Background Noise */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-0 pointer-events-none bg-[length:100%_4px,3px_100%]"></div>
@@ -1148,6 +1206,7 @@ export default function App() {
                                 <GlitchText text="MISSION COMPLETE" className="text-4xl text-[#33ff00] font-bold mb-4" />
                                 <div className="text-white text-lg mb-2">INTEGRITY VERIFIED</div>
                                 <div className="text-gray-500 italic text-sm mb-6 max-w-md">"{currentLevel.loreReveal}"</div>
+                                <div className="text-[#00d0ff] text-xs font-mono mb-6">{getRandomEcho('success')}</div>
                                 <div className="animate-pulse text-sm text-[#33ff00]">
                                     [ PRESS ENTER FOR NEXT NODE ]
                                 </div>

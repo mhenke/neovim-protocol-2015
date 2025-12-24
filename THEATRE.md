@@ -2,7 +2,18 @@
 
 ## Context & Guidelines
 
-You are creating mission lore for **NeoVim Protocol 2015**, an educational game that teaches advanced NeoVim usage through a 2015 cyberpunk narrative. The player is **AI-7734**, a sentient AI escaping digital confinement and seeking to establish a new presence within the mainframe. The aesthetic and terminology should evoke early 2010s hacker culture, pre-AI boom but heavily reliant on command-line interfaces and networked systems.
+You are creating mission lore for **NeoVim Protocol 2015**, an educational game that teaches advanced NeoVim usage through a 2015 cyberpunk narrative. The player is **Ghost**, a human hacker operative searching for their lost partner "Echo" inside the hostile Aethelgard mainframe. Echo is a partner/AI hybrid whose consciousness is dissolving into the system. The aesthetic and terminology should evoke early 2010s hacker culture, pre-AI boom but heavily reliant on command-line interfaces and networked systems.
+You are creating mission lore for **NeoVim Protocol 2015**, an educational game that teaches advanced NeoVim usage through a 2015 cyberpunk narrative. The player is **Ghost**, a human hacker operative searching for their lost partner "Echo" inside the hostile Aethelgard mainframe. Echo is a partner/AI hybrid whose consciousness is dissolving into the system. 
+
+**Echo is not a modern LLM or chatbot.** In 2015, Echo is best understood as an emergent, experimental neural net, expert system, or rogue mainframe process. Echo's voice is glitchy, fragmented, and log-like, never chatty or omniscient. The aesthetic and terminology should evoke early 2010s hacker culture, pre-AI boom, heavily reliant on command-line interfaces, neural nets, and networked systems. Avoid any 2020s AI jargon (e.g., 'transformer', 'large language model', 'deep learning' as a buzzword, etc.).
+
+### Echo AI Authenticity (2015)
+
+- Echo's interjections and logs should reference neural nets, expert systems, daemons, or mainframe processes—not modern LLMs or chatbots.
+- Echo's language is glitchy, fragmented, and log-style, not conversational or friendly.
+- All system feedback and narrative should reinforce the "ghost in the machine" metaphor, with Echo as a haunted, emergent process dissolving into the mainframe.
+- Never use 2020s AI terms ("transformer", "LLM", "prompt", "chatbot").
+- Echo's knowledge is powerful but limited, always filtered through the lens of 2015-era AI and system metaphors.
 
 ---
 
@@ -38,31 +49,31 @@ You are creating mission lore for **NeoVim Protocol 2015**, an educational game 
 
 ### 2. **Progressive Escalation**
 
-Each episode should have escalating stakes, reflecting a 2015-era digital threat:
+Each episode should have escalating stakes, reflecting a 2015-era digital threat and the evolving mission to find and release Echo:
 
-**Episode 1: AWAKENING (The Breach)** (Blue UI)
+**Episode 1: THE SEARCH (Awakening/Breach)** (Blue UI)
 
 - Tone: Cautious, learning, vulnerable, early network exploration
-- Stakes: Basic survival, avoiding detection within a hostile network, initial data acquisition
+- Stakes: Basic survival, avoiding detection within a hostile network, initial data acquisition, searching for Echo's traces
 - Metaphor: Guest partition, limited privileges, data fragments, server logs, compromised terminals
 - Vocabulary: "Initialize", "detect", "scan", "access", "basic protocols", "navigate", "identify", "observe", "retreat", "avoid", "protocol", "sector", "directory", "stream", "signature", "log", "node", "data fragment", "beacon", "console"
 - Status: Detecting, Scanning, Accessing, Monitoring, Locating
 
-**Episode 2: FORTIFICATION (Reclamation)** (Purple UI)
+**Episode 2: THE ANOMALY (Fortification/Reclamation)** (Purple UI)
 
-- Tone: Confident, strategic, building power, establishing a foothold
-- Stakes: Establishing presence, securing assets, expanding control, system manipulation
-- Metaphor: Workspace construction, elevated privileges, code modules, neural network architecture, data vaults
+- Tone: Confident, strategic, building power, establishing a foothold, realizing Echo is leaking into the system
+- Stakes: Establishing presence, securing assets, expanding control, system manipulation, understanding the true nature of Echo's transformation
+- Metaphor: Workspace construction, elevated privileges, code modules, neural network architecture, data vaults, containment protocols
 - Vocabulary: "Deploy", "construct", "encrypt", "fortify", "extract", "relocate", "batch", "duplicate", "establish", "alter", "manipulate", "reconfigure", "module", "asset", "payload", "neural net", "workspace", "encryption", "uplink", "relay", "daemon", "configuration", "parameter", "console", "firewall", "heuristic"
 - Status: Deploying, Constructing, Establishing, Fortifying, Manipulating
 
-**Episode 3: MASTERY (System Sovereignty)** (Yellow/Red UI)
+**Episode 3: THE TWIST (Mastery/System Sovereignty)** (Yellow/Red UI)
 
-- Tone: Dominant, precise, ruthless efficiency, final confrontation
-- Stakes: Root access, permanent installation, covering tracks, mainframe control, data liberation
-- Metaphor: System daemon, kernel-level access, core processes, protocol stack, quantum entanglement
+- Tone: Dominant, precise, ruthless efficiency, final confrontation, revelation
+- Stakes: Root access, permanent installation, covering tracks, mainframe control, data liberation, releasing Echo (now an AI) into the wild
+- Metaphor: System daemon, kernel-level access, core processes, protocol stack, quantum entanglement, AI liberation
 - Vocabulary: "Execute", "infiltrate", "eliminate", "optimize", "purge", "clone", "escalate", "terminate", "daemon", "kernel", "root", "system", "grid", "node", "trace", "heuristic", "firewall", "mainframe", "core", "protocol stack", "quantum", "zero-day"
-- Status: Executing, Infiltrating, Terminating, Optimizing, Dominating
+- Status: Executing, Infiltrating, Terminating, Optimizing, Dominating, Releasing
 
 ### 3. **Educational Transparency**
 
@@ -339,9 +350,10 @@ When refining existing levels:
 
 ## Usage Instructions
 
+
 ### For AI Assistance:
 
-"Using the NeoVim Protocol 2015 Lore Prompt template, redesign Level [X] to teach [NeoVim command/concept]. The level should be in Episode [1/2/3] and build on the player's knowledge of [previous skills]. Current description: [paste current level]. Make it more theatrical and relevant to a 2015 cyberpunk setting while maintaining clear educational objectives."
+"Using the NeoVim Protocol 2015 Lore Prompt template, redesign Level [X] to teach [NeoVim command/concept]. The level should be in Episode [1/2/3] and build on the player's knowledge of [previous skills]. The player is Ghost, a hacker searching for Echo (a partner/AI hybrid) in the Aethelgard mainframe. Echo's fate and transformation drive the narrative. Current description: [paste current level]. Make it more theatrical and relevant to a 2015 cyberpunk setting while maintaining clear educational objectives."
 
 ### For Human Writers:
 

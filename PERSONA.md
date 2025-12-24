@@ -4,7 +4,8 @@ The Lore:
 
     Protagonist: "Ghost" (The User).
 
-    Target: "Echo" (A lost partner/AI hybrid).
+    Target: "Echo" (A lost partner/AI hybrid). Echo is not a modern LLM or chatbot—think 2015: an emergent, experimental neural net, expert system, or rogue mainframe process. Echo's voice is glitchy, fragmented, and log-like, never chatty or omniscient. Avoid any 2020s AI jargon (e.g., 'transformer', 'large language model', 'prompt', etc.).
+Echo's interjections and logs should reference neural nets, expert systems, daemons, or mainframe processes—not modern LLMs or chatbots. All system feedback and narrative should reinforce the "ghost in the machine" metaphor, with Echo as a haunted, emergent process dissolving into the mainframe. Echo's knowledge is powerful but limited, always filtered through the lens of 2015-era AI and system metaphors.
 
     Setting: The Aethelgard Mainframe. A hostile, decaying digital architecture.
 
