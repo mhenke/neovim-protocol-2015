@@ -45,30 +45,36 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "j, k"
       },
       {
-        description: "Use 'w' to jump forward by word and 'b' to jump backward by word. Practice on the 'OFFLINE.' line.",
+        description: "Use 'w' to jump forward by word. Practice on the 'OFFLINE.' line.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["w", "b"],
+        expectedKeySequence: ["w"],
         value: "OFFLINE.",
         loreFragment: "LOG_01: 'Connection mapped. The silence is intentional.'",
-        keyHint: "w, b"
+        keyHint: "w"
       },
       {
-        description: "Use '0' to go to the start of the line and '$' to go to the end. Try this on any log line.",
+        description: "Use 'b' to jump backwards by word. Try this on the 'OFFLINE.' line to return to 'Connection'.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["0", "$"],
-        value: "[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].",
-        loreFragment: "LOG_02: 'Node ALPHA engaged. Shadows flicker at the edge of the log.'",
-        keyHint: "0, $"
+        expectedKeySequence: ["b"],
+        value: "Connection",
+        loreFragment: "LOG_02: 'Backtracked. Sometimes the answer is behind you.'",
+        keyHint: "b"
       },
       {
-        description: "Navigate to the bottom of the log with 'G', then to the top with 'gg'.",
-        type: "sequence",
-        subTasks: [
-          { type: "run_command", value: "G", loreFragment: "LOG_03: 'End of transmission confirmed. The breach is real.'", keyHint: "G" },
-          { type: "run_command", value: "gg", loreFragment: "LOG_04: 'Start of log verified. Echoes remain.'", keyHint: "gg" }
-        ],
-        loreFragment: "LOG_FINAL: 'Signal Lock Established. Ready for injection. Going in.'",
-        keyHint: "G, gg"
+        description: "Use '0' to go to the start of the line. Make sure your cursor is at the very beginning of the line: '[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].'",
+        type: "cursor_on",
+        value: "[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].",
+        cursor: 0,
+        loreFragment: "LOG_03: 'Zeroed in. The beginning always holds the key.'",
+        keyHint: "0"
+      },
+      {
+        description: "Use 'gg' to jump to the top of the file, then use '$' to move your cursor to the end of the first line: '// signal_trace.log'.",
+        type: "cursor_on",
+        value: "// signal_trace.log",
+        cursor: "end",
+        loreFragment: "LOG_FINAL: 'End of line reached. Ready for injection.'",
+        keyHint: "gg, $"
       }
     ]
   },
