@@ -28,8 +28,11 @@ export interface LevelConfig {
 
 export interface Task {
   description: string;
-  type: 'contains' | 'missing' | 'cursor_on' | 'run_command';
-  value: string;
+  type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'command_and_cursor_on' | 'sequence';
+  value?: string | string[];
+  command?: string | string[];
+  subTasks?: Task[];
+  currentStep?: number;
   completed: boolean;
   loreFragment?: string; // Optional narrative reward for completing specific task
   keyHint?: string; // Short key combo hint e.g. "ciw" or "j/k"
@@ -86,11 +89,13 @@ export interface GeminiLevelResponse {
   targetText: string[];
   loreReveal: string;
   hints: string[];
-  tasks: Array<{ 
-    description: string, 
-    type: 'contains' | 'missing' | 'cursor_on' | 'run_command', 
-    value: string, 
+  tasks: Array<{
+    description: string,
+    type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'command_and_cursor_on' | 'sequence',
+    value?: string | string[],
+    command?: string | string[],
+    subTasks?: Task[],
     loreFragment: string,
-    keyHint?: string 
+    keyHint?: string
   }>;
 }

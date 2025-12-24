@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
-import { CURRICULUM, INITIAL_LORE, LEVEL_1_FALLBACK, EPISODE_CONTEXT } from './constants';
-import { generateLevel } from './services/geminiService';
+import { CURRICULUM, INITIAL_LORE, EPISODE_CONTEXT } from './constants';
+import { STATIC_LEVELS } from './constants_static';
 import * as fs from './utils/fsHelpers';
 
 // --- Utility Components ---
@@ -225,7 +225,7 @@ export default function App() {
   const [gameState, setGameState] = useState<GameState>({
     currentLevelIndex: 0,
     mode: VimMode.NORMAL,
-    text: LEVEL_1_FALLBACK.initialText, // Ensure initial text is never empty
+    text: STATIC_LEVELS[1].initialText, // Ensure initial text is never empty
     cursor: { x: 0, y: 0 },
     commandBuffer: '',
     operatorBuffer: '',
@@ -245,7 +245,7 @@ export default function App() {
     lastExecutedCommand: null
   });
 
-  const [currentLevel, setCurrentLevel] = useState<Level>(LEVEL_1_FALLBACK);
+  const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const hasJumpedRef = useRef(false);
 
@@ -272,9 +272,10 @@ export default function App() {
   // --- Task Validation Logic ---
 
   useEffect(() => {
-    if (gameState.status !== 'PLAYING') return;
+    if (gameState.status !== 'PLAYING' || !currentLevel) return;
 
     setCurrentLevel(prevLevel => {
+        if (!prevLevel) return null;
         const newTasks = prevLevel.tasks.map(task => {
             if (task.completed) {
                 return task;
@@ -284,20 +285,97 @@ export default function App() {
             const currentLine = gameState.text[gameState.cursor.y] || '';
             
             if (task.type === 'contains') {
-                isMet = gameState.text.some(line => line.includes(task.value));
+                const values = Array.isArray(task.value) ? task.value : [task.value];
+                isMet = values.every(val => gameState.text.some(line => line.includes(val as string)));
             } else if (task.type === 'missing') {
-                isMet = !gameState.text.some(line => line.includes(task.value));
+                const values = Array.isArray(task.value) ? task.value : [task.value];
+                isMet = values.every(val => !gameState.text.some(line => line.includes(val as string)));
             } else if (task.type === 'cursor_on') {
-                // Strict check: Cursor must be overlapping the specific word
-                const targetIndex = currentLine.indexOf(task.value);
-                if (targetIndex !== -1) {
-                    const endIndex = targetIndex + task.value.length;
-                    isMet = gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
+                const values = Array.isArray(task.value) ? task.value : [task.value];
+                isMet = values.some(val => {
+                    const targetIndex = currentLine.indexOf(val as string);
+                    if (targetIndex !== -1) {
+                        const endIndex = targetIndex + (val as string).length;
+                        return gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
+                    }
+                    return false;
+                });
+            } else if (task.type === 'command_and_cursor_on') {
+                if (gameState.lastExecutedCommand && task.command) {
+                    const commands = Array.isArray(task.command) ? task.command : [task.command];
+                    if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                        const values = Array.isArray(task.value) ? task.value : [task.value];
+                        isMet = values.some(val => {
+                            const targetIndex = currentLine.indexOf(val as string);
+                            if (targetIndex !== -1) {
+                                const endIndex = targetIndex + (val as string).length;
+                                return gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
+                            }
+                            return false;
+                        });
+                    }
                 }
             } else if (task.type === 'run_command') {
-                // Check if lastExecutedCommand matches the task value
-                if (gameState.lastExecutedCommand && gameState.lastExecutedCommand.startsWith(task.value)) {
-                    isMet = true;
+                if (gameState.lastExecutedCommand) {
+                    const commands = Array.isArray(task.value) ? task.value : [task.value];
+                    if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                        isMet = true;
+                    }
+                }
+            } else if (task.type === 'sequence') {
+                if (task.subTasks) {
+                    const currentStep = task.currentStep || 0;
+                    if (currentStep < task.subTasks.length) {
+                        const subTask = task.subTasks[currentStep];
+                        let subTaskIsMet = false;
+                        // a bit of repetition here, but it's the simplest way to check the subtask
+                        if (subTask.type === 'contains') {
+                            const values = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
+                            subTaskIsMet = values.every(val => gameState.text.some(line => line.includes(val as string)));
+                        } else if (subTask.type === 'missing') {
+                            const values = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
+                            subTaskIsMet = values.every(val => !gameState.text.some(line => line.includes(val as string)));
+                        } else if (subTask.type === 'cursor_on') {
+                            const values = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
+                            subTaskIsMet = values.some(val => {
+                                const targetIndex = currentLine.indexOf(val as string);
+                                if (targetIndex !== -1) {
+                                    const endIndex = targetIndex + (val as string).length;
+                                    return gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
+                                }
+                                return false;
+                            });
+                        } else if (subTask.type === 'command_and_cursor_on') {
+                            if (gameState.lastExecutedCommand && subTask.command) {
+                                const commands = Array.isArray(subTask.command) ? subTask.command : [subTask.command];
+                                if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                                    const values = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
+                                    subTaskIsMet = values.some(val => {
+                                        const targetIndex = currentLine.indexOf(val as string);
+                                        if (targetIndex !== -1) {
+                                            const endIndex = targetIndex + (val as string).length;
+                                            return gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
+                                        }
+                                        return false;
+                                    });
+                                }
+                            }
+                        } else if (subTask.type === 'run_command') {
+                            if (gameState.lastExecutedCommand) {
+                                const commands = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
+                                if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                                    subTaskIsMet = true;
+                                }
+                            }
+                        }
+
+                        if (subTaskIsMet) {
+                            task.currentStep = currentStep + 1;
+                            if (task.currentStep === task.subTasks.length) {
+                                isMet = true;
+                            }
+                        }
+                    }
                 }
             }
 
@@ -313,7 +391,7 @@ export default function App() {
         return { ...prevLevel, tasks: newTasks };
     });
 
-  }, [gameState.text, gameState.cursor, gameState.status, gameState.lastExecutedCommand]);
+  }, [gameState.text, gameState.cursor, gameState.status, gameState.lastExecutedCommand, currentLevel]);
 
 
   // --- Logic Helpers ---
@@ -328,39 +406,32 @@ export default function App() {
     const prevConfig = CURRICULUM[index - 1];
     
     // Logic: Only show EPISODE_INTRO if we are moving to a NEW episode AND it's not the very first level.
-    // Level 1 (Index 0) intro is handled by the Landing Screen + Briefing Header.
     const isNewEpisode = index > 0 && prevConfig && config.episode > prevConfig.episode;
     
     setIsLoading(true);
     
     try {
-      let levelData: Level;
-      
-      // Use fallback if no key or for level 1 to ensure smooth start
-      if (index === 0 || !process.env.API_KEY) {
-         levelData = {
-             ...LEVEL_1_FALLBACK,
-             tasks: LEVEL_1_FALLBACK.tasks.map(t => ({...t, completed: false}))
-         };
-      } else {
-        const genLevel = await generateLevel(config, gameState.loreLog);
-        
-        const hydratedTasks: Task[] = genLevel.tasks.map(t => ({
-             ...t,
-             completed: false
-        }));
-
-        levelData = {
-          id: config.id,
-          config: config,
-          briefing: genLevel.briefing,
-          initialText: genLevel.initialText,
-          targetText: genLevel.targetText,
-          loreReveal: genLevel.loreReveal,
-          hints: genLevel.hints,
-          tasks: hydratedTasks
-        };
+      const staticLevelData = STATIC_LEVELS[config.id];
+      if (!staticLevelData) {
+        throw new Error(`No static level data found for level ID: ${config.id}`);
       }
+
+      const hydratedTasks: Task[] = staticLevelData.tasks.map(t => ({
+         ...t,
+         completed: false,
+         ...(t.type === 'sequence' && { currentStep: 0 })
+      }));
+
+      let levelData: Level = {
+        id: config.id,
+        config: config,
+        briefing: staticLevelData.briefing,
+        initialText: staticLevelData.initialText,
+        targetText: staticLevelData.targetText,
+        loreReveal: staticLevelData.loreReveal,
+        hints: staticLevelData.hints,
+        tasks: hydratedTasks
+      };
 
       // Safety: Ensure text is never empty to prevent crash
       if (!levelData.initialText || levelData.initialText.length === 0) {
@@ -372,7 +443,7 @@ export default function App() {
       setGameState(prev => ({
         ...prev,
         currentLevelIndex: index,
-        status: isNewEpisode ? 'EPISODE_INTRO' : 'BRIEFING', // Skip Intro for Level 1
+        status: isNewEpisode ? 'EPISODE_INTRO' : 'BRIEFING',
         mode: VimMode.NORMAL,
         text: [...levelData.initialText],
         cursor: { x: 0, y: 0 },
@@ -392,8 +463,16 @@ export default function App() {
 
     } catch (e) {
       console.error(e);
-      setCurrentLevel(LEVEL_1_FALLBACK);
-      setGameState(prev => ({...prev, message: "CONNECTION_LOST. RETRYING LOCAL CACHE.", status: 'BRIEFING', text: LEVEL_1_FALLBACK.initialText}));
+      // Fallback to something reasonable if static data is missing
+      const fallbackConfig = CURRICULUM[0];
+      const fallbackLevel = STATIC_LEVELS[fallbackConfig.id];
+      setCurrentLevel({
+        id: fallbackConfig.id,
+        config: fallbackConfig,
+        ...fallbackLevel,
+        tasks: fallbackLevel.tasks.map(t => ({...t, completed: false}))
+      });
+      setGameState(prev => ({...prev, message: "CONNECTION_LOST. RETRYING LOCAL CACHE.", status: 'BRIEFING', text: fallbackLevel.initialText}));
     } finally {
       setIsLoading(false);
     }
@@ -423,7 +502,7 @@ export default function App() {
   // --- Input Handler ---
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (gameState.status === 'LANDING' || gameState.status === 'EPISODE_INTRO' || gameState.status === 'BOOT' || gameState.status === 'GAMEOVER') return;
+    if (!currentLevel || gameState.status === 'LANDING' || gameState.status === 'EPISODE_INTRO' || gameState.status === 'BOOT' || gameState.status === 'GAMEOVER') return;
 
     if (gameState.activeDialog !== 'NONE') {
         if (e.key === 'Escape') setGameState(prev => ({ ...prev, activeDialog: 'NONE' }));
@@ -632,7 +711,7 @@ export default function App() {
       if (/[0-9]/.test(e.key)) {
          // Prevent 0 as first digit (it's start of line)
          if (prev.countBuffer === '' && e.key === '0') {
-             return { ...newState, cursor: { ...prev.cursor, x: 0 } };
+             return { ...newState, cursor: { ...prev.cursor, x: 0 }, countBuffer: '', lastExecutedCommand: '0' };
          }
          return { ...newState, countBuffer: prev.countBuffer + e.key };
       }
@@ -640,17 +719,41 @@ export default function App() {
       // 4. Normal Motions & Commands
       switch (e.key) {
         // Navigation
-        case 'h': return fs.moveCursor(newState, -1 * count, 0);
-        case 'j': return fs.moveCursor(newState, 0, 1 * count);
-        case 'k': return fs.moveCursor(newState, 0, -1 * count);
-        case 'l': return fs.moveCursor(newState, 1 * count, 0);
-        case 'w': return fs.jumpWord(newState, 'next', count);
-        case 'b': return fs.jumpWord(newState, 'prev', count);
-        case '0': return { ...newState, cursor: { ...prev.cursor, x: 0 }, countBuffer: '' };
-        case '$': return { ...newState, cursor: { ...prev.cursor, x: Math.max(0, (prev.text[prev.cursor.y]||'').length - 1) }, countBuffer: '' };
-        case 'G': return { ...newState, cursor: { x: 0, y: prev.text.length - 1 }, countBuffer: '' };
+        case 'h': {
+            const s = fs.moveCursor(newState, -1 * count, 0);
+            s.lastExecutedCommand = 'h';
+            return s;
+        }
+        case 'j': {
+            const s = fs.moveCursor(newState, 0, 1 * count);
+            s.lastExecutedCommand = 'j';
+            return s;
+        }
+        case 'k': {
+            const s = fs.moveCursor(newState, 0, -1 * count);
+            s.lastExecutedCommand = 'k';
+            return s;
+        }
+        case 'l': {
+            const s = fs.moveCursor(newState, 1 * count, 0);
+            s.lastExecutedCommand = 'l';
+            return s;
+        }
+        case 'w': {
+            const s = fs.jumpWord(newState, 'next', count);
+            s.lastExecutedCommand = 'w';
+            return s;
+        }
+        case 'b': {
+            const s = fs.jumpWord(newState, 'prev', count);
+            s.lastExecutedCommand = 'b';
+            return s;
+        }
+        case '0': return { ...newState, cursor: { ...prev.cursor, x: 0 }, countBuffer: '', lastExecutedCommand: '0' };
+        case '$': return { ...newState, cursor: { ...prev.cursor, x: Math.max(0, (prev.text[prev.cursor.y]||'').length - 1) }, countBuffer: '', lastExecutedCommand: '$' };
+        case 'G': return { ...newState, cursor: { x: 0, y: prev.text.length - 1 }, countBuffer: '', lastExecutedCommand: 'G' };
         case 'g': 
-           if (prev.motionBuffer === 'g') return { ...newState, cursor: { x: 0, y: 0 }, motionBuffer: '', countBuffer: '' };
+           if (prev.motionBuffer === 'g') return { ...newState, cursor: { x: 0, y: 0 }, motionBuffer: '', countBuffer: '', lastExecutedCommand: 'gg' };
            return { ...newState, motionBuffer: 'g' };
         
         // Find char
@@ -775,7 +878,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const areAllTasksComplete = currentLevel.tasks.every(t => t.completed);
+  const areAllTasksComplete = currentLevel ? currentLevel.tasks.every(t => t.completed) : false;
 
   // --- RENDER HELPERS ---
   
@@ -833,6 +936,10 @@ export default function App() {
         setGameState(prev => ({...prev, status: 'BOOT'}));
         loadLevel(0);
     }} />;
+  }
+
+  if (!currentLevel) {
+    return <div className="h-screen bg-[#050505] flex items-center justify-center text-[#33ff00] font-mono">LOADING...</div>;
   }
 
   // Find the first uncompleted task for highlighting

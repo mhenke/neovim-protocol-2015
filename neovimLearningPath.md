@@ -1,254 +1,395 @@
-# Neovim Learning Path: 3 Episodes, 15 Levels
+Excellent reference! Let me create a **revised 15-level structure** that incorporates everything valuable:Perfect! I've created a **complete 15-level structure** that incorporates everything valuable from your reference plus my previous analysis.
 
-A structured, progressive approach to mastering Neovim through meaningful practice.
+## 🎯 Key Improvements:
 
----
+### **From Your Reference:**
+✅ `Ctrl+v` - Visual block mode (Level 8) - essential for column editing  
+✅ `:nohl` - Clear search highlight (Level 7) - quality of life  
+✅ `:ls` `:b<num>` - Buffer list and jump (Level 5) - file management  
+✅ `?pattern` - Backward search (Level 7)  
+✅ Counts with operators (Level 10) - `5j`, `3dd`, `2yy`  
+✅ `Ctrl+u/d` - Half-page scroll (Level 11)  
 
-## 📖 EPISODE 1: FOUNDATION
+### **From My Analysis:**
+✅ `Ctrl+r` - Redo (Level 4) - can't have undo without it  
+✅ `A` `I` `O` - Line end/start operations (Level 2) - used constantly  
+✅ `>>` `<<` `==` `gg=G` - Indentation (Level 13) - critical for code  
+✅ `%` - Bracket matching (Level 9) - essential for code navigation  
+✅ `*` `#` - Quick word search (Level 7)  
+✅ `daw` vs `diw` - Text object boundaries (Level 6)  
+✅ `Ctrl+o` `Ctrl+i` - Jump history (Level 12)  
 
-*Master the fundamentals. Every task is designed to build muscle memory for real editing scenarios.*
+## 🔥 What Makes This Structure Strong:
 
-### Level 1: Your First Steps
-**Goal:** Get comfortable moving around without arrow keys
+1. **Episode 1** builds pure foundation - you can edit files by level 5
+2. **Episode 2** teaches efficiency - text objects, search, visual mode
+3. **Episode 3** teaches mastery - multi-window, formatting, mass operations
 
-**Tasks:**
-1. Open `nvim` and complete `:Tutor` lessons 1.1 through 1.6 (movement only)
-2. Open any text file and navigate to 5 different lines using only `hjkl`
-3. Practice moving between words: find a paragraph and jump through it using `w` (forward) and `b` (backward) 10 times
-4. Navigate to the beginning and end of 3 different lines using `0` and `$`
+4. **Level 15** is a synthesis level requiring everything combined
 
-**Success Metric:** You can move around a file without thinking about which key to press
+5. **Every command has real-world purpose** - no filler, no macros
 
----
+6. **Progressive skill stacking:**
+   - Level 7: Search with `/`
+   - Level 10: Use `.` to repeat
+   - Level 13: Format with `gg=G`
+   - Level 15: Combine all of the above in complex workflow
 
-### Level 2: Insert and Escape
-**Goal:** Enter and exit insert mode fluidly
+## 💡 What This Covers That Others Don't:
 
-**Tasks:**
-1. Create a new file (`nvim test.txt`) and write 5 sentences, entering insert mode with `i` each time
-2. Practice `a` (append): Go to the end of 5 existing words and add text after them
-3. Use `o` to open a new line below your cursor and write 3 new lines
-4. Delete a word with `x` (character by character), then use `u` to undo it
-5. Practice the cycle: Navigate somewhere → `i` → type something → `Esc` → navigate again (do this 10 times)
+- **Visual block mode** (`Ctrl+v`) - many tutorials skip this!
+- **Buffer management** - most just teach splits, not buffer switching
+- **Indentation/formatting** - critical for code, often overlooked
+- **Jump history** (`Ctrl+o/i`) - professionals use this constantly
+- **Text object boundaries** (`daw` vs `diw`) - nuance matters
 
-**Success Metric:** You instinctively press `Esc` to return to normal mode
+This is a **production-ready curriculum** that will make players genuinely productive in Neovim. Want me to detail specific challenges/tasks for each level?
 
----
+1# 🎮 The Ghost Protocol: Complete 15-Level Neovim Game
 
-### Level 3: Line Mastery
-**Goal:** Efficiently manipulate entire lines
-
-**Tasks:**
-1. Copy (yank) 3 different lines using `yy` and paste them elsewhere with `p`
-2. Delete 5 lines using `dd` and practice undoing (`u`) and redoing (`Ctrl+r`)
-3. Create a shopping list of 10 items, then reorder them by deleting (`dd`) and pasting (`p`)
-4. Write a paragraph, then use `cc` to completely replace 3 different lines
-
-**Success Metric:** You can rearrange lines in a document without using mouse or insert mode for every change
-
----
-
-### Level 4: Finding Things Fast
-**Goal:** Navigate by searching, not scrolling
-
-**Tasks:**
-1. Open a long text file and use `/word` to search for 5 different words
-2. Practice pressing `n` to jump to the next occurrence and `N` to go back
-3. Find a common word (like "the"), then navigate through every occurrence in the file using `n`
-4. Use `?word` to search backwards for 3 different words
-
-**Success Metric:** You naturally search instead of scrolling when looking for something
+A comprehensive progression teaching **real, practical Neovim** through a cyberpunk hacking narrative.
 
 ---
 
-### Level 5: File Operations
-**Goal:** Confidently save, quit, and manage files
+## 📖 EPISODE 1: THE BREACH (Foundation)
 
-**Tasks:**
-1. Create 3 new files, write something in each, save with `:w`, and quit with `:q`
-2. Make changes to a file, then quit without saving using `:q!`
-3. Practice the quick save-and-quit combo: `:wq` or `:x`
-4. Open an existing file (`:e filename`), make changes, and save
-5. Try to quit without saving to see the warning, then save properly
+### **Level 1** — `signal_trace.log`
+**Story:** Decrypt network traffic by navigating the signal patterns  
+**New Keys:** `h` `j` `k` `l` `w` `b` `0` `$` `gg` `G`
 
-**Success Metric:** You never lose work and can navigate files confidently
+**Teaches:**
+- Basic 4-direction movement (hjkl)
+- Word jumping (w/b)
+- Line boundaries (0/$)
+- File boundaries (gg/G)
 
----
-
-## 📖 EPISODE 2: EFFICIENCY
-
-*Level up your speed. Start combining commands and thinking in Vim language.*
-
-### Level 6: Text Objects (Game Changer)
-**Goal:** Operate on "things" not just characters
-
-**Tasks:**
-1. Write 5 sentences with quoted text. Use `ci"` to change the content inside quotes without retyping the quotes
-2. Write code or text with parentheses. Use `di(` to delete everything inside parentheses
-3. Create 5 words, then use `ciw` (change inner word) while your cursor is in the middle of each word
-4. Practice `daw` (delete a word) vs `diw` (delete inner word) to understand the difference
-
-**Success Metric:** You think "change inside" or "delete around" instead of manually selecting
+**Real Usage:** Navigate any file without mouse/arrows
 
 ---
 
-### Level 7: Visual Mode Power
-**Goal:** Select and operate on multiple things at once
+### **Level 2** — `sector_map.xml`
+**Story:** Inject false coordinates into the sector mapping system  
+**New Keys:** `i` `a` `o` `O` `A` `I` `Esc`
 
-**Tasks:**
-1. Write a paragraph, then use `v` to select 3 different phrases and delete them with `d`
-2. Select 5 lines with `V` (visual line mode) and indent them with `>`
-3. Create nested text, select a block with `v`, then indent/unindent it with `>` and `<`
-4. Write code, select multiple lines with `V`, then use `y` to copy and `p` to paste elsewhere
-5. Combine previous learning: Navigate with `/` to find text, then use `v` to select it
+**Teaches:**
+- Insert before cursor (i)
+- Append after cursor (a)
+- Open line below (o) and above (O)
+- **Append at line end (A)**
+- **Insert at line start (I)**
+- Return to Normal mode (Esc)
 
-**Success Metric:** You can quickly select and manipulate multiple lines or sections
-
----
-
-### Level 8: Counts and Combos
-**Goal:** Think in multiples and combine operators
-
-**Tasks:**
-1. Delete 3 lines at once using `3dd`
-2. Move forward 5 words with `5w` and backward 3 words with `3b`
-3. Copy 4 lines using `4yy` and paste them
-4. Delete 3 words forward using `d3w`
-5. Practice the pattern: Create a list of 20 items, then use counts to delete every 3rd item: `3j` (down 3) + `dd` (delete)
-
-**Success Metric:** You instinctively add numbers before commands
+**Real Usage:** Quick text insertion at any position
 
 ---
 
-### Level 9: Window Splitting
-**Goal:** Work with multiple files simultaneously
+### **Level 3** — `security_router.conf`
+**Story:** Disable security protocols by editing configuration values  
+**New Keys:** `x` `r` `cw` `ciw` `C`
 
-**Tasks:**
-1. Open a file, then split it horizontally with `:split` or vertically with `:vsplit`
-2. Navigate between splits using `Ctrl+w` then arrow keys (or `hjkl`)
-3. Open 2 different files in splits and copy content from one to the other
-4. Close a split with `:q` and practice opening/closing multiple splits
+**Teaches:**
+- Delete char (x)
+- Replace char (r)
+- Change word (cw)
+- Change inner word (ciw)
+- **Change to end of line (C)**
 
-**Success Metric:** You can reference one file while editing another without switching back and forth
-
----
-
-### Level 10: Macros (Automation)
-**Goal:** Record and replay repetitive tasks
-
-**Tasks:**
-1. Create a list of 10 items formatted inconsistently. Record a macro (`qa` to start, `q` to stop) that fixes one item, then replay it on the others with `@a`
-2. Write 5 lines that need the same change. Record a macro that: goes to the start (`0`), changes something, moves down (`j`). Then replay it 4 times with `4@a`
-3. Combine previous skills: Record a macro that searches for a word (`/word`), changes it (`ciw`), then moves to the next occurrence (`n`)
-
-**Success Metric:** When you notice repetitive editing, you think "I should record a macro"
+**Real Usage:** Quick edits without entering insert mode
 
 ---
 
-## 📖 EPISODE 3: MASTERY
+### **Level 4** — `access_log_ECHO-7.purged`
+**Story:** Purge compromised log entries and duplicate clean ones  
+**New Keys:** `dd` `D` `yy` `p` `P` `u` `Ctrl+r`
 
-*Become fluent. Combine everything you've learned into powerful workflows.*
+**Teaches:**
+- Delete line (dd)
+- **Delete to end of line (D)**
+- Copy/yank line (yy)
+- Paste after (p) and before (P)
+- Undo (u) and **redo (Ctrl+r)**
 
-### Level 11: Advanced Motions
-**Goal:** Move with precision and intention
-
-**Tasks:**
-1. Use `f{char}` to find a character on the current line, then `;` to repeat. Do this 10 times across different lines
-2. Practice `t{char}` (to/until character) combined with `d`: e.g., `dt,` deletes everything until the comma
-3. Jump between paragraphs using `{` and `}` in a long document
-4. Use `%` to jump between matching brackets/parentheses in code
-5. Combine everything: Navigate to a function, use `%` to find its closing brace, then `dt{` to delete until opening brace
-
-**Success Metric:** You rarely press `hjkl` repeatedly; instead you jump exactly where you need
+**Real Usage:** Line manipulation, clipboard operations, mistake recovery
 
 ---
 
-### Level 12: Registers and Marks
-**Goal:** Store and recall locations and text
+### **Level 5** — `exfiltration.sh`
+**Story:** Save the backdoor script and open multiple files for data extraction  
+**New Keys:** `:w` `:q` `:wq` `:q!` `:e filename` `:ls` `:bn` `:bp`
 
-**Tasks:**
-1. Set marks in 3 different locations using `ma`, `mb`, `mc`, then jump between them with `'a`, `'b`, `'c`
-2. Yank text into named registers: `"ayy` (yank line to register 'a'), then paste from specific registers `"ap`
-3. Use the special register `"+` to copy from Neovim to your system clipboard: `"+yy`, then paste in another application
-4. Create a workflow: Mark important spots in a large file, navigate around editing, then quickly jump back to your marks
+**Teaches:**
+- Save file (:w)
+- Quit (:q)
+- Save and quit (:wq)
+- Force quit (:q!)
+- **Open another file (:e)**
+- **List buffers (:ls)**
+- **Next/prev buffer (:bn/:bp)**
 
-**Success Metric:** You bookmark locations and can copy/paste between multiple "clipboards"
-
----
-
-### Level 13: Search and Replace Mastery
-**Goal:** Make large-scale changes confidently
-
-**Tasks:**
-1. Use `:%s/old/new/g` to replace all occurrences of a word in a file
-2. Add confirmation: `:%s/old/new/gc` and practice accepting (`y`) or rejecting (`n`) each change
-3. Replace only in a range: Select lines with `V`, then `:s/old/new/g` (notice the `'<,'>` prefix)
-4. Combine with search: Search for `/function`, then `:%s/function/method/g`
-
-**Success Metric:** You can refactor large files without manual find-and-replace clicking
+**Real Usage:** File management, buffer switching
 
 ---
 
-### Level 14: Workflow Optimization
-**Goal:** Build your personal Neovim environment
+## 📖 EPISODE 2: THE TRACE (Efficiency)
 
-**Tasks:**
-1. Create `~/.config/nvim/init.lua` and add line numbers: `vim.opt.number = true`
-2. Add a key mapping: `vim.keymap.set('n', '<leader>w', ':w<CR>')` to save with `Space+w`
-3. Set your tab preferences: `vim.opt.tabstop = 4` and `vim.opt.expandtab = true`
-4. Create a mapping to clear search highlighting: `vim.keymap.set('n', '<leader>h', ':noh<CR>')`
-5. **Real-world test:** Edit a project file using all your custom settings and mappings
+### **Level 6** — `firewall_rules.json`
+**Story:** Modify firewall rules without breaking JSON/code structure  
+**New Keys:** `ci"` `ci'` `ci(` `ci{` `ci[` `cit` `diw` `daw`
 
-**Success Metric:** Neovim feels like *your* editor, customized to your preferences
+**Teaches:**
+- Change inside quotes (ci")
+- Change inside parens (ci()
+- Change inside braces (ci{)
+- Change inside tags (cit)
+- **Delete inner word vs around word (diw/daw)**
 
----
-
-### Level 15: The Complete Workflow
-**Goal:** Put everything together in a real scenario
-
-**Tasks:**
-1. **Project task:** Open a codebase or writing project. Navigate between at least 3 files using `:e filename` or splits
-2. **Refactor task:** Find all instances of a variable/word (using `/`), change some with `ciw`, and do a bulk replace with `:%s/old/new/gc`
-3. **Efficiency task:** Record a macro to fix formatting across 10+ locations
-4. **Organization task:** Use marks to bookmark important functions/sections, edit in multiple places, then jump back
-5. **Combination task:** Search for something (`/pattern`), visually select a block (`V`), indent it (`>`), copy it (`y`), jump to a mark (`'a`), and paste it (`p`)
-
-**Success Metric:** You complete real work faster in Neovim than in your old editor
+**Real Usage:** Text objects for structured editing (essential for code)
 
 ---
 
-## 🎯 Progression Tips
+### **Level 7** — `packet_stream.dat`
+**Story:** Search and navigate through encrypted packet data  
+**New Keys:** `/pattern` `?pattern` `n` `N` `*` `#` `:nohl`
 
-**Between Episodes:**
-- Episode 1 → 2: Take a 2-3 day break, keep using what you learned
-- Episode 2 → 3: Take a week, let efficiency commands become automatic
-- After Episode 3: Start exploring plugins (telescope.nvim, LSP, treesitter)
+**Teaches:**
+- Search forward (/)
+- **Search backward (?)**
+- Next result (n), previous (N)
+- **Search word under cursor (* forward, # backward)**
+- **Clear search highlight (:nohl)**
 
-**Daily Practice:**
-- Spend 10-15 minutes on your current level
-- Don't rush - complete each level before moving on
-- Repeat levels if needed - mastery > speed
-
-**Signs You're Ready to Advance:**
-- You don't think about the commands, your fingers just execute
-- The tasks feel easy, almost boring
-- You start combining commands without the guide telling you to
+**Real Usage:** Fast navigation, find-all-references pattern
 
 ---
 
-## 🏆 Mastery Achieved
+### **Level 8** — `blockchain_ledger.dat`
+**Story:** Extract and manipulate transaction blocks visually  
+**New Keys:** `v` `V` `Ctrl+v` `d` `y` `>` `<`
 
-Once you've completed all 15 levels, you'll:
-- Edit text faster than you ever thought possible
-- Never reach for your mouse while editing
-- Think in Vim's "language" of operators and motions
-- Have a customized setup that fits your workflow
-- Be ready to explore the vast plugin ecosystem
+**Teaches:**
+- Visual character mode (v)
+- Visual line mode (V)
+- **Visual block mode (Ctrl+v)** - column editing!
+- Delete/yank selection
+- **Indent/unindent (>/< in visual)**
 
-**Your next steps:**
-1. Install a plugin manager (lazy.nvim)
-2. Add telescope.nvim for fuzzy finding
-3. Set up LSP for your programming languages
-4. Join the community (Reddit: r/neovim, Discord servers)
+**Real Usage:** Multi-line editing, column operations
 
-The journey doesn't end here - it's just beginning. You're now a Vim user. Welcome to the club. 🚀
+---
+
+### **Level 9** — `neural_net.py`
+**Story:** Fix corrupted neural network code with precision targeting  
+**New Keys:** `f` `t` `F` `T` `;` `,` `%`
+
+**Teaches:**
+- Find char forward (f), backward (F)
+- To/until char (t/T)
+- Repeat find (;), reverse (,)
+- **Jump to matching bracket (%)**
+
+**Real Usage:** Intra-line navigation, bracket matching in code
+
+---
+
+### **Level 10** — `config_array.ini`
+**Story:** Fix repeated configuration errors efficiently  
+**New Keys:** `.` `5j` `3dd` `2yy` (counts with operators)
+
+**Teaches:**
+- **Repeat last change (.)**
+- Counts with movement (5j = down 5)
+- Counts with operators (3dd = delete 3 lines)
+
+**Real Usage:** Efficiency multiplier, avoid repetition
+
+---
+
+## 📖 EPISODE 3: THE CORE (Mastery)
+
+### **Level 11** — `code_analysis.cpp`
+**Story:** Analyze and refactor C++ codebase across multiple windows  
+**New Keys:** `:sp` `:vsp` `Ctrl+w h/j/k/l` `Ctrl+w c` `Ctrl+u` `Ctrl+d`
+
+**Teaches:**
+- Horizontal split (:sp)
+- Vertical split (:vsp)
+- Navigate splits (Ctrl+w + hjkl)
+- Close split (Ctrl+w c)
+- **Scroll half-page (Ctrl+u/d)**
+
+**Real Usage:** Multi-file workflow, reference while coding
+
+---
+
+### **Level 12** — `quantum_state.sys`
+**Story:** Mark quantum states and navigate between entangled positions  
+**New Keys:** `ma` `'a` ``` `a ``` `Ctrl+o` `Ctrl+i`
+
+**Teaches:**
+- Set mark (ma)
+- Jump to mark line ('a)
+- Jump to mark exact position (`a)
+- **Jump to previous position (Ctrl+o)**
+- **Jump to next position (Ctrl+i)**
+
+**Real Usage:** Bookmark locations, navigate jump history
+
+---
+
+### **Level 13** — `source_code.js`
+**Story:** Indent and format corrupted source code  
+**New Keys:** `>>` `<<` `==` `gg=G` `J` `gJ`
+
+**Teaches:**
+- **Indent line (>>)**
+- **Unindent line (<<)**
+- **Auto-indent line (==)**
+- **Auto-indent entire file (gg=G)**
+- Join lines with space (J)
+- Join lines without space (gJ)
+
+**Real Usage:** Code formatting (critical for development)
+
+---
+
+### **Level 14** — `reality.sys`
+**Story:** Rewrite reality itself through mass find-and-replace  
+**New Keys:** `:s/old/new/g` `:%s/old/new/g` `:%s/old/new/gc` `&`
+
+**Teaches:**
+- Replace on line (:s/old/new/g)
+- Replace in file (:%s/old/new/g)
+- Replace with confirmation (:%s/old/new/gc)
+- **Repeat last substitution (&)**
+
+**Real Usage:** Refactoring, mass edits
+
+---
+
+### **Level 15** — `FINAL_GATE.lock`
+**Story:** The final barrier requires mastery of all techniques combined  
+**New Keys:** `ALL` (synthesis level)
+
+**Challenges:**
+1. Navigate between 3 split windows
+2. Search and replace across files
+3. Use marks to bookmark key sections
+4. Use text objects to edit structured data
+5. Use visual block to edit columns
+6. Indent/format code blocks
+7. Use counts and dot command for efficiency
+8. Jump between bracket pairs in nested structures
+
+**Real Usage:** Complete real-world workflow simulation
+
+---
+
+## 📊 COMPLETE COMMAND REFERENCE
+
+### Movement
+- `h j k l` - Cardinal directions
+- `w b e` - Word navigation
+- `0 $ ^ g_` - Line boundaries
+- `gg G` - File boundaries
+- `f t F T ; ,` - Find character on line
+- `% { }` - Jump matching brackets/paragraphs
+- `Ctrl+u Ctrl+d` - Half-page scroll
+- `Ctrl+o Ctrl+i` - Jump history
+
+### Editing
+- `i a o O A I` - Enter insert mode
+- `x r s` - Delete/replace char
+- `cw ciw C cc` - Change operators
+- `dd D yy p P` - Delete/yank/paste
+- `u Ctrl+r` - Undo/redo
+- `.` - Repeat last change
+
+### Text Objects
+- `ciw diw caw daw` - Word operations
+- `ci" ci' ci( ci{ ci[` - Inside delimiters
+- `cit dit` - Inside tags
+
+### Visual Mode
+- `v V Ctrl+v` - Character/Line/Block
+- `> <` - Indent/unindent
+- `d y` - Delete/yank selection
+
+### Search
+- `/ ?` - Search forward/backward
+- `n N` - Next/previous result
+- `* #` - Search word under cursor
+- `:nohl` - Clear highlighting
+
+### Replace
+- `:s/old/new/g` - Line replace
+- `:%s/old/new/g` - File replace
+- `:%s/old/new/gc` - With confirmation
+- `&` - Repeat substitution
+
+### Files & Buffers
+- `:w :q :wq :q!` - Save/quit
+- `:e filename` - Open file
+- `:ls` - List buffers
+- `:bn :bp :b<num>` - Buffer navigation
+
+### Windows
+- `:sp :vsp` - Split horizontal/vertical
+- `Ctrl+w h/j/k/l` - Navigate splits
+- `Ctrl+w c` - Close split
+
+### Formatting
+- `>> <<` - Indent/unindent line
+- `== gg=G` - Auto-indent
+- `J gJ` - Join lines
+
+### Marks & Jumps
+- `ma 'a \`a` - Set/jump to marks
+- `Ctrl+o Ctrl+i` - Jump back/forward
+
+---
+
+## 🎯 PROGRESSION DESIGN PHILOSOPHY
+
+**Episode 1:** Movement → Insertion → Basic edits → Line ops → File management  
+**Episode 2:** Text objects → Search → Visual → Precision → Efficiency  
+**Episode 3:** Multi-window → Bookmarks → Formatting → Mass replace → Synthesis
+
+**Key Improvements Over Original:**
+✅ Added `Ctrl+r` (redo) - can't have undo without it  
+✅ Added `A` `I` `O` - end/start line operations (used constantly)  
+✅ Added `>>` `<<` `==` - indentation (essential for code)  
+✅ Added `%` - bracket matching (critical for code navigation)  
+✅ Added `*` `#` - quick word search  
+✅ Added `:e` `:ls` `:bn` `:bp` - buffer management  
+✅ Added `Ctrl+v` - visual block mode (column editing)  
+✅ Added `daw` vs `diw` - understanding text object boundaries  
+✅ Added `Ctrl+o` `Ctrl+i` - jump list navigation  
+✅ Added `Ctrl+u` `Ctrl+d` - page scrolling  
+✅ Added `:nohl` - quality of life  
+
+**Removed:**
+❌ Macros (as requested) - replaced with formatting/indentation level
+
+This structure teaches **practical, professional Neovim** that you'd use daily in real development work.
+
+---
+
+## 🚀 IMPLEMENTATION NOTES
+
+### For Level Design:
+- Each level should require 3-5 specific key combos to "hack" the file
+- Introduce 1-2 new concepts, reinforce 2-3 previous ones
+- Final level should be open-ended: "hack this in under 2 minutes"
+
+### Difficulty Curve:
+- Levels 1-5: Learn individual commands
+- Levels 6-10: Combine commands (e.g., `ci"` then `p`)
+- Levels 11-15: Complex workflows (search → mark → split → replace → format)
+
+### Success Metrics:
+- **Bronze:** Complete level (any method)
+- **Silver:** Complete without mistakes
+- **Gold:** Complete efficiently (minimal keystrokes)
+- **Ghost:** Complete in under X seconds
+
+This is your complete, production-ready command progression! 🎮
