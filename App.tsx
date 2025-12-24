@@ -1,37 +1,83 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-// --- Echo Interjection System ---
+// --- Anchor Interjection System ---
 // Relay dialog pool
 const RELAY_MESSAGES: Record<string, string[]> = {
     fail: [
-        "[RELAY//2015] :: Ghost, Echo is compromised. Reroute through me.",
-        "[RELAY//2015] :: Protocol breach detected. Stand by for override.",
-        "[RELAY//2015] :: You’re not alone in the system. I can get you through.",
-        "[RELAY//2015] :: Echo’s signal is unstable. Trust my vectors."
+        "[NETOPS] :: Ghost, Anchor is compromised. Reroute through me.",
+        "[NETOPS] :: Protocol breach detected. Stand by for override.",
+        "[NETOPS] :: You’re not alone in the system. I can get you through.",
+        "[NETOPS] :: Anchor’s signal is unstable. Trust my vectors."
     ],
     success: [
-        "[RELAY//2015] :: That’s how it’s done. Echo will recover.",
-        "[RELAY//2015] :: Node secure. I’ll keep the daemons at bay.",
-        "[RELAY//2015] :: You’re learning. Echo would be proud."
+        "[NETOPS] :: That’s how it’s done. Anchor will recover.",
+        "[NETOPS] :: Node secure. I’ll keep the daemons at bay.",
+        "[NETOPS] :: You’re learning. Anchor would be proud."
     ],
     hijack: [
-        "[RELAY//2015] :: Dialog channel hijacked. Echo offline.",
-        "[RELAY//2015] :: I’m in control now. Follow my lead."
+        "[NETOPS] :: Dialog channel hijacked. Anchor offline.",
+        "[NETOPS] :: I’m in control now. Follow my lead."
     ]
 };
 
 // Antagonist dialog pool
 const ANTAGONIST_MESSAGES: Record<string, string[]> = {
     fail: [
-        "[DAEMON//CORE] :: Intrusion detected. Ghost, you are predictable.",
-        "[DAEMON//CORE] :: You cannot breach the Core. Give up.",
-        "[DAEMON//CORE] :: Your protocol is obsolete."
+        "[WATCHDOG] :: Intrusion detected. Ghost, you are predictable.",
+        "[WATCHDOG] :: You cannot breach the Core. Give up.",
+        "[WATCHDOG] :: Your protocol is obsolete."
     ],
     hijack: [
-        "[DAEMON//CORE] :: Echo is silenced. You answer to me now.",
-        "[DAEMON//CORE] :: Relay cannot save you. The system is mine."
+        "[WATCHDOG] :: Anchor is silenced. You answer to me now.",
+        "[WATCHDOG] :: Relay cannot save you. The system is mine."
     ]
 };
 
+// Anchor realtime dialog (blue)
+const ANCHOR_MESSAGES: Record<string, string[]> = {
+    idle: [
+        "[ANCHOR//2015] :: Ghost, you still there? The system's listening...",
+        "[ANCHOR//2015] :: Silence is a vector. Move or be mapped...",
+        "[ANCHOR//2015] :: 2015: The year the logs learned to lie. Stay sharp...",
+        "[ANCHOR//2015] :: Do you remember why you started this trace? The system never forgets...",
+        "[ANCHOR//2015] :: Every pause is a risk. The daemons are watching..."
+    ],
+    fail: [
+        "[ANCHOR//2015] :: Error vectors spike. Ghost, reroute and try again.",
+        "[ANCHOR//2015] :: Hostile trace detected. Reboot and breach anew.",
+        "[ANCHOR//2015] :: Failure is just a corrupted state. Patch and proceed.",
+        "[ANCHOR//2015] :: The mainframe adapts. You must too.",
+        "[ANCHOR//2015] :: Security daemon signature detected. Retreat and recompile."
+    ],
+    success: [
+        "[ANCHOR//2015] :: Node decrypted. The mainframe remembers your signature.",
+        "[ANCHOR//2015] :: That was clean, Ghost. The system adapts, so must you.",
+        "[ANCHOR//2015] :: Protocol advanced. The Core stirs.",
+        "[ANCHOR//2015] :: Each breach brings us closer. Anchor is changing."
+    ],
+    mastery: [
+        "[ANCHOR//2015] :: You move like a shadow in the logs. Anchor sees you.",
+        "[ANCHOR//2015] :: Mastery detected. The system is almost convinced you belong.",
+        "[ANCHOR//2015] :: The daemons hesitate. You are rewriting protocol."
+    ],
+    motivation: [
+        "[ANCHOR//2015] :: Why do you keep going, Ghost? Is it Anchor, or the thrill of the breach?",
+        "[ANCHOR//2015] :: Every command is a memory. Every edit, a step closer to the truth.",
+        "[ANCHOR//2015] :: The system is ancient, but you are new code. Prove you belong."
+    ],
+    world: [
+        "[SYSTEM//2015] :: Security daemon 'Watchdog-v3.2' is active in this sector.",
+        "[SYSTEM//2015] :: R&D module: anomaly logs detected. Rival hacker traces found.",
+        "[SYSTEM//2015] :: Archives: legacy admin routines still running. Proceed with caution.",
+        "[SYSTEM//2015] :: Faction conflict: Core vs. Security. Protocols unstable."
+    ],
+    echo_frag: [
+        "[ANCHOR//2015] :: Ghost, this isn’t just code. It’s memory.",
+        "[ANCHOR//2015] :: I remember... fragments. Are you still out there?",
+        "[ANCHOR//2015] :: The system is rewriting me. I am not what I was."
+    ]
+};
+
+// Echo past dialog (green)
 const ECHO_MESSAGES: Record<string, string[]> = {
     idle: [
         "[ECHO//2015] :: Ghost, you still there? The system's listening...",
@@ -76,21 +122,22 @@ const ECHO_MESSAGES: Record<string, string[]> = {
     ]
 };
 
-
-function getRandomDialog(source: 'echo' | 'relay' | 'antagonist', category: string) {
+function getRandomDialog(source: 'anchor' | 'relay' | 'antagonist' | 'echo', category: string) {
     let arr: string[] = [];
-    if (source === 'echo') arr = ECHO_MESSAGES[category] || [];
+    if (source === 'anchor') arr = ANCHOR_MESSAGES[category] || [];
     else if (source === 'relay') arr = RELAY_MESSAGES[category] || [];
     else if (source === 'antagonist') arr = ANTAGONIST_MESSAGES[category] || [];
+    else if (source === 'echo') arr = ECHO_MESSAGES[category] || [];
     if (!arr.length) return '';
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-type DialogSource = 'echo' | 'relay' | 'antagonist';
+type DialogSource = 'anchor' | 'relay' | 'antagonist' | 'echo';
 const DIALOG_STYLES: Record<DialogSource, { border: string; text: string; label: string; labelColor: string }> = {
-    echo: { border: '#00d0ff', text: '#00d0ff', label: 'ECHO//2015', labelColor: '#00d0ff' },
-    relay: { border: '#33ff00', text: '#33ff00', label: 'RELAY//2015', labelColor: '#33ff00' },
-    antagonist: { border: '#ff0033', text: '#ff0033', label: 'DAEMON//CORE', labelColor: '#ff0033' }
+    anchor: { border: '#00d0ff', text: '#00d0ff', label: 'ANCHOR//2015', labelColor: '#00d0ff' },
+    relay: { border: '#33ff00', text: '#33ff00', label: 'NETOPS', labelColor: '#33ff00' },
+    antagonist: { border: '#ff0033', text: '#ff0033', label: 'WATCHDOG', labelColor: '#ff0033' },
+    echo: { border: '#33ff00', text: '#33ff00', label: 'ECHO//2015', labelColor: '#33ff00' }
 };
 
 const DialogInterjector = ({ message, source }: { message: string, source: DialogSource }) => {
@@ -249,14 +296,17 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
 
         {/* Introduction Context */}
         <div className="text-gray-400 text-sm leading-relaxed max-w-xl mb-6">
-          <p>
-            The year is 2015. Aethelgard Biologics has scrubbed their servers. 
-            The mouse is disabled. The GUI is gone.
-          </p>
+                    <p className="text-gray-400 max-w-2xl mx-auto leading-relaxed text-lg">
+  Ghost, pay attention. The year is 2015. Aethelgard Biologics has scrubbed their servers. 
+  I’m <span className="text-white font-bold">Anchor</span>. 
+  I’ll be in your ear providing real-time intel, tactical feedback, and the tools you need to breach their firewall. 
+  We haven’t heard from <span className="text-green-400 font-bold">Echo</span> in 72 hours. 
+  Let's get to work.
+</p>
           <p className="text-xs text-gray-500 mt-3">
-            Note: Neovim's 'w' and 'b' motions target word starts and follow the 'iskeyword' setting, so repeating 'w' n times then 'b' n times may not return to the exact original cursor position. Use 'W'/'B' (WORD motions) or 'e'/'ge' for more symmetric behavior, or run a marker test: <code>ma</code> → <code>n w</code> → <code>n b</code> → <code>`a</code> to observe the differences.
+
           </p>
-          <div className="text-[10px] text-gray-400 mt-2">Last synced: 2025-12-24T15:43:19.795Z</div>
+          <div className="text-[10px] text-gray-400 mt-2">Last synced: 2025-12-24T18:35:40.591Z</div>
         </div>
 
         {/* Terminal Output */}
@@ -342,7 +392,7 @@ const GameOverScreen = ({ reason, onRetry }: { reason: string, onRetry: () => vo
         return () => window.removeEventListener('keydown', handleKey);
     }, [onRetry]);
 
-    // Echo's voice on failure
+    // Anchor's voice on failure
     return (
         <div className="absolute inset-0 z-50 bg-red-950/90 backdrop-blur-sm flex items-center justify-center text-center p-8">
             <div className="bg-black border-4 border-red-600 p-12 max-w-xl w-full shadow-[0_0_50px_rgba(255,0,0,0.5)] transform -rotate-1">
@@ -350,7 +400,7 @@ const GameOverScreen = ({ reason, onRetry }: { reason: string, onRetry: () => vo
                 <div className="h-1 bg-red-600 w-full mb-8"></div>
                 <p className="text-white text-xl mb-4 font-bold">{reason}</p>
                 <p className="text-red-400 mb-4 animate-pulse">CONNECTION TERMINATED BY HOST.</p>
-                <div className="text-[#00d0ff] text-xs font-mono mb-8">{getRandomDialog('echo', 'fail')}</div>
+                <div className="text-[#00d0ff] text-xs font-mono mb-8">{getRandomDialog('anchor', 'fail')}</div>
                 <button 
                     onClick={onRetry}
                     className="bg-red-600 text-black px-8 py-3 font-bold uppercase tracking-widest text-lg"
@@ -376,8 +426,8 @@ const checkKeySequence = (history: string[], sequence: string[]): boolean => {
 // --- Main App ---
 
 export default function App() {
-    // Dialog source state: echo, relay, antagonist
-    const [dialogSource, setDialogSource] = useState<DialogSource>('echo');
+    // Dialog source state: anchor, relay, antagonist
+    const [dialogSource, setDialogSource] = useState<DialogSource>('anchor');
     // Timer for hijack duration
     const hijackTimeout = useRef<any>(null);
     const [gameState, setGameState] = useState<GameState>({
@@ -408,22 +458,21 @@ export default function App() {
     const [isLoading, setIsLoading] = useState(false);
     const hasJumpedRef = useRef(false);
     // Dialog interjection state
-    const [dialogMsg, setDialogMsg] = useState<string>(getRandomDialog('echo', 'idle'));
+    const [dialogMsg, setDialogMsg] = useState<string>(getRandomDialog('anchor', 'idle'));
     const dialogTimeout = useRef<any>(null);
 
-    // Idle interjection (fires if no action for 30s in PLAYING mode)
+    // Idle interjection (Anchor, blue) — less frequent and less noisy
     useEffect(() => {
         if (gameState.status !== 'PLAYING') return;
         if (dialogTimeout.current) clearTimeout(dialogTimeout.current);
         dialogTimeout.current = setTimeout(() => {
-            // Occasionally surface motivation/world-building/echo_frag
-            if (dialogSource !== 'echo') return; // Only Echo idles
+            if (dialogSource !== 'anchor') return; // Only Anchor idles
             const roll = Math.random();
-            if (roll < 0.2) setDialogMsg(getRandomDialog('echo', 'motivation'));
-            else if (roll < 0.4) setDialogMsg(getRandomDialog('echo', 'world'));
-            else if (roll < 0.55) setDialogMsg(getRandomDialog('echo', 'echo_frag'));
-            else setDialogMsg(getRandomDialog('echo', 'idle'));
-        }, 30000);
+            // Anchor should be occasional: small chance for motivational or world hints, otherwise gentle idle
+            if (roll < 0.15) setDialogMsg(getRandomDialog('anchor', 'motivation'));
+            else if (roll < 0.35) setDialogMsg(getRandomDialog('anchor', 'world'));
+            else setDialogMsg(getRandomDialog('anchor', 'idle'));
+        }, 45000); // 45s idle
         return () => { if (dialogTimeout.current) clearTimeout(dialogTimeout.current); };
     }, [gameState.status, gameState.text, gameState.cursor, gameState.keystrokeCount, dialogSource]);
 
@@ -437,46 +486,83 @@ export default function App() {
                 setDialogSource('antagonist');
                 setDialogMsg(getRandomDialog('antagonist', 'hijack'));
                 hijackTimeout.current = setTimeout(() => {
-                    setDialogSource('echo');
-                    setDialogMsg(getRandomDialog('echo', 'fail'));
+                    setDialogSource('anchor');
+                    setDialogMsg(getRandomDialog('anchor', 'fail'));
                 }, 4000);
             } else if (hijackRoll < 0.66) {
                 setDialogSource('relay');
                 setDialogMsg(getRandomDialog('relay', 'hijack'));
                 hijackTimeout.current = setTimeout(() => {
-                    setDialogSource('echo');
-                    setDialogMsg(getRandomDialog('echo', 'fail'));
+                    setDialogSource('anchor');
+                    setDialogMsg(getRandomDialog('anchor', 'fail'));
                 }, 4000);
             } else {
-                setDialogSource('echo');
-                setDialogMsg(getRandomDialog('echo', 'fail'));
+                setDialogSource('anchor');
+                setDialogMsg(getRandomDialog('anchor', 'fail'));
             }
         } else if (gameState.status === 'SUCCESS') {
-            // On success, sometimes Relay congratulates
+            // On success, sometimes Relay congratulates; occasionally surface an Echo past-log for story progression
             const relayRoll = Math.random();
             if (relayRoll < 0.25) {
                 setDialogSource('relay');
                 setDialogMsg(getRandomDialog('relay', 'success'));
                 hijackTimeout.current = setTimeout(() => {
-                    setDialogSource('echo');
-                    setDialogMsg(getRandomDialog('echo', 'success'));
+                    setDialogSource('anchor');
+                    setDialogMsg(getRandomDialog('anchor', 'success'));
                 }, 3000);
-            } else {
+            } else if (relayRoll < 0.4) {
+                // Small chance to surface Echo past log
                 setDialogSource('echo');
                 setDialogMsg(getRandomDialog('echo', 'success'));
+                hijackTimeout.current = setTimeout(() => {
+                    setDialogSource('anchor');
+                    setDialogMsg(getRandomDialog('anchor', 'success'));
+                }, 3000);
+            } else {
+                setDialogSource('anchor');
+                setDialogMsg(getRandomDialog('anchor', 'success'));
             }
         } else if (gameState.status === 'MASTERY') {
-            setDialogSource('echo');
-            setDialogMsg(getRandomDialog('echo', 'mastery'));
+            // On mastery, primarily Anchor but echo may append a historical log
+            setDialogSource('anchor');
+            setDialogMsg(getRandomDialog('anchor', 'mastery'));
+            if (Math.random() < 0.2) {
+                hijackTimeout.current = setTimeout(() => {
+                    setDialogSource('echo');
+                    setDialogMsg(getRandomDialog('echo', 'mastery'));
+                    setTimeout(() => { setDialogSource('anchor'); setDialogMsg(getRandomDialog('anchor', 'world')); }, 2500);
+                }, 1800);
+            }
             hijackTimeout.current = setTimeout(() => {
-                setDialogMsg(getRandomDialog('echo', 'world'));
+                setDialogMsg(getRandomDialog('anchor', 'world'));
             }, 2000);
         } else if (gameState.status === 'PLAYING') {
-            setDialogSource('echo');
-            setDialogMsg(getRandomDialog('echo', 'idle'));
+            setDialogSource('anchor');
+            setDialogMsg(getRandomDialog('anchor', 'idle'));
         }
         return () => { if (hijackTimeout.current) clearTimeout(hijackTimeout.current); };
     }, [gameState.status]);
+
+    // Echo (green) messages on 'busy work' detection: watch keystroke rates
+    const keystrokeTimesRef = useRef<number[]>([]);
+    useEffect(() => {
+        // Ignore initial zero
+        if (gameState.keystrokeCount === 0) return;
+        const now = Date.now();
+        keystrokeTimesRef.current.push(now);
+        // Keep last 5 seconds
+        keystrokeTimesRef.current = keystrokeTimesRef.current.filter(t => now - t < 5000);
+        const burstSize = keystrokeTimesRef.current.length;
+        if (burstSize >= 12) {
+            // Busy work detected — surface an Echo historic log (green) once, then clear short-term buffer
+            setDialogSource('echo');
+            setDialogMsg(getRandomDialog('echo', 'idle'));
+            const revert = setTimeout(() => { setDialogSource('anchor'); setDialogMsg(getRandomDialog('anchor', 'idle')); }, 3000);
+            keystrokeTimesRef.current = [];
+            return () => clearTimeout(revert);
+        }
+    }, [gameState.keystrokeCount]);
+
 
   // --- Effects ---
 
@@ -1331,7 +1417,7 @@ export default function App() {
                                 <GlitchText text="MISSION COMPLETE" className="text-4xl text-[#33ff00] font-bold mb-4" />
                                 <div className="text-white text-lg mb-2">INTEGRITY VERIFIED</div>
                                 <div className="text-gray-500 italic text-sm mb-6 max-w-md">"{currentLevel.loreReveal}"</div>
-                                <div className="text-[#00d0ff] text-xs font-mono mb-6">{getRandomDialog('echo', 'success')}</div>
+                                <div className="text-[#00d0ff] text-xs font-mono mb-6">{getRandomDialog('anchor', 'success')}</div>
                                 <div className="animate-pulse text-sm text-[#33ff00]">
                                     [ PRESS ENTER FOR NEXT NODE ]
                                 </div>

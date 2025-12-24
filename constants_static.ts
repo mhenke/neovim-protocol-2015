@@ -3,7 +3,7 @@ import { GeminiLevelResponse } from './types';
 export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   // --- EPISODE 1: THE BREACH (Foundation) ---
   1: {
-    briefing: "AGENT 'ECHO' IS DARK. Her last signal was fragmented. We need you to navigate the raw signal log and align on key data nodes to decrypt her final message. You must be on the target word to establish a lock.",
+    briefing: "AGENT 'ECHO' IS DARK. Her last signal was fragmented—and possibly corrupted. Navigate this raw signal log, but be advised: integrity checks on Echo's transmission are failing. Align on key data nodes; establishing a lock on the target word may reveal fragments, or further distortions.",
     initialText: [
       "// signal_trace.log",
       "// Agent Echo - Last Transmission",
@@ -28,12 +28,11 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "",
       "// END OF TRANSMISSION"
     ],
-    loreReveal: "LOG_01 DECRYPTED: 'They aren't just hiding data. They are hiding a consciousness. I'm going deeper.' - Echo",
+    loreReveal: "LOG_01 DECRYPTED: '...hiding a consciousness... deeper...' [FRAGMENTED, ORIGIN UNCERTAIN] - Echo",
     hints: [
       "Use 'j' to move down and 'k' to move up.",
       "Use 'w' to jump forwards by word, and 'b' to jump backwards.",
-      "Use '0' to go to the start of the line, and '$' to go to the end.",
-      "Use 'gg' to jump to the top of the file, and 'G' to jump to the bottom."
+      "Use '0' to go to the start of the line, and '$' to go to the end."
     ],
     tasks: [
       {
@@ -43,7 +42,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         value: "Agent Echo - Last Transmission",
         cursor: 3,
         cursorExact: true,
-        loreFragment: "ECHO LOG: Breach successful. R&D perimeter compromised. Monitoring for countermeasures.",
+        loreFragment: "LOG_00: \"Backdoor found. I have breached the R&D perimeter.\"",
+        
         keyHint: "j l"
       },
       {
@@ -51,7 +51,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         type: "verify_key_sequence",
         expectedKeySequence: ["j", "w"],
         value: "STATUS",
-        loreFragment: "ECHO LOG: Their project isn't just AI—they're merging with it. This changes everything.",
+        loreFragment: "LOG_01: \"They aren't creating an AI. They are becoming it.\"",
+        
         keyHint: "j w"
       },
       {
@@ -59,7 +60,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         type: "verify_key_sequence",
         expectedKeySequence: ["$", "b"],
         value: "server...",
-        loreFragment: "ECHO LOG: Signal trace complete. Coordinates locked. Preparing next phase.",
+        loreFragment: "LOG_02: \"Tracing signal origin... Coordinates locked.\"",
         keyHint: "$ b"
       },
       {
@@ -70,15 +71,6 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         loreFragment: "ECHO LOG: Signal alignment confirmed. Standing by for your command.",
         keyHint: "0"
       },
-      {
-        description: "Go to the end of the file, then to the top of the file.",
-        type: "verify_key_sequence",
-        expectedKeySequence: ["G", "gg"],
-        value: "// signal_trace.log",
-        cursor: 0,
-        loreFragment: "ECHO LOG: Signal lock established. Ready for injection. Following your lead.",
-        keyHint: "G gg"
-      }
     ]
   },
   2: {
@@ -119,7 +111,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     tasks: []
   },
   3: {
-    briefing: "SYSTEM FAULT. Compromised log entries must be purged and clean ones duplicated to obscure our presence. We must operate quickly and precisely.",
+    briefing: "SYSTEM FAULT. The mainframe's memory banks are a dynamic, self-correcting entity. Compromised log entries trigger latent subroutines. Purge these anomalies and duplicate verified data. This isn't about deception; it's about aligning with the system's own deterministic cycles of data integrity, or else risk a full system rollback triggered by deep-seated protocols.",
     initialText: [
       "// System Fault Log",
       "ERROR: CRITICAL_PROCESS_FAIL - URGENT",
@@ -140,7 +132,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "",
       "// END OF LOG"
     ],
-    loreReveal: "FAULT LOGS SANITIZED. 'Undo is your best friend when things go sideways. Dot is your best friend when things go right.' - Echo",
+    loreReveal: "LOG_03 SANITIZED: '...undo... dot... right...' [SYNTAX LOOP, ECHO FRAGMENT] - Echo",
     hints: [
       "'dd' to delete a line, 'D' to delete to end of line.",
       "'dw' to delete a word.",
@@ -160,14 +152,14 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "From 'ERROR: MEMORY_ALLOCATION_FAIL - URGENT', delete to the end of the line.",
         type: "missing",
         value: "- URGENT",
-        loreFragment: "LOG_21: 'Urgency removed. Time bends in the breach.'",
+        loreFragment: "LOG_21: 'Urgency metrics reset. The system prioritizes stability over chronological integrity.'",
         keyHint: "D"
       },
       {
         description: "Delete the word 'ERROR:' from 'ERROR: MEMORY_ALLOCATION_FAIL'.",
         type: "missing",
         value: "ERROR:",
-        loreFragment: "LOG_22: 'Error signature neutralized. Ghosts in the machine.'",
+        loreFragment: "LOG_22: 'Error signature neutralized. Residual data echoes persist within the sector. Unintended side effect of purging protocols.'",
         keyHint: "dw"
       },
       {
@@ -213,7 +205,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
             keyHint: "p"
           }
         ],
-        loreFragment: "LOG_24: 'Ghost login duplicated. Echoes multiply.'",
+        loreFragment: "LOG_24: 'Login duplicated. Echoes multiply: is this replication or infection? System remains unaware.'",
         keyHint: "yy, p"
       },
       {
@@ -233,7 +225,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
                 keyHint: "P"
             }
         ],
-        loreFragment: "LOG_25: 'Boot order scrambled. Sequence rewritten.'",
+        loreFragment: "LOG_25: 'Boot sequence re-ordered. Conflicting directives create a new, unstable reality. System accepts the change with no query.'",
         keyHint: "yy, P"
       },
       {
@@ -253,7 +245,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
                 keyHint: "."
             }
         ],
-        loreFragment: "LOG_26: 'Corruption purged. Data flows clean.'",
+        loreFragment: "LOG_26: 'Corruption purged. Data flows clean—for now. The system's self-healing protocols are easily deceived.'",
         keyHint: "dw, ."
       }
     ]
