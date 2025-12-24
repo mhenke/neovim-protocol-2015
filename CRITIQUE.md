@@ -191,7 +191,7 @@ Example:
 
 #### FAILURE CONDITIONS (if applicable)
 
-"[What happens if time/keystroke limit exceeded]"
+Only Episode 3 enforces hard keystroke limits; exceeding them results in a GAMEOVER state with message 'KEYSTROKE LIMIT EXCEEDED' and a narrative describing system lockdown or protocol purge.
 
 ---
 

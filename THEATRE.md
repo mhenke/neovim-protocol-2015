@@ -260,7 +260,7 @@ Use this template when creating or refining levels:
 **Episode:** [1-3] - [EPISODE NAME]
 **Core Skill:** [Primary NeoVim command/concept being taught]
 **Supporting Skills:** [Secondary commands/concepts used]
-**Difficulty Indicator:** [No limit / Time: XXs / Keystrokes: XX]
+**Difficulty Indicator:** [No limit / Time: XXs / Keystrokes: advisory (Ep1-2) / Keystroke max (Ep3)]
 
 ---
 
@@ -329,7 +329,7 @@ Example:
 
 #### FAILURE CONDITIONS (if applicable)
 
-"[What happens if time/keystroke limit exceeded in narrative terms]"
+Only Episode 3 enforces hard keystroke limits; exceeding them should result in a GAMEOVER state with the narrative 'KEYSTROKE LIMIT EXCEEDED' describing system lockdown or protocol purge.
 
 ---
 

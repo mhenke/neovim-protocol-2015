@@ -103,7 +103,7 @@ This episode focuses on the player's initial entry into the mainframe, searching
 **Episode:** 1 - THE BREACH (Awakening/Breach)
 **Core Skill:** Basic Insert Mode (`i`, `a`, `o`)
 **Supporting Skills:** Basic Navigation (`h/j/k/l`, `w/b`, `0/$`)
-**Difficulty Indicator:** Keystrokes: Target efficiency.
+**Difficulty Indicator:** Keystroke guidance: advisory for Episodes 1–2; Episode 3 enforces hard max limits.
 
 ---
 
