@@ -9,7 +9,7 @@ Principles
 - Echo (green) = past logs / lore: LOG_NN fragments appearing as historical narrative to advance story and reward "busy work" or milestone completion.
 - Hands-off UX: minimal mouse/hover affordances; keyboard-first interactions only.
 
-### SIGNAL WARMUP: INITIAL CONTACT
+### LEVEL 1: SIGNAL WARMUP: INITIAL CONTACT
 
 **Episode:** 1 - THE SEARCH (Awakening/Breach)
 **Core Skill:** Basic Navigation (`h/j/k/l`)
@@ -82,7 +82,7 @@ Use fundamental NeoVim movement commands to traverse a corrupted log file, pinpo
 
 #### LEADS TO:
 
-Level 1: signal_trace.log (Episode 1 - THE SEARCH)
+Level 2: signal_trace.log (Episode 1 - THE SEARCH)
 
 ---
 
@@ -96,9 +96,9 @@ This episode focuses on the player's initial entry into the mainframe, searching
 
 ---
 
-#### Example: Level 1: `signal_trace.log` (First Level of Episode 1)
+#### Example: Level 2: `signal_trace.log` (First Level of Episode 1)
 
-### LEVEL 1: LOG INJECTION: PROTOCOL ESTABLISHMENT
+### LEVEL 2: LOG INJECTION: PROTOCOL ESTABLISHMENT
 
 **Episode:** 1 - THE SEARCH (Awakening/Breach)
 **Core Skill:** Basic Insert Mode (`i`, `a`, `o`)
@@ -171,7 +171,7 @@ SIGNAL TRACE: INITIAL CONTACT (Basic Navigation)
 
 #### LEADS TO:
 
-Level 2: protocol_entry.log (Episode 1 - THE SEARCH)
+Level 3: protocol_entry.log (Episode 1 - THE SEARCH)
 
 Episode 2 — The Trace (Efficiency)
 - Levels: firewall_rules.json, blockchain_ledger.dat, neural_net.py, config_array.ini, code_analysis.cpp
