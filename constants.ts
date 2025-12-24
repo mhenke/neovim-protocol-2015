@@ -42,14 +42,22 @@ export const CURRICULUM: LevelConfig[] = [
   },
   {
     id: 2, episode: 1, episodeTitle: "THE BREACH",
-    filename: "security_hub.log",
-    objective: "Disable security protocols and purge compromised logs with precision editing.",
-    newKeys: ['i', 'a', 'o', 'O', 'A', 'I', 'Esc', 'x', 'r', 'cw', 'ciw', 'C', 'dd', 'D', 'yy', 'p', 'P', 'u', 'Ctrl+r'],
-    mechanics: ['insert_mode', 'editing', 'line_manipulation', 'undo_redo'],
-    idealKeystrokes: 40
+    filename: "protocol_entry.log",
+    objective: "Inject new data and make basic corrections to system logs.",
+    newKeys: ['i', 'a', 'o', 'O', 'A', 'I', 'Esc', 'x', 'r', 'cw', 'ciw', 'C'],
+    mechanics: ['insert_mode', 'editing'],
+    idealKeystrokes: 25
   },
   {
     id: 3, episode: 1, episodeTitle: "THE BREACH",
+    filename: "system_fault.log",
+    objective: "Purge compromised log entries and duplicate clean ones, recovering from errors.",
+    newKeys: ['dd', 'D', 'dw', 'yy', 'p', 'P', 'u', 'Ctrl+r', '.'],
+    mechanics: ['line_manipulation', 'undo_redo', 'repeat_last_action'],
+    idealKeystrokes: 25
+  },
+  {
+    id: 4, episode: 1, episodeTitle: "THE BREACH",
     filename: "data_stream.dat",
     objective: "Search and navigate through encrypted packet data, and replace corrupted data.",
     newKeys: ['/pattern', '?pattern', 'n', 'N', '*', '#', ':nohl', ':s/old/new/g', ':%s/old/new/g'],
@@ -57,15 +65,17 @@ export const CURRICULUM: LevelConfig[] = [
     idealKeystrokes: 25
   },
   {
-    id: 4, episode: 1, episodeTitle: "THE BREACH",
+    id: 5, episode: 1, episodeTitle: "THE BREACH",
     filename: "exfiltration.sh",
     objective: "Save the backdoor script and open multiple files for data extraction",
     newKeys: [':w', ':q', ':wq', ':q!', ':e', ':sp', ':vsp', 'Ctrl+w h/j/k/l', ':ls', ':bn', ':bp'],
     mechanics: ['file_operations', 'window_management', 'buffer_management'],
     idealKeystrokes: 20
   },
+
+  // --- EPISODE 2: THE TRACE (Efficiency) ---
   {
-    id: 5, episode: 1, episodeTitle: "THE BREACH",
+    id: 6, episode: 2, episodeTitle: "THE TRACE",
     filename: "firewall_rules.json",
     objective: "Modify firewall rules without breaking JSON/code structure",
     newKeys: ['ci"', "ci'", 'ci(', 'ci{', 'ci[', 'cit', 'diw', 'daw'],
@@ -73,10 +83,8 @@ export const CURRICULUM: LevelConfig[] = [
     timeLimit: 120,
     idealKeystrokes: 20
   },
-
-  // --- EPISODE 2: THE TRACE (Efficiency) ---
   {
-    id: 6, episode: 2, episodeTitle: "THE TRACE",
+    id: 7, episode: 2, episodeTitle: "THE TRACE",
     filename: "blockchain_ledger.dat",
     objective: "Extract and manipulate transaction blocks visually",
     newKeys: ['v', 'V', 'Ctrl+v', 'd', 'y', '>', '<'],
@@ -85,7 +93,7 @@ export const CURRICULUM: LevelConfig[] = [
     idealKeystrokes: 22
   },
   {
-    id: 7, episode: 2, episodeTitle: "THE TRACE",
+    id: 8, episode: 2, episodeTitle: "THE TRACE",
     filename: "neural_net.py",
     objective: "Fix corrupted neural network code with precision targeting",
     newKeys: ['f', 't', 'F', 'T', ';', ',', '%'],
@@ -94,7 +102,7 @@ export const CURRICULUM: LevelConfig[] = [
     idealKeystrokes: 18
   },
   {
-    id: 8, episode: 2, episodeTitle: "THE TRACE",
+    id: 9, episode: 2, episodeTitle: "THE TRACE",
     filename: "config_array.ini",
     objective: "Fix repeated configuration errors efficiently",
     newKeys: ['.', '5j', '3dd', '2yy'],
@@ -103,22 +111,13 @@ export const CURRICULUM: LevelConfig[] = [
     idealKeystrokes: 10
   },
   {
-    id: 9, episode: 2, episodeTitle: "THE TRACE",
+    id: 10, episode: 2, episodeTitle: "THE TRACE",
     filename: "code_analysis.cpp",
-    objective: "Analyze and refactor C++ codebase across multiple windows, scrolling quickly.",
-    newKeys: ['Ctrl+u', 'Ctrl+d'],
-    mechanics: ['scrolling'],
+    objective: "Analyze and refactor C++ codebase across multiple windows, marking key points for navigation.",
+    newKeys: ['Ctrl+u', 'Ctrl+d', 'ma', "'a", "``a``", 'Ctrl+o', 'Ctrl+i'],
+    mechanics: ['scrolling', 'marks', 'jump_list'],
     maxKeystrokes: 40,
     idealKeystrokes: 25
-  },
-  {
-    id: 10, episode: 2, episodeTitle: "THE TRACE",
-    filename: "quantum_state.sys",
-    objective: "Mark quantum states and navigate between entangled positions",
-    newKeys: ['ma', "'a", "``a``", 'Ctrl+o', 'Ctrl+i'],
-    mechanics: ['marks', 'jump_list'],
-    maxKeystrokes: 35,
-    idealKeystrokes: 20
   },
 
   // --- EPISODE 3: THE CORE (Mastery) ---

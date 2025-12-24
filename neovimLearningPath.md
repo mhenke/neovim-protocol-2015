@@ -20,21 +20,34 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 
 ---
 
-### **Level 2** — `security_hub.log`
-**Story:** Disable security protocols and purge compromised logs with precision editing.  
-**New Keys:** `i`, `a`, `o`, `O`, `A`, `I`, `Esc`, `x`, `r`, `cw`, `ciw`, `C`, `dd`, `D`, `yy`, `p`, `P`, `u`, `Ctrl+r`
+### **Level 2** — `protocol_entry.log`
+**Story:** Inject new data and make basic corrections to system logs.  
+**New Keys:** `i`, `a`, `o`, `O`, `A`, `I`, `Esc`, `x`, `r`, `cw`, `ciw`, `C`
 
 **Teaches:**
 - Insert mode variations (`i, a, o, O, A, I`)
-- Basic editing (`x, r, cw, ciw, C`)
-- Line manipulation (`dd, D, yy, p, P`)
-- Undo/Redo (`u`, `Ctrl+r`)
+- Basic character/word editing (`x, r, cw, ciw, C`)
 
-**Real Usage:** The core editing toolkit for any file.
+**Real Usage:** Quick text insertion and basic in-line editing.
 
 ---
 
-### **Level 3** — `data_stream.dat`
+### **Level 3** — `system_fault.log`
+**Story:** Purge compromised log entries and duplicate clean ones, recovering from errors.  
+**New Keys:** `dd`, `D`, `dw`, `yy`, `p`, `P`, `u`, `Ctrl+r`, `.`
+
+**Teaches:**
+- Line and word deletion (`dd, D, dw`)
+- Copy/yank line (`yy`)
+- Paste after (`p`) and before (`P`)
+- Undo (`u`) and redo (`Ctrl+r`)
+- Repeat last change (`.`)
+
+**Real Usage:** Efficient line manipulation, mistake recovery, and repetitive tasks.
+
+---
+
+### **Level 4** — `data_stream.dat`
 **Story:** Search and navigate through encrypted packet data, and replace corrupted data.
 **New Keys:** `/pattern`, `?pattern`, `n`, `N`, `*`, `#`, `:nohl`, `:s/old/new/g`, `:%s/old/new/g`
 
@@ -48,7 +61,7 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 
 ---
 
-### **Level 4** — `exfiltration.sh`
+### **Level 5** — `exfiltration.sh`
 **Story:** Save the backdoor script and open multiple files for data extraction  
 **New Keys:** `:w`, `:q`, `:wq`, `:q!`, `:e`, `:sp`, `:vsp`, `Ctrl+w h/j/k/l`, `:ls`, `:bn`, `:bp`
 
@@ -62,39 +75,33 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 
 ---
 
-### **Level 5** — `firewall_rules.json`
+## 📖 EPISODE 2: THE TRACE (Efficiency)
+
+### **Level 6** — `firewall_rules.json`
 **Story:** Modify firewall rules without breaking JSON/code structure  
 **New Keys:** `ci"`, `ci'`, `ci(`, `ci{`, `ci[`, `cit`, `diw`, `daw`
 
 **Teaches:**
-- Change inside quotes (ci")
-- Change inside parens (ci()
-- Change inside braces (ci{)
-- Change inside tags (cit)
-- **Delete inner word vs around word (diw/daw)**
+- Text objects for change inside/around delimiters and words.
 
 **Real Usage:** Text objects for structured editing (essential for code)
 
 ---
 
-## 📖 EPISODE 2: THE TRACE (Efficiency)
-
-### **Level 6** — `blockchain_ledger.dat`
+### **Level 7** — `blockchain_ledger.dat`
 **Story:** Extract and manipulate transaction blocks visually  
 **New Keys:** `v`, `V`, `Ctrl+v`, `d`, `y`, `>`, `<`
 
 **Teaches:**
-- Visual character mode (v)
-- Visual line mode (V)
-- **Visual block mode (Ctrl+v)** - column editing!
+- Visual character mode (v), line mode (V), and block mode (Ctrl+v)
 - Delete/yank selection
-- **Indent/unindent (>/< in visual)**
+- Indent/unindent (>/< in visual)
 
 **Real Usage:** Multi-line editing, column operations
 
 ---
 
-### **Level 7** — `neural_net.py`
+### **Level 8** — `neural_net.py`
 **Story:** Fix corrupted neural network code with precision targeting  
 **New Keys:** `f`, `t`, `F`, `T`, `;`, `,`, `%`
 
@@ -102,48 +109,35 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 - Find char forward (f), backward (F)
 - To/until char (t/T)
 - Repeat find (;), reverse (,)
-- **Jump to matching bracket (%)**
+- Jump to matching bracket (%)
 
 **Real Usage:** Intra-line navigation, bracket matching in code
 
 ---
 
-### **Level 8** — `config_array.ini`
+### **Level 9** — `config_array.ini`
 **Story:** Fix repeated configuration errors efficiently  
 **New Keys:** `.` `5j` `3dd` `2yy` (counts with operators)
 
 **Teaches:**
-- **Repeat last change (.)**
-- Counts with movement (5j = down 5)
-- Counts with operators (3dd = delete 3 lines)
+- Repeat last change (.)
+- Counts with movement (5j = down 5) and operators (3dd = delete 3 lines)
 
 **Real Usage:** Efficiency multiplier, avoid repetition
 
 ---
 
-### **Level 9** — `code_analysis.cpp`
-**Story:** Analyze and refactor C++ codebase across multiple windows, scrolling quickly.  
-**New Keys:** `Ctrl+u`, `Ctrl+d`
+### **Level 10** — `code_analysis.cpp`
+**Story:** Analyze and refactor C++ codebase across multiple windows, marking key points for navigation.
+**New Keys:** `Ctrl+u`, `Ctrl+d`, `ma`, `'a`, "```a```", `Ctrl+o`, `Ctrl+i`
 
 **Teaches:**
-- **Scroll half-page (Ctrl+u/d)**
-
-**Real Usage:** Efficient file navigation.
-
----
-
-### **Level 10** — `quantum_state.sys`
-**Story:** Mark quantum states and navigate between entangled positions  
-**New Keys:** `ma`, `'a`, "```a```", `Ctrl+o`, `Ctrl+i`
-
-**Teaches:**
+- Scroll half-page (Ctrl+u/d)
 - Set mark (ma)
-- Jump to mark line ('a)
-- Jump to mark exact position (`a)
-- **Jump to previous position (Ctrl+o)**
-- **Jump to next position (Ctrl+i)**
+- Jump to mark ('a, `a)
+- Jump to previous/next position (Ctrl+o, Ctrl+i)
 
-**Real Usage:** Bookmark locations, navigate jump history
+**Real Usage:** Efficient file navigation, bookmarking, and navigating jump history.
 
 ---
 
@@ -154,12 +148,9 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 **New Keys:** `>>`, `<<`, `==`, `gg=G`, `J`, `gJ`
 
 **Teaches:**
-- **Indent line (>>)**
-- **Unindent line (<<)**
-- **Auto-indent line (==)**
-- **Auto-indent entire file (gg=G)**
-- Join lines with space (J)
-- Join lines without space (gJ)
+- Indent line (>>), unindent line (<<)
+- Auto-indent line (==), auto-indent entire file (gg=G)
+- Join lines with/without space (J, gJ)
 
 **Real Usage:** Code formatting (critical for development)
 
@@ -170,7 +161,7 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 **New Keys:** `&`
 
 **Teaches:**
-- **Repeat last substitution (&)**
+- Repeat last substitution (&)
 
 **Real Usage:** Rapid consecutive changes.
 

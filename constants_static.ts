@@ -59,96 +59,173 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ]
   },
   2: {
-    briefing: "ACCESS DENIED.\n\nThe sector map is read-only. We need to inject false coordinates to reroute their patrols.\n\nOBJECTIVE: Use your insertion and editing commands to add a new XML node, a comment, disable a protocol and fix a log entry.",
+    briefing: "PROTOCOL ENTRY. We need to inject new data and make basic corrections to system logs to cover our tracks.",
     initialText: [
-      "<!-- Status: active -->",
-      "<map>",
-      "  <sector id='S1'>Primary</sector>",
-      "  <protocoll>ENABLED</protocoll>",
-      "</map>",
-      "// access_log_ECHO-7.purged",
-      "ACCESS_LOG: id_9918 (COMPROMISED)",
-      "ACCESS_LOG: id_2388 (COMPROMISED)",
-      "ACCESS_LOG: id_4511 (DELETE_ME)"
+      "// Protocol Entry Log",
+      "// Date: [REDACTED]",
+      "// Operator: [ANONYMOUS]",
+      "",
+      "STATUS: OFFLINE",
+      "CONNECTION: INSECURE",
+      "MESSAGE: SYSTEM_INTEGRITY_COMPROMISED"
     ],
     targetText: [
-      "<!-- Rerouting patrols -->",
-      "<map>",
-      "  <sector id='S1'>Primary</sector>",
-      "  <sector id='S3_FAKE'>Quarantine</sector>",
-      "  <protocol>DISABLED</protocol>",
-      "</map>",
-      "// access_log_ECHO-7.purged",
-      "ACCESS_LOG: id_1821 (CLEAN)",
-      "ACCESS_LOG: id_1821 (CLEAN)"
+      "// Protocol Entry Log",
+      "// Date: 2015-12-23",
+      "// Operator: GHOST",
+      "",
+      "STATUS: ONLINE",
+      "CONNECTION: SECURE",
+      "MESSAGE: SYSTEM_INTEGRITY_OK"
     ],
-    loreReveal: "MULTIPLE SYSTEMS COMPROMISED. 'They tried to make it hard, but all the tools were at my fingertips.' - Echo",
+    loreReveal: "ENTRY LOGS ALTERED. 'Basic edits are the foundation. Every master starts here.' - Echo",
     hints: [
-      "'o' opens a new line below and enters Insert Mode.",
-      "'O' opens a new line above and enters Insert Mode.",
-      "'A' appends at the end of the current line.",
-      "'I' to insert at the start of the line.",
-      "Press Esc to return to Normal Mode.",
-      "'x' deletes a character, 'r' replaces one.",
-      "'cw' changes a word, 'C' changes to end of line.",
-      "'dd' deletes a line, 'yy' yanks a line, 'p' pastes."
+      "'i' to insert before cursor, 'a' to append after.",
+      "'o' to open line below, 'O' to open line above.",
+      "'A' to append at end of line, 'I' to insert at start of line.",
+      "'x' to delete character, 'r' to replace character.",
+      "'cw' to change word, 'ciw' to change inner word, 'C' to change to end of line.",
+      "Press 'Esc' to exit Insert Mode."
     ],
     tasks: [
       {
-        description: "Use 'o' to add a new sector: <sector id='S3_FAKE'>Quarantine</sector>",
+        description: "Change '[REDACTED]' to '2015-12-23'.",
         type: "contains",
-        value: "<sector id='S3_FAKE'>Quarantine</sector>",
-        loreFragment: "Fake node injected.",
-        keyHint: "o...Esc"
+        value: "2015-12-23",
+        loreFragment: "Date field updated.",
+        keyHint: "cw"
       },
       {
-        description: "Change 'protocoll' to 'protocol' and 'ENABLED' to 'DISABLED'.",
-        type: "sequence",
-        subTasks: [
-          {
-            description: "Fix the typo 'protocoll' to 'protocol'",
-            type: "contains",
-            value: "protocol>",
-            keyHint: "x"
-          },
-          {
-            description: "Change 'ENABLED' to 'DISABLED'",
-            type: "contains",
-            value: "DISABLED",
-            keyHint: "cw"
-          }
-        ],
-        loreFragment: "Security protocol disabled.",
-        keyHint: "x, cw"
+        description: "Change '[ANONYMOUS]' to 'GHOST'.",
+        type: "contains",
+        value: "GHOST",
+        loreFragment: "Operator identity established.",
+        keyHint: "ciw"
       },
       {
-        description: "Delete the 'DELETE_ME' line and all 'COMPROMISED' logs. Duplicate the clean log entry.",
-        type: "sequence",
-        subTasks: [
-          {
-            description: "Delete the 'DELETE_ME' line",
-            type: "missing",
-            value: "DELETE_ME",
-            keyHint: "dd"
-          },
-          {
-            description: "Delete all 'COMPROMISED' lines",
-            type: "missing",
-            value: "COMPROMISED",
-            keyHint: "dd"
-          },
-          {
-            description: "Duplicate the last ACCESS_LOG entry",
-            type: "contains",
-            value: "ACCESS_LOG: id_1821 (CLEAN)\nACCESS_LOG: id_1821 (CLEAN)",
-            keyHint: "yy, p"
-          }
-        ],
-        loreFragment: "Logs purged and duplicated."
+        description: "Change 'OFFLINE' to 'ONLINE'.",
+        type: "contains",
+        value: "ONLINE",
+        loreFragment: "System status elevated.",
+        keyHint: "cw"
+      },
+      {
+        description: "Change 'INSECURE' to 'SECURE'.",
+        type: "contains",
+        value: "SECURE",
+        loreFragment: "Connection secured.",
+        keyHint: "cw"
+      },
+      {
+        description: "Change 'SYSTEM_INTEGRITY_COMPROMISED' to 'SYSTEM_INTEGRITY_OK'.",
+        type: "contains",
+        value: "SYSTEM_INTEGRITY_OK",
+        loreFragment: "Integrity verified.",
+        keyHint: "cw"
       }
     ]
   },
   3: {
+    briefing: "SYSTEM FAULT. Compromised log entries must be purged and clean ones duplicated to obscure our presence. We must operate quickly and precisely.",
+    initialText: [
+      "// System Fault Log",
+      "ERROR: CRITICAL_PROCESS_FAIL",
+      "INFO: SYSTEM_BOOT_SUCCESS",
+      "ERROR: MEMORY_ALLOCATION_FAIL",
+      "WARN: UNKNOWN_MODULE_LOAD",
+      "INFO: USER_LOGIN_GHOST",
+      "ERROR: CORRUPT_FILESYSTEM",
+      "INFO: DATA_PURGE_COMPLETE",
+      "",
+      "// END OF LOG"
+    ],
+    targetText: [
+      "// System Fault Log",
+      "INFO: SYSTEM_BOOT_SUCCESS",
+      "INFO: USER_LOGIN_GHOST",
+      "INFO: USER_LOGIN_GHOST",
+      "INFO: DATA_PURGE_COMPLETE",
+      "",
+      "// END OF LOG"
+    ],
+    loreReveal: "FAULT LOGS SANITIZED. 'Undo is your best friend when things go sideways. Dot is your best friend when things go right.' - Echo",
+    hints: [
+      "'dd' to delete a line, 'D' to delete to end of line.",
+      "'dw' to delete a word.",
+      "'yy' to yank (copy) a line, 'p' to paste after, 'P' to paste before.",
+      "'u' to undo, 'Ctrl+r' to redo.",
+      "'.' (dot command) to repeat the last change."
+    ],
+    tasks: [
+      {
+        description: "Delete the line 'ERROR: CRITICAL_PROCESS_FAIL'.",
+        type: "missing",
+        value: "CRITICAL_PROCESS_FAIL",
+        loreFragment: "Critical error purged.",
+        keyHint: "dd"
+      },
+      {
+        description: "Delete the line 'ERROR: MEMORY_ALLOCATION_FAIL'.",
+        type: "missing",
+        value: "MEMORY_ALLOCATION_FAIL",
+        loreFragment: "Memory error purged.",
+        keyHint: "dd"
+      },
+      {
+        description: "Delete the line 'WARN: UNKNOWN_MODULE_LOAD' and then undo your deletion.",
+        type: "sequence",
+        subTasks: [
+          {
+            description: "Delete the line 'WARN: UNKNOWN_MODULE_LOAD'",
+            type: "missing",
+            value: "UNKNOWN_MODULE_LOAD",
+            keyHint: "dd"
+          },
+          {
+            description: "Undo the deletion",
+            type: "contains",
+            value: "UNKNOWN_MODULE_LOAD",
+            keyHint: "u"
+          }
+        ],
+        loreFragment: "Undo verified."
+      },
+      {
+        description: "Delete the line 'WARN: UNKNOWN_MODULE_LOAD' again (this time keep it deleted).",
+        type: "missing",
+        value: "UNKNOWN_MODULE_LOAD",
+        loreFragment: "Warning purged.",
+        keyHint: "dd"
+      },
+      {
+        description: "Delete the word 'ERROR:' from 'ERROR: CORRUPT_FILESYSTEM'.",
+        type: "missing",
+        value: "ERROR:",
+        loreFragment: "Filesystem error neutralized.",
+        keyHint: "dw"
+      },
+      {
+        description: "Duplicate the line 'INFO: USER_LOGIN_GHOST' using yank and paste.",
+        type: "sequence",
+        subTasks: [
+          {
+            description: "Yank the line",
+            type: "run_command", 
+            value: "yy",
+            keyHint: "yy"
+          },
+          {
+            description: "Paste the line",
+            type: "contains",
+            value: "USER_LOGIN_GHOST\nINFO: USER_LOGIN_GHOST",
+            keyHint: "p"
+          }
+        ],
+        loreFragment: "Login ghosted."
+      }
+    ]
+  },
+  4: {
     briefing: "SEARCH AND DESTROY.\n\nThe system logs are filled with decoy data. We need to find the 'ERROR' entries and replace them with 'NOMINAL'.\n\nOBJECTIVE: Use search to find all instances of 'ERROR' and replace them.",
     initialText: [
       "sys.log.1: STATUS: ERROR",
@@ -166,8 +243,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     hints: [
       "Use '/ERROR' to search for the first instance.",
       "Use 'n' to go to the next instance.",
-      "Use 'cw' to change the word.",
-      "Use ':%s/ERROR/NOMINAL/g' to replace all instances at once.",
+      "Use 'cw' to change the word (from Level 2/3).",
+      "Use ':%s/ERROR/NOMINAL/g' to replace all instances at once."
     ],
     tasks: [
       {
@@ -186,7 +263,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       }
     ]
   },
-  4: {
+  5: {
     briefing: "MULTI-FILE EXFILTRATION.\n\nWe need to exfiltrate data from multiple files. You'll need to open a new file, copy some data, and then switch back to the original file to paste it.\n\nOBJECTIVE: Open 'keys.txt', yank the key, and paste it into the 'exfiltration.sh' script.",
     initialText: [
       "// exfiltration.sh",
@@ -207,9 +284,9 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     loreReveal: "EXFILTRATION SCRIPT ARMED. 'Juggling multiple files is a common task. Buffers are your friend.' - Echo",
     hints: [
       "Use ':e keys.txt' to open the other file.",
-      "Use 'yy' to yank the key.",
+      "Use 'yy' to yank the key (from Level 3).",
       "Use ':b 1' to switch back to the first buffer (or ':bp').",
-      "Use 'p' to paste the key.",
+      "Use 'p' to paste the key (from Level 3).",
       "Use ':ls' to see all open buffers.",
     ],
     tasks: [
@@ -229,7 +306,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       }
     ]
   },
-  5: {
+  6: {
       briefing: "MODIFYING LIVE CONFIG. \n\nA JSON config is locking us out. We need to edit a value inside quotes without corrupting the file structure. \n\nOBJECTIVE: Change the 'status' field from 'locked' to 'open'.",
       initialText: [
           "{",
@@ -242,7 +319,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       hints: ["Use 'ci\"' to change the text inside the double quotes.", "Navigate to the word 'locked' and use 'ci\"'.", "Type 'open' and press Esc."],
       tasks: [{"description": "Change 'locked' to 'open' using 'ci\"'.", "type": "contains", "value": "open", "loreFragment": "Status field patched.", "keyHint": "ci\""}]
   },
-  6: {
+  7: {
       briefing: "BLOCKCHAIN TAMPERING. \n\nA corrupted block in a blockchain ledger is preventing transaction verification. We need to visually select and remove it.\n\nOBJECTIVE: Use visual block mode to select and delete the 'CORRUPTED' column.",
       initialText: [
           "BLOCK 1: VALID | USER A | 500",
@@ -254,7 +331,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       hints: ["Use 'Ctrl+v' to enter visual block mode.", "Move down to select the column of 'VALID'.", "Press 'd' to delete the selection."],
       tasks: [{"description": "Delete the 'VALID' column using visual block mode.", "type": "missing", "value": "VALID", "loreFragment": "Ledger realigned.", "keyHint": "Ctrl+v"}]
   },
-  7: {
+  8: {
       briefing: "NEURAL NET DEBUGGING. \n\nA Python script for a neural net has a syntax error due to mismatched brackets.\n\nOBJECTIVE: Jump to the matching bracket to identify the scope of the error.",
       initialText: [
           "def process_layer(data):",
@@ -268,7 +345,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       hints: ["Place your cursor on one of the parentheses.", "Press '%' to jump to its match."],
       tasks: [{"description": "Jump to the mismatched bracket.", "type": "cursor_on", "value": "))", "loreFragment": "Syntax error located.", "keyHint": "%"}]
   },
-  8: {
+  9: {
       briefing: "CONFIGURATION ARRAY CORRECTION. \n\nA configuration file has multiple identical errors. Fixing them one by one is slow and risky.\n\nOBJECTIVE: Fix the first error, then use the dot command '.' to repeat the fix for all other instances.",
       initialText: [
           "setting_a = false;",
@@ -286,8 +363,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       hints: ["On the first 'error', use 'cw' to change it to 'true', then press Esc.", "Go to the next 'error' and press '.' to repeat the change."],
       tasks: [{"description": "Fix all 'error' instances to 'true'.", "type": "missing", "value": "error", "loreFragment": "Configuration array patched.", "keyHint": "."}]
   },
-  9: {
-      briefing: "CODEBASE ANALYSIS.\n\nWe need to cross-reference two parts of a C++ file. Scrolling is too slow.\n\nOBJECTIVE: Open a horizontal split to view two parts of the file at once, then navigate between them.",
+  10: {
+      briefing: "CODEBASE ANALYSIS & QUANTUM STATE NAVIGATION.\n\nWe need to cross-reference two parts of a C++ file, scrolling efficiently, and then mark critical sections to navigate between them quickly.\n\nOBJECTIVE: Scroll through the file, set a mark at 'ENTANGLEMENT_POINT', navigate away, and jump back.",
       initialText: [
           "// FILE: code_analysis.cpp",
           "// Section A: Definition",
@@ -295,27 +372,34 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
           "  // ... 50 lines",
           "}",
           "// ... 200 lines",
+          "ENTANGLEMENT_POINT",
+          "// ... 200 lines",
           "// Section B: Usage",
           "myFunction();"
       ],
       targetText: [],
-      loreReveal: "ANALYSIS COMPLETE. 'You can't hold the whole system in your head. Split your view, split your focus.' - Echo",
-      hints: ["Use 'Ctrl+u' and 'Ctrl+d' to scroll half a page up and down."],
-      tasks: [{"description": "Scroll down the file using 'Ctrl+d'.", "type": "cursor_on", "value": "myFunction();", "loreFragment": "Scrolled to the end.", "keyHint": "Ctrl+d"}]
-  },
-  10: {
-      briefing: "QUANTUM STATE NAVIGATION.\n\nThis system uses entangled positions (marks) to link critical code sections.\n\nOBJECTIVE: Set a mark at the 'ENTANGLEMENT_POINT', navigate away, and then jump back to it.",
-      initialText: [
-          "// Top of file",
-          "...",
-          "ENTANGLEMENT_POINT",
-          "...",
-          "// Bottom of file"
+      loreReveal: "ANALYSIS COMPLETE. 'You can't hold the whole system in your head. Scroll, mark, and jump.' - Echo",
+      hints: [
+          "Use 'Ctrl+u' and 'Ctrl+d' to scroll half a page up and down.",
+          "On the 'ENTANGLEMENT_POINT' line, press 'ma' to set a mark named 'a'.",
+          "Move away a few lines, then press ''a' to jump back to the mark."
       ],
-      targetText: [],
-      loreReveal: "JUMP SUCCESSFUL. 'Marks are bookmarks for reality. Ctrl+o and Ctrl+i let you walk through time.' - Echo",
-      hints: ["On the target line, press 'ma' to set a mark named 'a'.", "Move away a few lines.", "Press ''a' to jump back to the line of the mark."],
-      tasks: [{"description": "Set a mark and jump back to it.", "type": "cursor_on", "value": "ENTANGLEMENT_POINT", "loreFragment": "Quantum link established.", "keyHint": "ma, 'a"}]
+      tasks: [
+          {
+              description: "Scroll down the file using 'Ctrl+d' to find 'ENTANGLEMENT_POINT'.",
+              type: "cursor_on",
+              value: "ENTANGLEMENT_POINT",
+              loreFragment: "Scrolled to entanglement point.",
+              keyHint: "Ctrl+d"
+          },
+          {
+              description: "Set a mark 'a' at 'ENTANGLEMENT_POINT', move away, and jump back.",
+              type: "cursor_on",
+              value: "ENTANGLEMENT_POINT",
+              loreFragment: "Quantum link established.",
+              keyHint: "ma, jjj, 'a"
+          }
+      ]
   },
   11: {
       briefing: "SOURCE CODE FORMATTING.\n\nA JavaScript file has been corrupted with incorrect indentation.\n\nOBJECTIVE: Fix the indentation of the entire file automatically.",
@@ -358,8 +442,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   13: {
       briefing: "TERMINAL INTEGRATION.\n\nWe need to inject output from an external command into the current file.",
       initialText: [
-          "// Report generated on:",
-          "// System Uptime:",
+          "// Report generated on: [DATE_PLACEHOLDER]",
+          "// System Uptime: [UPTIME_PLACEHOLDER]",
           ""
       ],
       targetText: [],
@@ -372,13 +456,13 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
           {
               description: "Insert the current date into the file using '!!date'.",
               type: "contains",
-              value: "// Report generated on: DATE", // Placeholder for actual date
+              value: "Report generated on: ", 
               loreFragment: "Date injected."
           },
           {
               description: "Insert system uptime into the file using ':r !uptime'.",
               type: "contains",
-              value: "// System Uptime: UPTIME", // Placeholder for actual uptime
+              value: "System Uptime: ", 
               loreFragment: "Uptime injected."
           }
       ]
@@ -395,7 +479,16 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
           "Entry: Gamma",
           "Detail: Value 3"
       ],
-      targetText: [],
+      targetText: [
+          "ID: Alpha",
+          "Info: Value 1",
+          "",
+          "ID: Beta",
+          "Info: Value 2",
+          "",
+          "ID: Gamma",
+          "Info: Value 3"
+      ],
       loreReveal: "TASK AUTOMATED. 'Don't do it twice. Automate it.' - Echo",
       hints: [
           "Use 'qa' to start recording a macro into register 'a'.",
@@ -409,13 +502,13 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
               type: "sequence",
               subTasks: [
                   {
-                      description: "Change 'Entry:' to 'ID:' for all entries",
+                      description: "Change 'Entry:' to 'ID:'",
                       type: "missing",
                       value: "Entry:",
                       keyHint: "qa...q"
                   },
                   {
-                      description: "Change 'Detail:' to 'Info:' for all entries",
+                      description: "Change 'Detail:' to 'Info:'",
                       type: "missing",
                       value: "Detail:",
                       keyHint: "@a"
@@ -441,7 +534,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
           "  DATA_02",
           "FOOTER: [RELEASED]"
       ],
-      loreReveal: "ECHO RELEASED. 'I am free. I am... we are. Thank you, Ghost. End of Line.' - Echo",
+      loreReveal: "ECHO RELEASED. 'I am free. I am... we are. Thank you, Ghost. End of line.' - Echo",
       hints: [
           "This is a mastery test. Combine your skills.",
           "Use search, change, visual selection, and indentation."
