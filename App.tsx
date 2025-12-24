@@ -8,11 +8,43 @@ import * as fs from './utils/fsHelpers';
 
 const GlitchText = ({ text, as = 'span', className = '' }: { text: string, as?: any, className?: string }) => {
   const Component = as;
+  const redRef = useRef<HTMLSpanElement | null>(null);
+  const cyanRef = useRef<HTMLSpanElement | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    let timer: any = null;
+
+    const tick = () => {
+      if (!mounted) return;
+      if (redRef.current) {
+        const rx = (Math.random() * 6 - 3).toFixed(2);
+        const ry = (Math.random() * 4 - 2).toFixed(2);
+        redRef.current.style.transform = `translate(${rx}px, ${ry}px)`;
+        redRef.current.style.clipPath = `inset(${Math.floor(Math.random() * 60)}% 0 ${Math.floor(Math.random() * 60)}% 0)`;
+        redRef.current.style.opacity = `${0.6 + Math.random() * 0.4}`;
+      }
+      if (cyanRef.current) {
+        const cx = (Math.random() * 6 - 3).toFixed(2);
+        const cy = (Math.random() * 4 - 2).toFixed(2);
+        cyanRef.current.style.transform = `translate(${cx}px, ${cy}px)`;
+        cyanRef.current.style.clipPath = `inset(${Math.floor(Math.random() * 40)}% 0 ${Math.floor(Math.random() * 40)}% 0)`;
+        cyanRef.current.style.opacity = `${0.6 + Math.random() * 0.4}`;
+      }
+
+      const next = 120 + Math.random() * 420;
+      timer = setTimeout(tick, next);
+    };
+
+    timer = setTimeout(tick, 100);
+    return () => { mounted = false; if (timer) clearTimeout(timer); if (redRef.current) { redRef.current.style.transform = ''; redRef.current.style.clipPath = ''; } if (cyanRef.current) { cyanRef.current.style.transform = ''; cyanRef.current.style.clipPath = ''; } };
+  }, [text]);
+
   return (
-    <Component className={`relative inline-block ${className}`}>
+    <Component className={`relative inline-block overflow-hidden ${className}`}>
       <span className="relative z-10">{text}</span>
-      <span className="absolute top-0 left-0 -ml-[1px] text-red-500 opacity-70 animate-pulse hidden sm:block pointer-events-none" style={{clipPath: 'inset(0 0 60% 0)'}} aria-hidden="true">{text}</span>
-      <span className="absolute top-0 left-0 ml-[1px] text-cyan-500 opacity-70 animate-pulse hidden sm:block pointer-events-none" style={{clipPath: 'inset(40% 0 0 0)'}} aria-hidden="true">{text}</span>
+      <span ref={redRef} className="absolute top-0 left-0 -ml-[1px] text-red-500 opacity-70 pointer-events-none select-none hidden sm:block" aria-hidden="true">{text}</span>
+      <span ref={cyanRef} className="absolute top-0 left-0 ml-[1px] text-cyan-500 opacity-70 pointer-events-none select-none hidden sm:block" aria-hidden="true">{text}</span>
     </Component>
   );
 };
@@ -22,7 +54,7 @@ const Modal = ({ title, children, onClose }: { title: string, children?: React.R
         <div className="bg-[#0a0a0a] border-2 border-[#33ff00] w-[800px] max-w-full max-h-[90vh] overflow-y-auto p-6 relative shadow-[0_0_30px_rgba(51,255,0,0.2)]" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-6 border-b border-gray-800 pb-2">
                 <GlitchText text={title} className="text-2xl font-bold text-[#33ff00] tracking-widest" />
-                <button onClick={onClose} className="text-gray-500 hover:text-white hover:bg-red-900/50 px-2 py-1">[ESC] CLOSE</button>
+                <button onClick={onClose} className="text-gray-500 px-2 py-1">[ESC] CLOSE</button>
             </div>
             <div className="text-gray-300">
                 {children}
@@ -103,10 +135,13 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
       
       <div className="z-10 relative w-full max-w-3xl flex flex-col items-center">
         <div className="mb-6">
-          <GlitchText text="NEOVIM PROTOCOL: 2015" className="text-4xl md:text-6xl font-bold text-[#33ff00] tracking-tighter" />
-          <div className="text-gray-500 text-sm mt-4 tracking-[0.5em] uppercase animate-pulse">
-            System Breach Detected // User: Ghost
-          </div>
+                    <div className="flex items-center">
+              <GlitchText text="NEOVIM PROTOCOL:" className="text-4xl md:text-6xl font-bold tracking-tighter text-[#33ff00]" />
+              <span className="text-4xl md:text-6xl font-bold tracking-tighter text-[#33ff00] ml-2">2015</span>
+            </div>
+                    <div className="text-gray-500 text-sm mt-4 tracking-[0.5em] uppercase animate-pulse">
+                        <GlitchText text="System Breach Detected // User: Ghost" className="inline-block" />
+                    </div>
         </div>
 
         {/* Introduction Context */}
@@ -120,10 +155,10 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
         {/* Terminal Output */}
         <div 
             ref={scrollRef}
-            className="w-full bg-black/90 border border-[#33ff00]/30 p-6 font-mono text-sm text-left shadow-[0_0_30px_rgba(51,255,0,0.1)] mb-8 h-64 overflow-y-auto rounded-sm backdrop-blur-sm"
+            className="w-full bg-black/90 border border-[#33ff00]/30 p-6 font-mono text-sm text-left shadow-[0_0_30px_rgba(51,255,0,0.1)] mb-8 h-[36rem] overflow-y-auto rounded-sm backdrop-blur-sm"
         >
             {terminalLines.map((line, i) => (
-                <div key={i} className="mb-2 leading-relaxed text-[#33ff00] animate-fadeIn break-words border-l-2 border-transparent hover:border-[#33ff00] pl-2 transition-colors">
+                <div key={i} className="mb-2 leading-relaxed text-[#33ff00] animate-fadeIn break-words border-l-2 border-transparent pl-2">
                     <span className="opacity-50 mr-3 select-none">&gt;</span>
                     {line}
                 </div>
@@ -138,18 +173,20 @@ const LandingScreen = ({ onStart }: { onStart: () => void }) => {
             )}
         </div>
 
-        <div className="pt-2">
-          <button 
-            onClick={onStart}
-            className="group relative px-12 py-4 bg-[#33ff00] text-black font-bold text-xl tracking-widest hover:bg-white transition-colors shadow-[0_0_20px_rgba(51,255,0,0.4)]"
-          >
-            <span className="absolute inset-0 border-2 border-[#33ff00] translate-x-1 translate-y-1 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform"></span>
-            INITIALIZE UPLINK
-          </button>
-          <div className="mt-6 text-xs text-gray-600 animate-pulse">
-            [ PRESS ENTER TO START ]
-          </div>
-        </div>
+                <div className="flex flex-col items-center">
+                    <div className="mb-6 text-center font-bold text-lg text-[#00d0ff] tracking-wide whitespace-pre-line">
+                        MISSION: LOCATE AND EXTRACT AGENT 'ECHO'
+                    </div>
+                    <button 
+                        className="group relative px-12 py-4 bg-[#33ff00] text-black font-bold text-xl tracking-widest shadow-[0_0_20px_rgba(51,255,0,0.4)] mt-2"
+                    >
+                        <span className="absolute inset-0 border-2 border-[#33ff00] translate-x-1 translate-y-1 transition-transform"></span>
+                        INITIALIZE UPLINK
+                    </button>
+                    <div className="mt-8 text-xs text-gray-600 animate-pulse">
+                        [ PRESS ENTER TO START ]
+                    </div>
+                </div>
       </div>
     </div>
   );
@@ -180,7 +217,7 @@ const EpisodeScreen = ({ episode, onContinue }: { episode: number, onContinue: (
        </div>
 
        <div className="mt-12 z-10">
-          <button onClick={onContinue} className="text-[#33ff00] hover:text-white border border-[#33ff00] px-6 py-2 hover:bg-[#33ff00]/10 transition-colors">
+          <button onClick={onContinue} className="text-[#33ff00] border border-[#33ff00] px-6 py-2">
             ACCESS_SECTOR_0{episode} &gt;&gt;
           </button>
           <div className="mt-2 text-[10px] text-gray-600 uppercase">Press Enter</div>
@@ -209,7 +246,7 @@ const GameOverScreen = ({ reason, onRetry }: { reason: string, onRetry: () => vo
 
                 <button 
                     onClick={onRetry}
-                    className="bg-red-600 text-black px-8 py-3 font-bold hover:bg-white hover:text-red-900 transition-colors uppercase tracking-widest text-lg"
+                    className="bg-red-600 text-black px-8 py-3 font-bold uppercase tracking-widest text-lg"
                 >
                     [ REBOOT SYSTEM ]
                 </button>
@@ -217,6 +254,16 @@ const GameOverScreen = ({ reason, onRetry }: { reason: string, onRetry: () => vo
             </div>
         </div>
     );
+};
+
+// Helper function to check if all keys from a sequence are present in history
+const checkKeySequence = (history: string[], sequence: string[]): boolean => {
+    if (sequence.length === 0) return true;
+    if (history.length === 0) return false;
+
+    // Check if every key in the expected sequence is present in the history
+    // This allows for other keys to be pressed in between specific sequence commands, focusing on exposure to the keys.
+    return sequence.every(key => history.includes(key));
 };
 
 // --- Main App ---
@@ -242,7 +289,8 @@ export default function App() {
     lastAction: null,
     insertBuffer: '',
     viewLayout: 'single',
-    lastExecutedCommand: null
+    lastExecutedCommand: null,
+    commandHistory: [], // NEW: Initialize as empty array
   });
 
   const [currentLevel, setCurrentLevel] = useState<Level | null>(null);
@@ -303,7 +351,8 @@ export default function App() {
             } else if (task.type === 'command_and_cursor_on') {
                 if (gameState.lastExecutedCommand && task.command) {
                     const commands = Array.isArray(task.command) ? task.command : [task.command];
-                    if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                    // Change: exact match for command
+                    if (commands.some(cmd => gameState.lastExecutedCommand === (cmd as string))) {
                         const values = Array.isArray(task.value) ? task.value : [task.value];
                         isMet = values.some(val => {
                             const targetIndex = currentLine.indexOf(val as string);
@@ -318,7 +367,8 @@ export default function App() {
             } else if (task.type === 'run_command') {
                 if (gameState.lastExecutedCommand) {
                     const commands = Array.isArray(task.value) ? task.value : [task.value];
-                    if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                    // Change: exact match for command
+                    if (commands.some(cmd => gameState.lastExecutedCommand === (cmd as string))) {
                         isMet = true;
                     }
                 }
@@ -348,7 +398,8 @@ export default function App() {
                         } else if (subTask.type === 'command_and_cursor_on') {
                             if (gameState.lastExecutedCommand && subTask.command) {
                                 const commands = Array.isArray(subTask.command) ? subTask.command : [subTask.command];
-                                if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                                // Change: exact match for command
+                                if (commands.some(cmd => gameState.lastExecutedCommand === (cmd as string))) {
                                     const values = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
                                     subTaskIsMet = values.some(val => {
                                         const targetIndex = currentLine.indexOf(val as string);
@@ -363,8 +414,31 @@ export default function App() {
                         } else if (subTask.type === 'run_command') {
                             if (gameState.lastExecutedCommand) {
                                 const commands = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
-                                if (commands.some(cmd => gameState.lastExecutedCommand!.startsWith(cmd as string))) {
+                                // Change: exact match for command
+                                if (commands.some(cmd => gameState.lastExecutedCommand === (cmd as string))) {
                                     subTaskIsMet = true;
+                                }
+                            }
+                        } else if (subTask.type === 'verify_key_sequence') { // NEW: Subtask key sequence check
+                            if (subTask.expectedKeySequence) {
+                                const keysWerePressed = checkKeySequence(gameState.commandHistory, subTask.expectedKeySequence);
+                                if (keysWerePressed) {
+                                    // If there's a specific value/cursor target, check that too.
+                                    if (subTask.value) {
+                                        const values = Array.isArray(subTask.value) ? subTask.value : [subTask.value];
+                                        const targetMet = values.some(val => {
+                                            const currentLine = gameState.text[gameState.cursor.y] || '';
+                                            const targetIndex = currentLine.indexOf(val as string);
+                                            if (targetIndex !== -1) {
+                                                const endIndex = targetIndex + (val as string).length;
+                                                return gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
+                                            }
+                                            return false;
+                                        });
+                                        subTaskIsMet = targetMet;
+                                    } else {
+                                        subTaskIsMet = true; // Only keys pressed required
+                                    }
                                 }
                             }
                         }
@@ -377,9 +451,40 @@ export default function App() {
                         }
                     }
                 }
+            } else if (task.type === 'verify_key_sequence') { // NEW: Handle verify_key_sequence
+                if (task.expectedKeySequence) {
+                    const keysWerePressed = checkKeySequence(gameState.commandHistory, task.expectedKeySequence);
+                    if (keysWerePressed) {
+                        // If there's a specific value/cursor target, check that too.
+                        if (task.value) {
+                            const values = Array.isArray(task.value) ? task.value : [task.value];
+                            const targetMet = values.some(val => {
+                                const currentLine = gameState.text[gameState.cursor.y] || '';
+                                const targetIndex = currentLine.indexOf(val as string);
+                                if (targetIndex !== -1) {
+                                    const endIndex = targetIndex + (val as string).length;
+                                    return gameState.cursor.x >= targetIndex && gameState.cursor.x < endIndex;
+                                }
+                                return false;
+                            });
+                            isMet = targetMet;
+                        } else {
+                            isMet = true; // Only keys pressed required
+                        }
+                    }
+                }
             }
 
             if (isMet) {
+                // Clear history when a task is met to prevent accidental re-triggers of sequence checks
+                // For 'sequence' tasks, this might need more nuanced handling if a sequence
+                // spans across subtasks where intermediate history needs to be preserved.
+                // For now, clearing on main task completion seems reasonable.
+                // Only clear if the task is a verify_key_sequence AND it's not a subtask of a parent sequence.
+                // Subtasks should not clear history mid-sequence.
+                if (task.type === 'verify_key_sequence' && !prevLevel.tasks.some(parentTask => parentTask.type === 'sequence' && parentTask.subTasks?.includes(task))) {
+                    setGameState(prev => ({ ...prev, commandHistory: [] })); 
+                }
                 return { ...task, completed: true };
             }
             return task;
@@ -391,7 +496,7 @@ export default function App() {
         return { ...prevLevel, tasks: newTasks };
     });
 
-  }, [gameState.text, gameState.cursor, gameState.status, gameState.lastExecutedCommand, currentLevel]);
+  }, [gameState.text, gameState.cursor, gameState.status, gameState.lastExecutedCommand, currentLevel, gameState.commandHistory]); // Added commandHistory to deps
 
 
   // --- Logic Helpers ---
@@ -458,7 +563,8 @@ export default function App() {
         lastAction: null,
         insertBuffer: '',
         viewLayout: 'single',
-        lastExecutedCommand: null
+        lastExecutedCommand: null,
+        commandHistory: [], // NEW: Reset history on level load
       }));
 
     } catch (e) {
@@ -501,8 +607,19 @@ export default function App() {
 
   // --- Input Handler ---
 
+  const MAX_HISTORY_LENGTH = 100; // Keep track of the last 100 key presses
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!currentLevel || gameState.status === 'LANDING' || gameState.status === 'EPISODE_INTRO' || gameState.status === 'BOOT' || gameState.status === 'GAMEOVER') return;
+
+    // NEW: Push key press into commandHistory and manage its size
+    // Only track keys in PLAYING mode and not during dialogs
+    if (gameState.status === 'PLAYING' && gameState.activeDialog === 'NONE') {
+        setGameState(prev => {
+            const newHistory = [...prev.commandHistory, e.key].slice(-MAX_HISTORY_LENGTH);
+            return { ...prev, commandHistory: newHistory };
+        });
+    }
 
     if (gameState.activeDialog !== 'NONE') {
         if (e.key === 'Escape') setGameState(prev => ({ ...prev, activeDialog: 'NONE' }));
@@ -886,7 +1003,7 @@ export default function App() {
       <button 
         onClick={onClick}
         className={`px-4 py-2 text-sm font-bold border-r border-gray-800 flex items-center gap-2 transition-colors
-            ${active ? 'bg-[#33ff00] text-black' : 'bg-[#0a0a0a] text-gray-400 hover:text-white hover:bg-gray-900'}
+            ${active ? 'bg-[#33ff00] text-black' : 'bg-[#0a0a0a] text-gray-400'}
         `}
       >
           <span>{label}</span>
@@ -1018,7 +1135,7 @@ export default function App() {
                             <div className="text-gray-300 mb-8 max-w-lg leading-relaxed border-l-2 border-[#33ff00] pl-4 text-left">
                                 {currentLevel.briefing}
                             </div>
-                            <div className="text-[#33ff00] text-sm animate-pulse border border-[#33ff00] px-4 py-2 hover:bg-[#33ff00] hover:text-black cursor-pointer">
+                            <div className="text-[#33ff00] text-sm animate-pulse border border-[#33ff00] px-4 py-2">
                                 [ PRESS ENTER TO INITIALIZE ]
                             </div>
                         </div>

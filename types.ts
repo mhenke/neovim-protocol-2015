@@ -1,4 +1,3 @@
-
 export enum VimMode {
   NORMAL = 'NORMAL',
   INSERT = 'INSERT',
@@ -26,16 +25,23 @@ export interface LevelConfig {
   idealKeystrokes?: number; // For "Ghost" par score
 }
 
+export type TaskType = 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'command_and_cursor_on' | 'sequence' | 'verify_key_sequence';
+
 export interface Task {
   description: string;
-  type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'command_and_cursor_on' | 'sequence';
+  type: TaskType;
   value?: string | string[];
   command?: string | string[];
-  subTasks?: Task[];
+  subTasks?: SubTask[];
   currentStep?: number;
   completed: boolean;
   loreFragment?: string; // Optional narrative reward for completing specific task
   keyHint?: string; // Short key combo hint e.g. "ciw" or "j/k"
+  expectedKeySequence?: string[]; // NEW: Expected sequence of keys for 'verify_key_sequence' type
+}
+
+export interface SubTask extends Task {
+  subTasks?: never; // Subtasks do not have subtasks themselves
 }
 
 export interface Level {
@@ -81,6 +87,7 @@ export interface GameState {
   insertBuffer: string; // Track text typed during current insert session
   viewLayout: 'single' | 'vsplit' | 'hsplit';
   lastExecutedCommand: string | null; // To validate run_command tasks
+  commandHistory: string[]; // NEW: Stores recent key presses for sequence verification
 }
 
 export interface GeminiLevelResponse {
@@ -91,11 +98,12 @@ export interface GeminiLevelResponse {
   hints: string[];
   tasks: Array<{
     description: string,
-    type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'command_and_cursor_on' | 'sequence',
+    type: 'contains' | 'missing' | 'cursor_on' | 'run_command' | 'command_and_cursor_on' | 'sequence' | 'verify_key_sequence', // Updated TaskType
     value?: string | string[],
     command?: string | string[],
     subTasks?: Task[],
     loreFragment: string,
-    keyHint?: string
+    keyHint?: string,
+    expectedKeySequence?: string[]; // NEW: Expected sequence of keys
   }>;
 }

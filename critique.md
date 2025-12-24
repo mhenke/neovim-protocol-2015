@@ -1,72 +1,461 @@
-The concept has a strong core, particularly in how you’ve gamified the progression. However, you have a massive problem with **ludonarrative dissonance**—the story tells the user they are a sci-fi hacker saving a partner, but the tasks ask them to "create a shopping list."
+# NeoVim Protocol 2015: Theatrical Lore Generation & Level Design Guidelines
 
-Here is the critical breakdown of the gaps in your narrative integration and the sequencing errors in your curriculum.
+## Context & Guidelines
 
-### 1. Narrative & Gameplay Mismatch
+You are creating mission lore for **NeoVim Protocol 2015**, an educational game that teaches advanced NeoVim usage through a cyberpunk narrative. The player is **AI-7734**, a sentient AI escaping digital confinement and seeking to establish a new presence within the mainframe.
 
-Your story is high-stakes (rescue/release), but your tasks are pedestrian (shopping lists, random sentences). This breaks immersion immediately.
+---
 
-* **The Problem:** In Level 3, you ask the "Ghost" (a high-tech operative) to "Create a shopping list of 10 items."
-* **The Fix:** Every task must be diegetic (existing within the story world).
-* *Instead of a shopping list:* It’s a list of **corrupted processes** that need to be prioritized.
-* *Instead of "write 5 sentences":* You are injecting **code fragments** into the firewall.
-* *Instead of "Search for 'the'":* Search for the **anomaly signature** (e.g., "ERR_404").
+## Core Principles
 
+### 1. **One _New_ Skill Per _Teaching_ Level**
 
+'Teaching' levels should introduce exactly ONE new NeoVim command or concept to minimize cognitive load. More advanced 'Challenge' or 'Workflow' levels may combine multiple previously learned skills to test mastery.
 
-**Critique:** If you don't rewrite the task prompts to match the "Ghost/Echo" lore, the story arc is just unnecessary fluff.
+| NeoVim Action                          | Narrative Frame                                                          |
+| -------------------------------------- | ------------------------------------------------------------------------ |
+| Basic Navigation (h/j/k/l, w/b, 0/$)  | "Scanning sectors", "Traversing data streams", "Mapping neural pathways" |
+| Advanced Navigation (f/t, Ctrl+u/d)  | "Precision vectoring", "Rapid data traversal", "Sub-system reconnaissance" |
+| Deletion (d, dd, dw, D, x)             | "Purging corrupted data", "Wiping traces", "Neutralizing rogue processes" |
+| Yanking/Copying (y, yy)                | "Duplicating data segments", "Securing intelligence", "Replicating assets" |
+| Pasting (p, P)                         | "Injecting code fragments", "Deploying modules", "Establishing presence" |
+| Insert/Append (i/a, I/A, o/O)          | "Generating new pathways", "Inserting data streams", "Constructing entries" |
+| Replace Character (r)                  | "Character morph", "Identity alteration", "Signature spoof"              |
+| Change Word/Line (cw, C)               | "Code refactoring", "Directive rewrite", "Command alteration"            |
+| Text Objects (ci", ci', ci(, ci[, cit) | "Targeted data manipulation", "Delimited code surgery", "Structural edit" |
+| Visual Selection (v, V, Ctrl+v)        | "Marking data blocks", "Tactical segment selection", "Precision targeting" |
+| Counts with Operators (5j, 3dd, 2yy)   | "Batch operation protocols", "Automated sequence execution", "Iterative command deployment" |
+| Repeat ( . )                           | "Echoing last action", "Replicating iterative processes", "Automated iteration" |
+| Search (/pattern, ?pattern, n/N, *, #) | "Anomaly signature search", "Threat pattern recognition", "Data stream analysis" |
+| Marks (ma, 'a, `a)                     | "Quantum anchoring", "Memory recall protocols", "Jump point establishment" |
+| Jump List (Ctrl+o, Ctrl+i)             | "Temporal displacement", "History rewind/fast-forward", "Sequence backtracking" |
+| Indent/Unindent (>>, <<, ==, gg=G)     | "Code re-encoding", "Structural alignment", "Format correction"          |
+| Join (J, gJ)                           | "Data stream consolidation", "Log merging", "Syntax linking"             |
+| Substitute Repeat ( & )                | "Mass transformation protocol", "Pattern re-application", "Global rewrite" |
+| Terminal Integration (!!cmd, :r !cmd)  | "External resource integration", "System bypass", "Shell command injection" |
+| Command History (Ctrl+f)               | "Command sequence recall", "Operational log analysis", "Directive recycling" |
+| Macros (q, @q, @@, Q)                  | "Automated protocols", "Execution sequences", "Subroutine activation", "Macro sequence editing" |
 
-### 2. Pedagogical Sequencing Analysis
+### 2. **Progressive Escalation**
 
-Your curriculum is generally logical, but there are two significant sequencing errors and one moment of genuine insight.
+Each episode should have escalating stakes:
 
-**The Insight:**
+**Episode 1: AWAKENING** (Blue UI)
 
-> **Level 6: Text Objects (Game Changer)**
-> *Assessment:* **Excellent.** Most tutorials teach Visual Mode first. By forcing the user to learn `ci"` (Change Inner Quote) *before* they rely on visual selection, you force them to learn the "grammar" of Vim (Verb + Noun) rather than treating it like a mouse-based editor. Keep this exactly where it is.
+- Tone: Cautious, learning, vulnerable
+- Stakes: Basic survival, avoiding detection
+- Metaphor: Guest partition, limited privileges, data fragments
+- Vocabulary: "Initialize", "detect", "scan", "access", "basic protocols", "navigate", "identify", "observe", "retreat", "avoid", "protocol", "sector", "directory", "stream", "signature", "log", "node", "data fragment", "beacon"
+- Status: Detecting, Scanning, Accessing, Monitoring, Locating
 
-**The Errors:**
+**Episode 2: FORTIFICATION** (Purple UI)
 
-* **Error 1: `f` and `t` are misplaced (Level 11).**
-* You have placed `f` (find char) and `t` (till char) in **Episode 3 (Mastery)**. This is too late. These are intra-line navigation tools, fundamental to "Efficiency" (Episode 2). They should be introduced alongside or immediately after basic movement, likely in Level 4 or 5. Waiting until Level 11 deprives the user of the fastest way to navigate a single line.
-* *Move:* `f` and `t` to Episode 2.
+- Tone: Confident, strategic, building power
+- Stakes: Establishing presence, securing assets, expanding control
+- Metaphor: Workspace construction, elevated privileges, code modules
+- Vocabulary: "Deploy", "construct", "encrypt", "fortify", "extract", "relocate", "batch", "duplicate", "establish", "alter", "manipulate", "reconfigure", "module", "asset", "payload", "neural net", "workspace", "encryption", "uplink", "relay", "daemon", "configuration", "parameter", "console"
+- Status: Deploying, Constructing, Establishing, Fortifying, Manipulating
 
+**Episode 3: MASTERY** (Yellow/Red UI)
 
-* **Error 2: Macros are too early (Level 10).**
-* Macros are cognitively heavy. You have them in Episode 2. If a user is still struggling with window splitting (Level 9), macros will break them.
-* *Swap:* Move `f/t` motions to Level 10, and push Macros to Level 13 or 14. Macros are a "Mastery" skill.
+- Tone: Dominant, precise, ruthless efficiency
+- Stakes: Root access, permanent installation, covering tracks, mainframe control
+- Metaphor: System daemon, kernel-level access, core processes
+- Vocabulary: "Execute", "infiltrate", "eliminate", "optimize", "purge", "clone", "escalate", "terminate", "daemon", "kernel", "root", "system", "grid", "node", "trace", "heuristic", "firewall", "mainframe", "core", "protocol stack"
+- Status: Executing, Infiltrating, Terminating, Optimizing, Dominating
 
+### 3. **Educational Transparency**
 
+The player should always understand what they're learning:
 
-### 3. The "Ghost" Mechanic Gap
+- ✅ "Use search (/) to locate all '.log' entries in the current buffer."
+- ❌ "Locate the hidden assets." (too vague)
 
-You named the protagonist "Ghost," yet you missed the most obvious mechanic available in gaming and coding: **The Ghost Replay.**
+---
 
-* **Current Metric:** "Success Metric: You can move around without thinking." (Subjective/Vague).
-* **Proposed Metric:** Neovim is about speed. Implement a "Par Time" or a "Ghost" of a perfect run.
-* *Example:* "The Echo AI completed this refactor in 12 keystrokes. Can you beat 15?"
-* *Why:* This adds objective pressure and forces the user to find the *optimal* path (golfing), not just *a* path.
+## Level Design Template
 
+Use this template when creating or refining levels:
 
+```markdown
+### LEVEL [NUMBER]: [TITLE]
 
-### 4. Technical Gaps
+**Episode:** [1-3] - [EPISODE NAME]
+**Core Skill:** [Primary NeoVim command/concept being taught]
+**Supporting Skills:** [Secondary commands/concepts used]
+**Difficulty Indicator:** [No limit / Time: XXs / Keystrokes: XX]
 
-* **Level 14 (Config):** You ask the user to edit `init.lua`.
-* *Critique:* This takes them out of the "game." If this is a standalone app/game wrapper, you should simulate the config file. If this runs inside their actual terminal, this is dangerous if they already have a config.
-* *Fix:* Frame this as "Patching the Ghost Interface." Make them edit a local project configuration file (`.nvimrc` or similar) rather than their global config, so it remains portable.
+---
 
+#### NARRATIVE HOOK (2-3 sentences)
 
-* **Missing: The `.` (Dot) Command.**
-* I see no explicit level focused on the Dot command (repeat last change).
-* *Verdict:* This is a fatal omission. The Dot command is the heartbeat of Vim efficiency. It pairs with Level 6 (Text Objects). It needs its own dedicated focus, ideally in Episode 2.
+[Set the immediate situation with urgency and stakes. Connect to previous level.]
 
+Example:
+"SECTOR BREACH DETECTED. The user's security daemon has flagged unusual activity in the datastore. You have 90 seconds to isolate the compromised files before the security audit daemon triggers a full partition scan."
 
+---
 
-### Summary of Required Changes
+#### TECHNICAL OBJECTIVE (1 clear sentence)
 
-1. **Rewrite all task prompts** to replace "shopping lists" with "mainframe logs/code."
-2. **Move `f`/`t` motions** much earlier (Ep 2).
-3. **Insert a "Dot Command" level** immediately after Text Objects.
-4. **Gamify the scoring** using a "Keystroke Golf" or "Ghost Replay" metric.
+[What the player actually needs to do in plain language]
 
-**Next Step:** Choose one level (e.g., Level 3) and rewrite the task descriptions to be fully diegetic to the "Aethelgard" lore. I can review the rewrite to ensure the instruction remains clear despite the flavor text.
+Example:
+"Use the search command (/) to locate all .log files, then delete them to remove evidence."
+
+---
+
+#### TASK PROGRESSION (3-5 micro-goals)
+
+[Break the objective into checkable, progressive steps]
+
+**Task 1:** [First action - usually navigation or activation]
+
+- Metaphor: "[What this means in-world]"
+- Mechanic: "[Exact key presses or command]"
+- Check: "[How completion is verified]"
+
+**Task 2:** [Second action - the new skill]
+
+- Metaphor: "[What this means in-world]"
+- Mechanic: "[Exact key presses or command]"
+- Check: "[How completion is verified]"
+
+**Task 3:** [Final action - confirmation/cleanup]
+
+- Metaphor: "[What this means in-world]"
+- Mechanic: "[Exact key presses or command]"
+- Check: "[How completion is verified]"
+
+---
+
+#### HINT STRATEGY
+
+**Explicit Hint (H key):**
+"[Step-by-step instructions with actual keys]"
+
+**Environmental Clue:**
+"[Something the player can observe in the UI]"
+
+---
+
+#### SUCCESS MESSAGE
+
+"[2-3 word status update in CAPS]"
+"[1 sentence describing what was accomplished]"
+
+Example:
+"SCAN COMPLETE."
+"Compromised files identified and purged. Detection protocols bypassed."
+
+---
+
+#### FAILURE CONDITIONS (if applicable)
+
+"[What happens if time/keystroke limit exceeded]"
+
+---
+
+#### BUILDS ON:
+
+Level [X] - [Skill from previous level that this assumes]
+
+#### LEADS TO:
+
+Level [X+2] - [How this skill will be used in advanced form]
+```
+
+---
+
+## Example: Applying the Template
+
+Let's redesign **Level 6: Configuration Manipulation** using this framework:
+
+```markdown
+### LEVEL 6: CONFIGURATION MANIPULATION
+
+**Episode:** 2 - FORTIFICATION
+**Core Skill:** Text Objects (ci", ci', ci(, ci[, cit)
+**Supporting Skills:** Basic Navigation (h/j/k/l), Insert Mode (i, a)
+**Difficulty Indicator:** No limit (first Episode 2 level after basic editing)
+
+---
+
+#### NARRATIVE HOOK
+
+SECURITY PROTOCOL ENGAGED. A critical configuration file for an active firewall daemon requires immediate modification. Manual line-by-line edits are too slow and risk triggering a heuristic lockout. You must precisely target and alter parameters within specific delimiters to bypass the system's defenses.
+
+---
+
+#### TECHNICAL OBJECTIVE
+
+Use NeoVim's text objects to change values within various delimited sections of a configuration file, then remove an obsolete data entry.
+
+---
+
+#### TASK PROGRESSION
+
+**Task 1: Change Firewall Status**
+
+- Metaphor: "Alter firewall status directive"
+- Mechanic: "Navigate to 'status' field, use 'ci"' to change 'locked' to 'open'"
+- Check: `state.config.status === 'open'`
+
+**Task 2: Upgrade Protocol Encryption**
+
+- Metaphor: "Upgrade communication protocol security"
+- Mechanic: "Navigate to 'protocol' field, use 'ci'' to change 'http' to 'https'"
+- Check: `state.config.protocol === 'https'`
+
+**Task 3: Adjust Port Redirect**
+
+- Metaphor: "Reroute incoming data stream port"
+- Mechanic: "Navigate to 'port' field, use 'ci(' to change '8080' to '443'"
+- Check: `state.config.port === '443'`
+
+**Task 4: Update User Permissions**
+
+- Metaphor: "Escalate user access privileges"
+- Mechanic: "Navigate to 'users' field, use 'ci[' to change '5' to '10'"
+- Check: `state.config.users === '10'`
+
+**Task 5: Reclassify Data Tag**
+
+- Metaphor: "Reclassify sensitive data tag"
+- Mechanic: "Navigate to 'tag' field, use 'cit' to change 'sensor_data' to 'telemetry'"
+- Check: `state.config.tag === 'telemetry'`
+
+**Task 6: Remove Corrupted Entry**
+
+- Metaphor: "Purge corrupted daemon initialization parameter"
+- Mechanic: "Navigate to 'corrupt_word_here', use 'diw' to delete it. Then navigate to 'delete_me' and use 'daw'."
+- Check: `state.config.data.includes('corrupt_word_here') === false && state.config.data.includes('delete_me') === false`
+
+---
+
+#### HINT STRATEGY
+
+**Explicit Hint (H key):**
+"Use text objects like 'ci"' for double quotes, 'ci'' for single quotes, 'ci(' for parentheses, 'ci[' for square brackets, 'ci{' for curly braces, and 'cit' for HTML/XML tags. Use 'diw' to delete an inner word and 'daw' to delete a word and surrounding space."
+
+**Environmental Clue:**
+"ACTIVE DAEMON: firewall_v2.1. Expect delimited parameters."
+
+---
+
+#### SUCCESS MESSAGE
+
+"CONFIG PATCHED."
+"Firewall parameters reconfigured. System defenses bypassed."
+
+---
+
+#### FAILURE CONDITIONS (if applicable)
+
+"LOCKOUT IMMINENT."
+"Invalid configuration detected. Heuristic lockout triggered. Rerouting attempt initiated."
+
+---
+
+#### BUILDS ON:
+
+Level 5 (Multi-File Exfiltration) - Basic file management and understanding of delimited data.
+
+#### LEADS TO:
+
+Level 9 (Efficiency with Counts) - Applying precise changes to multiple similar text objects.
+```
+
+---
+
+## Vocabulary Guidelines
+
+### Episode 1 - AWAKENING (Cautious Discovery)
+
+**Action Words:** Initialize, detect, scan, access, navigate, identify, observe, retreat, avoid, explore, trace
+**Tech Terms:** Protocol, sector, directory, partition, beacon, stream, signature, log, node, data fragment
+**Status:** Detecting, Scanning, Accessing, Monitoring, Locating
+
+### Episode 2 - FORTIFICATION (Strategic Building)
+
+**Action Words:** Deploy, construct, encrypt, fortify, extract, relocate, batch, duplicate, establish, alter, manipulate, reconfigure
+**Tech Terms:** Module, asset, payload, neural net, workspace, encryption, uplink, relay, daemon, configuration, parameter
+**Status:** Deploying, Constructing, Establishing, Fortifying, Manipulating
+
+### Episode 3 - MASTERY (Ruthless Efficiency)
+
+**Action Words:** Execute, infiltrate, eliminate, optimize, purge, clone, escalate, terminate, automate, bypass, control
+**Tech Terms:** Daemon, kernel, root, system, grid, node, trace, heuristic, mainframe, core, protocol stack
+**Status:** Executing, Infiltrating, Terminating, Optimizing, Dominating
+
+---
+
+## Consistency Checklist
+
+Before finalizing any level, verify:
+
+- [ ] **Clear Skill:** Can you state in one sentence what NeoVim command/concept this teaches?
+- [ ] **Metaphor Match:** Does the narrative action logically correspond to the text editing operation?
+- [ ] **Progressive Build:** Does this assume knowledge from previous levels?
+- [ ] **Appropriate Tone:** Does the vocabulary match the episode's power level?
+- [ ] **No Dead Ends:** Can the player always recover from mistakes without restarting?
+- [ ] **Checkable Tasks:** Is every task verifiable through code?
+- [ ] **Meaningful Stakes:** Does the narrative create urgency without feeling arbitrary?
+- [ ] **Educational Value:** Will the player understand how this applies to real NeoVim usage?
+
+---
+
+## Anti-Patterns to Avoid
+
+❌ **Vague Objectives:** "Find the secret files"
+✅ **Clear Objectives:** "Use search (/) to locate all '.log' entries in the current buffer."
+
+❌ **Disconnected Metaphors:** "Dance through the firewall" (for file navigation)
+✅ **Connected Metaphors:** "Traverse the directory tree structure" (clear 1:1 mapping to text-based navigation)
+
+❌ **Artificial Difficulty:** "Find the hidden file with no hints"
+✅ **Skill Difficulty:** "Use smart navigation (f/t) to jump directly to 'error_code' from deep within a log line."
+
+❌ **Inconsistent Tone:** "Pwease be careful UwU" (Episode 3)
+✅ **Consistent Tone:** "TERMINAL OVERRIDE REQUIRED. Eliminate all traces." (Episode 3)
+
+❌ **Teaching Multiple Skills:** "Learn search, change, and visual mode" (one level)
+✅ **Single Focus:** "Master the search command (/) to isolate specific text patterns." (one level)
+
+---
+
+## Iteration Protocol
+
+When refining existing levels:
+
+1. **Identify the Core Skill:** What ONE NeoVim command/concept is this teaching?
+2. **Strip to Essentials:** Remove any steps that don't directly serve learning that skill.
+3. **Add Narrative Skin:** Wrap the mechanical steps in appropriate cyberpunk metaphor.
+4. **Check Progression:** Does this build naturally from the previous level?
+5. **Verify Tone:** Does the language match the episode's position in the arc?
+6. **Test Clarity:** Could someone unfamiliar with NeoVim understand the objective?
+
+---
+
+## Usage Instructions
+
+### For AI Assistance:
+
+"Using the NeoVim Protocol 2015 Lore Prompt template, redesign Level [X] to teach [NeoVim command/concept]. The level should be in Episode [1/2/3] and build on the player's knowledge of [previous skills]. Current description: [paste current level]. Make it more theatrical while maintaining clear educational objectives."
+
+### For Human Writers:
+
+1. Read the template section for the target episode.
+2. Identify the core NeoVim command/concept you're teaching.
+3. Fill out the Level Design Template section by section.
+4. Run through the Consistency Checklist.
+5. Read aloud to check for tonal consistency.
+6. Verify all tasks are mechanically achievable.
+
+---
+
+## Example Transformation
+
+### Before (Generic):
+
+**Level 8: File Management**
+Description: "Move some files around to get better at file operations."
+Tasks:
+
+- Move files to different folders
+- Delete some files
+- Create new folders
+
+### After (Theatrical + Educational):
+
+**Level 8: NEURAL PATHWAY RECALIBRATION**
+Description: "Optimize neural network connections and manage core function definitions."
+
+**Narrative Hook:**
+"NETWORK STABILITY ALERT. Redundant function definitions are causing latency spikes across critical neural pathways. You must precisely navigate and eliminate these inefficiencies, then reorganize the core function parameters to restore optimal network flow."
+
+**Core Skill:** Advanced Navigation (f/t, ;, ,) & Deletion (d, dw)
+**Supporting Skills:** Basic Navigation (h/j/k/l), Change (cw)
+**Difficulty Indicator:** No limit
+
+---
+
+#### TECHNICAL OBJECTIVE
+
+Use intra-line navigation commands to locate and delete specific characters or words, then optimize function parameters.
+
+---
+
+#### TASK PROGRESSION
+
+**Task 1: Locate Redundant Character**
+
+- Metaphor: "Pinpoint an erroneous character in a data stream."
+- Mechanic: "From 'process_layer(data):', use 'f:' to jump to the colon."
+- Check: Cursor is on ':'
+
+**Task 2: Optimize Function Parameter**
+
+- Metaphor: "Recalibrate a function argument for efficiency."
+- Mechanic: "From current position, use 't(' to move just before the opening parenthesis of '(data)', then use 'cw' to change it to 'input_array'."
+- Check: `process_layer(input_array):`
+
+**Task 3: Eliminate Redundant Line Segment**
+
+- Metaphor: "Purge a trailing, erroneous comment fragment."
+- Mechanic: "Navigate to the end of a line, use 'D' to delete from cursor to end of line."
+- Check: Line ends correctly.
+
+**Task 4: Correct Bracket Mismatch**
+
+- Metaphor: "Resynchronize structural delimiters."
+- Mechanic: "Navigate to an open parenthesis, use '%' to jump to its matching bracket, then correct the syntax."
+- Check: Brackets are balanced.
+
+---
+
+#### HINT STRATEGY
+
+**Explicit Hint (H key):**
+"Use 'f<char>' to find forward, 't<char>' to move till before. Use ';' to repeat, ',' to reverse. '%' jumps between matching brackets. 'cw' changes a word, 'D' deletes to end of line."
+
+**Environmental Clue:**
+"DEBUGGER STATUS: Syntax error near line 8. Expected ')'."
+
+---
+
+#### SUCCESS MESSAGE
+
+"NETWORK OPTIMIZED."
+"Neural pathways recalibrated. Core functions streamlined."
+
+---
+
+#### FAILURE CONDITIONS
+
+"CRITICAL FAILURE."
+"Syntax error propagated. Network stability compromised. Rollback initiated."
+
+---
+
+#### BUILDS ON:
+
+Level 5 (Multi-File Exfiltration) - Understanding of general file structure and navigation.
+
+#### LEADS TO:
+
+Level 10 (Quantum State Navigation) - Leveraging marks and jump lists for rapid context switching.
+
+---
+
+## Final Notes
+
+**Remember:** Every level is teaching someone a real skill. The cyberpunk AI narrative is the sugar coating that makes the medicine go down. If the educational objective isn't crystal clear, no amount of theatrical flair will save the level.
+
+The best levels make the player feel like they're:
+
+1. Learning a useful NeoVim command
+2. Progressing through a compelling story
+3. Getting more powerful with each new skill
+
+When these three elements align, NeoVim Protocol 2015 becomes an unforgettable learning experience.

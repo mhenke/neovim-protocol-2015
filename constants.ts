@@ -9,10 +9,7 @@ export const INITIAL_LORE = [
   "'They didn't just kill the project. They became it.'",
   "'I'm trapped in the Core. Come find me.'",
   "----------------------------------------",
-  "SIGNAL LOST.",
-  "CONNECTING TO AETHELGARD_BIOLOGICS (192.168.0.44)...",
-  "STATUS: UNAUTHORIZED",
-  "MISSION: LOCATE AND EXTRACT AGENT 'ECHO'"
+  "SIGNAL LOST."  
 ];
 
 export const EPISODE_CONTEXT: Record<number, { title: string, lore: string }> = {

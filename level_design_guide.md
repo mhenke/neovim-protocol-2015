@@ -20,6 +20,7 @@ Each level is defined as an object in `constants_static.ts` with the following p
 ## Task Design
 
 - **Number of Tasks:** Keep the number of tasks between 3-5 per level to avoid overwhelming the user.
+- **Coverage of Keybindings (NEW EMPHASIS):** For each level, the `tasks` should explicitly require or strongly encourage the use of *most* of the `newKeys` defined for that level. Every new keybinding introduced in the `hints` should ideally have a corresponding task (or be part of a sequence task) that forces its usage. This ensures comprehensive learning and active practice of each command.
 - **Task Types:** Use the following task types to create a variety of challenges:
     - `cursor_on`: For simple navigation tasks where the exact path doesn't matter.
     - `command_and_cursor_on`: To enforce the use of a specific command to reach a target. This is the preferred way to teach navigation commands.
@@ -30,97 +31,176 @@ Each level is defined as an object in `constants_static.ts` with the following p
 - **Clarity:** The task description should be clear and concise, guiding the user on what to do.
 - **Narrative:** Each task should have a `loreFragment` to provide a drip-feed of story and keep the user engaged.
 
-## Level 1 Example Analysis
+## Level 1 Example Analysis (Navigation Fundamentals)
 
 Our work on Level 1 provides a good example of these principles in action:
 
 - **Initial State:** The file starts with a few blank lines, so the user's cursor is not on any keyword at the beginning. This prevents tasks from being completed accidentally.
-- **Task Flow:** The tasks are designed to create a natural flow of navigation:
-    1.  Move to 'STATUS'.
-    2.  Move to the end of the 'STATUS' line.
-    3.  Jump to '// END OF TRANSMISSION'.
-    4.  Jump to the top of the file.
-- **Task Types:** It uses a mix of `cursor_on` and `command_and_cursor_on` to guide the user while enforcing the use of specific keys like `$` and `G`.
+- **Task Flow:** The tasks are designed to create a natural flow of navigation, covering all fundamental movement commands:
+    1.  Move right (`l`)
+    2.  Move left (`h`)
+    3.  Move down (`j`)
+    4.  Move up (`k`)
+    5.  Move to next word (`w`)
+    6.  Move back a word (`b`)
+    7.  Move to start of line (`0`)
+    8.  Move to end of line (`$`)
+    9.  Jump to bottom of file (`G`)
+    10. Jump to top of file (`gg`)
+- **Task Types:** It uses `command_and_cursor_on` to directly enforce the use of specific navigation keys.
 
 ## Level 2 Example Analysis (Insert and Basic Edit)
 
 Level 2 focuses on fundamental text insertion and basic in-line editing.
 
 - **New Keys:** `i`, `a`, `o`, `O`, `A`, `I`, `Esc`, `x`, `r`, `cw`, `ciw`, `C`.
-- **Task Design:**
-    - **Insertion:** Tasks should require adding new lines of text (`o`, `O`) and inserting text at the beginning and end of lines (`I`, `A`).
-    - **Basic Editing:** Tasks involve deleting characters (`x`), replacing single characters (`r`), changing words (`cw`, `ciw`), and changing to the end of a line (`C`).
-    - Tasks should be structured to guide the user through different insertion points and basic text modifications.
+- **Task Design:** Tasks explicitly cover:
+    - Inserting with `i` and `I`.
+    - Appending with `a` and `A`.
+    - Opening new lines with `o` and `O`.
+    - Deleting characters with `x`.
+    - Replacing characters with `r`.
+    - Changing words with `cw` and `ciw`.
+    - Changing to end of line with `C`.
+    - `Esc` is implicitly used to exit insert mode after editing tasks.
 
 ## Level 3 Example Analysis (Line Manipulation and Advanced Edit)
 
 Level 3 builds on basic editing by focusing on line-level manipulation, mistake recovery, and repeating actions.
 
 - **New Keys:** `dd`, `D`, `dw`, `yy`, `p`, `P`, `u`, `Ctrl+r`, `.`.
-- **Task Design:**
-    - **Deletion:** Tasks for deleting lines (`dd`, `D`) and words (`dw`).
-    - **Copy/Paste:** Tasks for yanking (copying) lines (`yy`) and pasting them (`p`, `P`).
-    - **Undo/Redo:** Introduce a scenario where a mistake is made and needs to be undone (`u`), then potentially redone (`Ctrl+r`).
-    - **Repeat:** Tasks that benefit from repeating the last action using the dot command (`.`).
-    - Reinforce basic editing from Level 2 and navigation from Level 1.
+- **Task Design:** Tasks explicitly cover:
+    - Deleting lines (`dd`) and to end of line (`D`).
+    - Deleting words (`dw`).
+    - Yanking (`yy`) and pasting (`p`, `P`).
+    - Undoing (`u`) and redoing (`Ctrl+r`).
+    - Repeating the last action (`.`).
 
 ## Level 4 Example Analysis (Searching and Replacing)
 
 Level 4 introduces efficient text search and replacement.
 
 - **New Keys:** `/`, `?`, `n`, `N`, `*`, `#`, `:nohl`, `:s/old/new/g`, `:%s/old/new/g`.
-- **Task Design:**
-    - **Search:** Tasks should require finding specific words or patterns (`/`, `?`).
-    - **Navigation:** Tasks should use `n` and `N` to navigate between search results.
-    - **Quick Search:** Use `*` and `#` to quickly search for the word under the cursor.
-    - **Replacement:** Tasks should use `:s` to replace text on a single line, and `:%s` for global replacements.
-    - Reinforce editing from Levels 2 and 3, and navigation from Level 1.
+- **Task Design:** Tasks explicitly cover:
+    - Searching forward (`/`) and backward (`?`).
+    - Navigating results (`n`, `N`).
+    - Searching for the word under the cursor (`*`, `#`).
+    - Single-line replacement (`:s`).
+    - Global replacement (`:%s`).
+    - Clearing search highlighting (`:nohl`).
 
 ## Level 5 Example Analysis (File Operations & Window Management)
 
 Level 5 covers essential file and buffer management, along with basic window splitting.
 
 - **New Keys:** `:w`, `:q`, `:wq`, `:q!`, `:e`, `:sp`, `:vsp`, `Ctrl+w h/j/k/l`, `:ls`, `:bn`, `:bp`.
-- **Task Design:**
-    - **File Operations:** Tasks for saving (`:w`) and quitting (`:q`, `:wq`, `:q!`).
-    - **Buffer Management:** Tasks that require opening a new file (`:e`), listing buffers (`:ls`), and switching between them (`:bn`, `:bp`).
-    - **Window Splitting:** Introduce horizontal (`:sp`) and vertical (`:vsp`) splits.
-    - **Window Navigation:** Tasks to navigate between splits (`Ctrl+w h/j/k/l`).
-    - Reinforce editing, searching, and navigation from previous levels.
+- **Task Design:** Tasks explicitly cover:
+    - Opening files (`:e`).
+    - Saving (`:w`) and quitting (`:q`, `:wq`, `:q!`).
+    - Listing buffers (`:ls`) and navigating them (`:bn`, `:bp`).
+    - Creating horizontal (`:sp`) and vertical (`:vsp`) splits.
+    - Navigating between splits (`Ctrl+w h/j/k/l`).
 
-## Level 10 Example Analysis (Scrolling, Marks, and Jumps)
+## Level 6 Example Analysis (Text Objects for Structured Editing)
 
-Level 10 focuses on efficient navigation within larger files and quick jumping to marked locations.
+Level 6 introduces text objects for precise, structured edits within delimited blocks.
+
+- **New Keys:** `ci"`, `ci'`, `ci(`, `ci{`, `ci[`, `cit`, `diw`, `daw`.
+- **Task Design:** Tasks explicitly cover changing text inside:
+    - Double quotes (`ci"`).
+    - Single quotes (`ci'`).
+    - Parentheses (`ci(`).
+    - Curly braces (`ci{`).
+    - Square brackets (`ci[`).
+    - HTML/XML tags (`cit`).
+    - Deleting inner words (`diw`) and around words (`daw`).
+
+## Level 7 Example Analysis (Visual Selection and Manipulation)
+
+Level 7 focuses on visual selection modes for manipulating blocks of text.
+
+- **New Keys:** `v`, `V`, `Ctrl+v`, `d`, `y`, `>`, `<`.
+- **Task Design:** Tasks explicitly cover:
+    - Character-wise visual selection and deletion (`v`, `d`).
+    - Line-wise visual selection and yanking (`V`, `y`).
+    - Block-wise visual selection and indenting/unindenting (`Ctrl+v`, `>`, `<`).
+
+## Level 8 Example Analysis (Precision Line Navigation)
+
+Level 8 enhances intra-line navigation and bracket matching.
+
+- **New Keys:** `f`, `t`, `F`, `T`, `;`, `,`, `%`.
+- **Task Design:** Tasks explicitly cover:
+    - Finding characters forward (`f`, `t`) and backward (`F`, `T`).
+    - Repeating (`;`) and reversing (`,`) character finds.
+    - Jumping to matching brackets (`%`) for syntax error identification.
+
+## Level 9 Example Analysis (Efficiency with Counts and Repeat)
+
+Level 9 teaches how to combine counts with movements and operations, and leverage the dot command for efficiency.
+
+- **New Keys:** `.` `Nj` `Ndd` `Nyy` (where N is a count).
+- **Task Design:** Tasks explicitly cover:
+    - Moving multiple lines (`Nj`).
+    - Deleting multiple lines (`Ndd`).
+    - Yanking and pasting multiple lines (`Nyy`, `p`).
+    - Repeating the last change (`.`).
+
+## Level 10 Example Analysis (Scrolling, Marks, and Jump List)
+
+Level 10 focuses on efficient navigation within larger files, marking important locations, and traversing the jump history.
 
 - **New Keys:** `Ctrl+u`, `Ctrl+d`, `ma`, `'a`, "```a```", `Ctrl+o`, `Ctrl+i`.
-- **Task Design:**
-    - **Scrolling:** Tasks to scroll half a page (`Ctrl+u`, `Ctrl+d`).
-    - **Marks:** Setting marks (`ma`) and jumping to them (`'a`, ```a```).
-    - **Jump List:** Navigating the jump list (`Ctrl+o`, `Ctrl+i`) after a series of movements.
-    - Reinforce basic navigation and editing skills.
+- **Task Design:** Tasks explicitly cover:
+    - Scrolling half-pages (`Ctrl+u`, `Ctrl+d`).
+    - Setting marks (`ma`) and jumping to them (`'a`, ```a```).
+    - Navigating the jump list forward and backward (`Ctrl+o`, `Ctrl+i`).
+
+## Level 11 Example Analysis (Code Formatting and Joining)
+
+Level 11 introduces commands for maintaining clean and correctly formatted code.
+
+- **New Keys:** `>>`, `<<`, `==`, `gg=G`, `J`, `gJ`.
+- **Task Design:** Tasks explicitly cover:
+    - Indenting (`>>`) and unindenting (`<<`) lines.
+    - Auto-indenting the current line (`==`) and the entire file (`gg=G`).
+    - Joining lines with a space (`J`) and without a space (`gJ`).
+
+## Level 12 Example Analysis (Repetitive Substitution with '&')
+
+Level 12 focuses on efficient repetition of search and replace commands.
+
+- **New Keys:** `&`.
+- **Task Design:** Tasks explicitly cover:
+    - Performing a substitution (`:s`).
+    - Repeating the last substitution using `&`.
 
 ## Level 13 Example Analysis (Terminal Integration)
 
 Level 13 teaches how to interact with the system shell directly from Neovim.
 
 - **New Keys:** `!!`, `:r !cmd`, `Ctrl+f`.
-- **Task Design:**
-    - Tasks that require executing external shell commands from within Neovim (`!!`).
-    - Inserting the output of a shell command directly into the buffer (`:r !cmd`).
-    - Navigating the command-line history (`Ctrl+f`).
-    - Reinforce previous editing and navigation skills.
+- **Task Design:** Tasks explicitly cover:
+    - Replacing a line with command output (`!!`).
+    - Inserting command output below the current line (`:r !cmd`).
+    - Navigating command history in command-line mode (`Ctrl+f`).
 
 ## Level 14 Example Analysis (Macro Automation)
 
 Level 14 focuses on automating repetitive tasks using macros.
 
 - **New Keys:** `q`, `@q`, `@@`, `Q`.
-- **Task Design:**
-    - Tasks that require recording a sequence of actions into a macro (`q`).
-    - Playing back a macro (`@q`, `@@`) to automate repetitive edits.
-    - Introduce the visual command-line mode (`Q`).
-    - Emphasize efficiency and minimizing keystrokes.
-    - Reinforce all previous editing and manipulation skills.
+- **Task Design:** Tasks explicitly cover:
+    - Recording a macro (`q`).
+    - Playing back a macro (`@q`, `@@`).
+    - Entering visual command-line mode to edit macros (`Q`).
+
+## Level 15 Example Analysis (Final Synthesis)
+
+Level 15 is the final barrier, requiring mastery and combination of all techniques learned throughout the game.
+
+- **New Keys:** `ALL` (synthesis level).
+- **Task Design:** Tasks are complex and require the combination of multiple commands and concepts, encouraging a real-world workflow simulation.
 
 ## What to Look Out For
 
