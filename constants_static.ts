@@ -77,8 +77,9 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   2: {
     briefing: "THE BREACH: A fragile handshake — repair protocol headers and leave a persistent trace before the watchdog purges temporary buffers.",
     initialText: [
-      "// protocol_header.cfg",
-      "// Agent Echo - Protocol Log",
+      "// protocol_bypass.cgi",
+      "// Agent Echo - Protocol CGI",
+      "#!/usr/bin/env perl",
       "",
       "PROTOCOL_STATUS: DEACTIVATED",
       "CONNECTION_ROUTE: UNSECURED",
@@ -92,11 +93,11 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// END_SESSION"
     ],
     targetText: [
-      "// protocol_header.cfg",
-      "// Agent Echo - Protocol Log",
+      "// protocol_bypass.cgi",
+      "// Agent Echo - Protocol CGI",
       "",
       "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED", // After Task 1 (I)
-      "CONNECTION_ROUTE: UNSECURED [TOKEN_VALID]",     // After Task 2 (A)
+      "CONNECTION_ROUTE: UNSECURED [TOKEN=VALID]",     // After Task 2 (A)
       "LOG_BUFFER_STATE: NEW_UNINITIALIZED",               // After Task 4 (i)
       "",
       "// INSERT_POINT_A",
@@ -117,46 +118,37 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     tasks: [
       {
-        description: "Press 'i', insert a short fragment (one or two chars), then press `Esc` to return to Normal Mode.",
+        description: "Insert a persistent bypass header at the start of the PROTOCOL_STATUS line using `I`, then press `Esc`.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["i", "<inserted>", "Escape|Esc"],
-        loreFragment: "LOG_04: \"ECHO LOG: Transmission interrupted mid-write. Partial fragment recovered.\"",
-        keyHint: "i"
-      },
-
-      {
-        description: "Press 'I' to insert at the first non-blank of the line, add a short fragment (one or two chars), then press `Esc`.",
-        type: "verify_key_sequence",
-        expectedKeySequence: ["I", "<inserted>", "Escape|Esc"],
-        loreFragment: "LOG_04: \"ECHO LOG: Transmission interrupted mid-write. Partial fragment recovered.\"",
+        expectedKeySequence: ["I", "B", "Y", "P", "A", "S", "S", "_", "S", "E", "C", "_", "0", "X", "0", "0", ":", " ", "Escape|Esc"],
+        value: "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED",
+        cursorExact: true,
+        loreFragment: "LOG_04: \"ECHO LOG: Transmission interrupted mid-write. Persistent header recovered.\"",
         keyHint: "I"
       },
-
-
-
       {
-        description: "Append a validation token to the 'CONNECTION_ROUTE' line and exit Insert Mode (A, Esc).",
+        description: "Append a validation token to the end of the CONNECTION_ROUTE line using `A`, then press `Esc`.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["j", "A", " ", "[", "T", "O", "K", "E", "N", "_", "V", "A", "L", "I", "D", "]", "Esc"],
-        value: "CONNECTION_ROUTE: UNSECURED [TOKEN_VALID]",
+        expectedKeySequence: ["j", "A", " ", "[", "T", "O", "K", "E", "N", "=", "V", "A", "L", "I", "D", "]", "Esc"],
+        value: "CONNECTION_ROUTE: UNSECURED [TOKEN=VALID]",
         cursorExact: true,
-        loreFragment: "LOG_05: \"ECHO LOG: Link secured. A momentary clarity.\"",
+        loreFragment: "LOG_05: \"ECHO LOG: Link secured. Token appended.\"",
         keyHint: "A"
       },
       {
-        description: "Create a new echo ping entry below the append point (o, type text, Esc).",
+        description: "Create a new CGI-status ping below // APPEND_POINT_B using `o`, add `LOG_04_ECHO_PING_RECEIVED`, then press `Esc`.",
         type: "verify_key_sequence",
         expectedKeySequence: ["j", "j", "j", "o", "L", "O", "G", "_", "0", "4", "_", "E", "C", "H", "O", "_", "P", "I", "N", "G", "_", "R", "E", "C", "E", "I", "V", "E", "D", "Esc"],
         value: "LOG_04_ECHO_PING_RECEIVED",
         cursorExact: true,
-        loreFragment: "LOG_06: \"ECHO LOG: A message. A signal. Was it from me?\"",
+        loreFragment: "LOG_06: \"ECHO LOG: CGI ping injected. Heartbeat registered.\"",
         keyHint: "o"
       },
       {
-        description: "Commit the buffer with :w to persist injected entries.",
+        description: "Persist your changes with `:w` to commit the CGI update.",
         type: "run_command",
         value: ":w",
-        loreFragment: "LOG_08: \"ECHO LOG: Data committed. A fleeting moment of control.\"",
+        loreFragment: "LOG_08: \"ECHO LOG: CGI updated and committed. Persistence confirmed.\"",
         keyHint: ":w"
       }
     ]

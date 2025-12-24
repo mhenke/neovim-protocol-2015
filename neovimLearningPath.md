@@ -20,7 +20,7 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 
 ---
 
-### **Level 2** — `protocol_header.cfg`
+### **Level 2** — `protocol_bypass.cgi`
 **Story:** Inject new data and make basic corrections to system logs.  
 **New Keys:** `i`, `a`, `o`, `O`, `A`, `I`, `Esc`, `x`, `r`, `cw`, `ciw`, `C`
 

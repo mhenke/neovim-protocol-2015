@@ -38,7 +38,7 @@ export const CURRICULUM: LevelConfig[] = [
   },
   {
     id: 2, episode: 1, episodeTitle: "THE BREACH",
-    filename: "protocol_header.cfg",
+    filename: "protocol_bypass.cgi",
     objective: "Plant a persistent bypass header, append validation tokens, and commit protocol fixes to secure a foothold.",
 
 

@@ -115,7 +115,7 @@ SIGNAL STABILIZED. Your initial trace confirmed Echo's presence. Now, to establi
 
 #### TECHNICAL OBJECTIVE (1 clear sentence)
 
-Insert new protocol headers and append critical parameters, then save and exit the `protocol_header.cfg` file.
+Insert new CGI protocol headers and append critical parameters, then save and exit the `protocol_bypass.cgi` file.
 
 ---
 
