@@ -790,7 +790,13 @@ export default function App() {
     setIsLoading(true);
     
     try {
-      const staticLevelData = STATIC_LEVELS[config.id];
+      // Map curriculum ID to static level data. Warmup (id=1) uses WARMUP_LEVEL; other levels map to STATIC_LEVELS with an offset because STATIC_LEVELS was generated prior to warmup insertion.
+      let staticLevelData: any = null;
+      if (config.id === 1) {
+          staticLevelData = WARMUP_LEVEL;
+      } else {
+          staticLevelData = STATIC_LEVELS[config.id - 1];
+      }
       if (!staticLevelData) {
         throw new Error(`No static level data found for level ID: ${config.id}`);
       }
