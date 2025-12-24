@@ -77,7 +77,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   2: {
     briefing: "THE BREACH: A fragile handshake — repair protocol headers and leave a persistent trace before the watchdog purges temporary buffers.",
     initialText: [
-      "// signal_trace.log",
+      "// protocol_log.log",
       "// Agent Echo - Protocol Log",
       "",
       "PROTOCOL_STATUS: DEACTIVATED",
@@ -92,7 +92,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// END_SESSION"
     ],
     targetText: [
-      "// signal_trace.log",
+      "// protocol_log.log",
       "// Agent Echo - Protocol Log",
       "",
       "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED", // After Task 1 (I)
@@ -109,24 +109,25 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ],
     loreReveal: "LOG_09: 'Persistent link secured. Data buffer committed. Echo's presence established.' - Echo",
     hints: [
-      "`i` inserts before the cursor. `a` appends after the cursor.",
-      "`I` inserts at the beginning of the line. `A` appends at the end of the line.",
+      "`i` inserts before the cursor (before the current character). `I` inserts at the first non-blank of the line—useful to ignore leading indent.",
+      "`a` appends after the cursor. `A` appends at the end of the line.",
       "`o` creates a new line below. `O` creates a new line above.",
       "Press `Esc` to exit Insert Mode and return to Normal Mode.",
-      "Type `:` then `w` and `Enter` to save changes. Type `:` then `q` and `Enter` to quit."
+      "Type `:` then `w` and `Enter` to save changes."
     ],
     tasks: [
       {
-        description: "Navigate to 'PROTOCOL_STATUS: DEACTIVATED'. Use `I` to insert 'BYPASS_SEC_0X00: ' at the start of the line. Press `Esc`.",
+        description: "Echo started writing a bypass header but was interrupted. Press `i` or `I`, type a short fragment (one or two chars), then press `Esc`.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["I", "B", "Y", "P", "A", "S", "S", "_", "S", "E", "C", "_", "0", "X", "0", "0", ":", " ", "Esc"],
-        value: "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED",
-        cursorExact: true,
-        loreFragment: "LOG_04: \"ECHO LOG: Protocol initiated. A spark in the void.\"",
-        keyHint: "I"
+        expectedKeySequence: ["i|I", "<inserted>", "Escape|Esc"],
+        loreFragment: "LOG_04: \"ECHO LOG: Transmission interrupted mid-write. Partial fragment recovered.\"",
+        keyHint: "i / I"
       },
+
+
+
       {
-        description: "Navigate to 'CONNECTION_ROUTE: UNSECURED'. Use `A` to append ' [TOKEN_VALID]' at the end of the line. Press `Esc`.",
+        description: "Append a validation token to the 'CONNECTION_ROUTE' line and exit Insert Mode (A, Esc).",
         type: "verify_key_sequence",
         expectedKeySequence: ["j", "A", " ", "[", "T", "O", "K", "E", "N", "_", "V", "A", "L", "I", "D", "]", "Esc"],
         value: "CONNECTION_ROUTE: UNSECURED [TOKEN_VALID]",
@@ -135,7 +136,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "A"
       },
       {
-        description: "Navigate to '// APPEND_POINT_B'. Use `o` to create a new line below, type 'LOG_04_ECHO_PING_RECEIVED', and press `Esc`.",
+        description: "Create a new echo ping entry below the append point (o, type text, Esc).",
         type: "verify_key_sequence",
         expectedKeySequence: ["j", "j", "j", "o", "L", "O", "G", "_", "0", "4", "_", "E", "C", "H", "O", "_", "P", "I", "N", "G", "_", "R", "E", "C", "E", "I", "V", "E", "D", "Esc"],
         value: "LOG_04_ECHO_PING_RECEIVED",
@@ -144,27 +145,11 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         keyHint: "o"
       },
       {
-        description: "Navigate to 'LOG_BUFFER_STATE: UNINITIALIZED'. Use `i` to place the cursor before 'UNINITIALIZED', type 'NEW_', and press `Esc`.",
-        type: "verify_key_sequence",
-        expectedKeySequence: ["k", "k", "k", "k", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "l", "i", "N", "E", "W", "_", "Esc"],
-        value: "LOG_BUFFER_STATE: NEW_UNINITIALIZED",
-        cursorExact: true,
-        loreFragment: "LOG_07: \"ECHO LOG: State initialized. A new beginning.\"",
-        keyHint: "i"
-      },
-      {
-        description: "From Normal Mode, save your changes by typing `:` then `w` and `Enter`.",
+        description: "Commit the buffer with :w to persist injected entries.",
         type: "run_command",
         value: ":w",
         loreFragment: "LOG_08: \"ECHO LOG: Data committed. A fleeting moment of control.\"",
         keyHint: ":w"
-      },
-      {
-        description: "From Normal Mode, quit the session by typing `:` then `q` and `Enter`.",
-        type: "run_command",
-        value: ":q",
-        loreFragment: "LOG_09: \"ECHO LOG: Connection lost. But the message... it remains.\"",
-        keyHint: ":q"
       }
     ]
   },
@@ -290,7 +275,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   4: {
     briefing: "FAULT ARCHIVE: Corrupted fault logs are rewriting themselves — purge errors and duplicate verified entries to preserve evidence.",
     initialText: [
-      "// System Fault Log",
+      "// system_fault.log",
       "ERROR: CRITICAL_PROCESS_FAIL - URGENT",
       "INFO: SYSTEM_BOOT_SUCCESS",
       "ERROR: MEMORY_ALLOCATION_FAIL - URGENT",
@@ -302,7 +287,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// END OF LOG"
     ],
     targetText: [
-      "// System Fault Log",
+      "// system_fault.log",
       "INFO: SYSTEM_BOOT_SUCCESS",
       "INFO: USER_LOGIN_GHOST",
       "INFO: USER_LOGIN_GHOST", // Duplicated line
@@ -359,7 +344,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   5: {
     briefing: "ARCHIVES: Daemonic metadata mutates logs — excise corrupt tokens with visual precision and restore coherence.",
     initialText: [
-      "// Anomaly Report",
+      "// anomaly_report.txt",
       "ALERT: SUBVERSIVE_DAEMON_ACTIVITY",
       "TRACE: kernel_hooked",
       "NOTE: UNUSUAL_PATTERN_DETECTED",
@@ -368,7 +353,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "CODE: F00D00F0"
     ],
     targetText: [
-      "// Anomaly Report",
+      "// anomaly_report.txt",
       "ALERT:",
       "TRACE: kernel_hooked",
       "TRACE: kernel_hooked",
