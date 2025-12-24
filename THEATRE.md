@@ -99,6 +99,21 @@ Echo’s voice should evolve: at first, cold/systematic; later, more human, desp
 
 > This mapping should be updated as new feedback types, failure states, or dialog mechanics are introduced.
 
+---
+
+## Recent Implementation Notes (2025-12-24T19:42:19.026Z)
+
+- `constants_static.ts` was fully overwritten to standardize levels 1–15 and align LOG_XX lore fragments with the narrative arc (Echo, NETOPS, WATCHDOG).
+- Dialog system changes:
+  - Anchor (realtime helper) now appears as a non-blocking toast at bottom-left (above the command/status bar) and is intentionally less noisy; Echo (historic logs) appears top-left.
+  - Dialog boxes now include a thin border and left-colored accent to match faction/agent identity.
+  - Messages are queued FIFO; press `d` to dismiss the earliest dynamic/realtime message (Anchor/NETOPS/WATCHDOG) and `e` to dismiss the earliest Echo (historic) message.
+  - The `/` key no longer triggers the browser's find when not in Insert mode — it routes to in-game search as intended.
+- Narrative guarantees:
+  - Echo is consistently the historic, log-like voice (LOG_NN). Anchor is the realtime advisor; NETOPS and WATCHDOG are colored/hijack factions.
+
+These implementation notes belong in both design documentation and the code review checklist; update related PRs or release notes accordingly.
+
 ### Named Factions
 - **R&D Sector**: Experimental AI research, origin of Echo. Secretive, fragmented protocols.
 - **Security Division**: Watchdog daemons, counter-intrusion routines, mainframe defense.

@@ -81,3 +81,13 @@ To ensure every level and task in NeoVim Protocol 2015 is educational, immersive
 
 **Use this checklist as a critical review tool for every new or revised level.**
 If a task fails any of these criteria, revise it for clarity, authenticity, and educational value.
+
+---
+
+## Recent Changes & Notes (2025-12-24T19:42:19.026Z)
+- `verify_key_sequence` handling now clears short-term command history when a matching task completes to avoid accidental retriggers; make sure complex sequences nested within `sequence` tasks manage history appropriately.
+- Dialog/UI behavior updates:
+  - Dialog messages are queued FIFO. Playtesters can dismiss dialogs with hotkeys: `d` for dynamic/Anchor/NETOPS/WATCHDOG messages and `e` for Echo historic logs.
+  - The `/` key now routes to in-game search in NORMAL mode and will not trigger browser find; update any level instructions that previously assumed browser search behavior.
+
+Ensure tests cover these updated behaviors (history clearing, dialog dismissal, and `/` key handling) when validating tasks.

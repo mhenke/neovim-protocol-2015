@@ -252,5 +252,12 @@ This audit compares the current implementation of game mechanics (as of Dec 2025
   - Expanding text object logic for nested/multi-line cases.
   - Completing visual mode and more Ex commands as needed.
 
+## Recent UI & Input Handling Notes (2025-12-24T19:42:19.026Z)
+- The dialog system now queues messages (FIFO) and assigns dismissal hotkeys for easier playtesting:
+  - `d` dismisses the earliest dynamic/realtime dialog (Anchor/NETOPS/WATCHDOG).
+  - `e` dismisses the earliest Echo historic log toast.
+- The `/` key is prevented from invoking the browser's find when in NORMAL mode; this ensures `/` integrates reliably into the in-game search mechanics.
+- Dialog toasts include a thin border and colored left accent to identify source. Anchor appears bottom-left (non-blocking); Echo appears top-left.
+
 ## Conclusion
 The current implementation is highly faithful for the curriculum's scope, with minor simplifications. All critical motions and tasks behave as in real Neovim for the tested levels. See above for edge cases and improvement areas.
