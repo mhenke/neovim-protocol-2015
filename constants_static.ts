@@ -313,35 +313,35 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "Navigate to the first 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "CRITICAL_PROCESS_FAIL",
-        loreFragment: "LOG_20: \"Urgency metrics reset. The system prioritizes stability over chronological integrity.\"",
+        loreFragment: "LOG_20: \"ECHO: I watched the alarms spike — I cut the noise to buy time. If this line disappears, remember I tried. — Echo\"",
         keyHint: "dd"
       },
       {
         description: "Navigate to the next 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "MEMORY_ALLOCATION_FAIL",
-        loreFragment: "LOG_21: \"Memory fault signature neutralized; side effects observed in adjacent sectors.\"",
+        loreFragment: "LOG_21: \"ECHO: Memory scorched beneath the surface. I ripped the corrupt trace out and hoped it wouldn't come back. It did. — Echo\"",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to the 'WARN:' line and use `dd` to delete it.",
         type: "missing",
         value: "UNKNOWN_MODULE_LOAD",
-        loreFragment: "LOG_22: \"Anomaly warning scrubbed. Subroutines realign.\"",
+        loreFragment: "LOG_22: \"ECHO: Warnings screamed in hex; I scrubbed what I could. The system learns — it adapts to the cuts. — Echo\"",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to the final 'ERROR:' line and use `dd` to delete it.",
         type: "missing",
         value: "CORRUPT_FILESYSTEM",
-        loreFragment: "LOG_23: \"Filesystem corruption purged. Integrity check initiated.\"",
+        loreFragment: "LOG_23: \"ECHO: I purged the corrupt sectors with a trembling hand. The integrity check stared back like a judge. — Echo\"",
         keyHint: "j, dd"
       },
       {
         description: "Navigate to 'INFO: USER_LOGIN_GHOST' line and use `yy` to yank (copy) it, then `p` to paste it on the line below.",
         type: "run_command",
         value: "yy,p",
-        loreFragment: "LOG_24: \"Login duplicated. Echoes multiply: is this replication or infection?\"",
+        loreFragment: "LOG_24: \"ECHO: I copied the ghost of a login to hide the gap. Replication or survival — I don't know which. Remember the copy. — Echo\"",
         keyHint: "yy, p"
       }
     ]
@@ -379,14 +379,14 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         description: "Select the anomalous token and delete it.",
         type: "missing",
         value: "SUBVERSIVE_DAEMON_ACTIVITY",
-        loreFragment: "LOG_30: \"Daemon token isolated. The culture of the mainframe resists deletion.\"",
+        loreFragment: "LOG_30: \"ECHO: This daemon burrowed into our tags. I carved it out and felt the system flinch. It remembered me. — Echo\"",
         keyHint: "v, d"
       },
       {
         description: "Visual-line yank of the TRACE line and paste it below.",
         type: "run_command",
         value: "V, y, p",
-        loreFragment: "LOG_31: \"Trace duplicated. Replication observed across partitions.\"",
+        loreFragment: "LOG_31: \"ECHO: I duplicated the trace to confuse the watchers. Little echoes ripple — maybe one will survive. — Echo\"",
         keyHint: "V, y, p"
       },
       {
