@@ -36,23 +36,23 @@ Our work on Level 1 provides a good example of these principles in action:
 
 - **Initial State:** The file starts with a few blank lines, so the user's cursor is not on any keyword at the beginning. This prevents tasks from being completed accidentally.
 - **Task Flow:** The tasks are designed to create a natural flow of navigation:
-    1.  Move to `STATUS`.
-    2.  Move to the end of the line.
-    3.  Jump to the end of the file.
+    1.  Move to 'STATUS'.
+    2.  Move to the end of the 'STATUS' line.
+    3.  Jump to '// END OF TRANSMISSION'.
     4.  Jump to the top of the file.
 - **Task Types:** It uses a mix of `cursor_on` and `command_and_cursor_on` to guide the user while enforcing the use of specific keys like `$` and `G`.
-- **Combined Tasks:** We ended up using a `sequence` task to combine the line navigation tasks (`$`, `0`, `b`) into a single, more complex task, which makes the level more interesting and less cluttered with too many small tasks.
 
 ## Level 2 Example Analysis
 
-Level 2 combines concepts from the original levels 2, 3, and 4. It's a dense level that teaches the core editing toolkit.
+Level 2 is now a comprehensive level that teaches the core editing toolkit.
 
 - **New Keys:** `i`, `a`, `o`, `O`, `A`, `I`, `Esc`, `x`, `r`, `cw`, `ciw`, `C`, `dd`, `D`, `yy`, `p`, `P`, `u`, `Ctrl+r`.
 - **Task Design:**
     - **Insertion:** Tasks should require adding new lines of text (`o`, `O`) and inserting text at the beginning and end of lines (`I`, `A`).
-    - **Editing:** Tasks should involve changing words (`cw`), replacing characters (`r`), and deleting characters (`x`).
+    - **Editing:** Tasks should involve changing words (`cw`), replacing characters (`r`), deleting characters (`x`).
     - **Line Manipulation:** Tasks for deleting (`dd`), yanking (`yy`), and pasting (`p`, `P`) lines.
     - **Undo/Redo:** A task that requires the user to make a mistake and then correct it with `u`.
+    - It uses `sequence` tasks to combine multiple editing actions for a more realistic workflow.
 
 ## Level 3 Example Analysis
 
@@ -61,15 +61,34 @@ Level 2 combines concepts from the original levels 2, 3, and 4. It's a dense lev
     - **Search:** Tasks should require finding specific words or patterns in the text.
     - **Navigation:** Tasks should use `n` and `N` to navigate between search results.
     - **Replacement:** Tasks should use `:s` to replace text on a line, and `:%s` to replace text globally.
+    - Reinforce navigation from Level 1 and editing from Level 2.
 
 ## Level 4 Example Analysis
 
-- **New Keys:** `:w`, `:q`, `:wq`, `:q!`, `:e`, `:sp`, `:vsp`, `Ctrl+w hjkl`, `:ls`, `:b<num>`.
+- **New Keys:** `:w`, `:q`, `:wq`, `:q!`, `:e`, `:sp`, `:vsp`, `Ctrl+w h/j/k/l`, `:ls`, `:bn`, `:bp`.
 - **Task Design:**
     - **File Operations:** Tasks for saving and quitting.
-    - **Window Management:** Tasks for creating horizontal and vertical splits (`:sp`, `:vsp`) and navigating between them (`Ctrl+w hjkl`).
-    - **Buffer Management:** Tasks that require opening a new file (`:e`), listing buffers (`:ls`), and switching between them (`:b<num>`).
+    - **Window Management:** Tasks for creating horizontal and vertical splits (`:sp`, `:vsp`) and navigating between them (`Ctrl+w h/j/k/l`).
+    - **Buffer Management:** Tasks that require opening a new file (`:e`), listing buffers (`:ls`), and switching between them (`:bn`, `:bp`).
+    - Reinforce editing from Level 2 and search/replace from Level 3.
 
+## Level 13 Example Analysis (Terminal Integration)
+
+- **New Keys:** `!!`, `:r !cmd`, `Ctrl+f`.
+- **Task Design:**
+    - Tasks that require executing external shell commands from within Neovim.
+    - Inserting the output of a shell command directly into the buffer.
+    - Navigating the command-line history.
+    - Reinforce previous editing and navigation skills.
+
+## Level 14 Example Analysis (Macro Automation)
+
+- **New Keys:** `q`, `@q`, `@@`, `Q`.
+- **Task Design:**
+    - Tasks that require recording a sequence of actions into a macro.
+    - Playing back a macro to automate repetitive edits.
+    - Emphasize efficiency and minimizing keystrokes.
+    - Reinforce all previous editing and manipulation skills.
 
 ## What to Look Out For
 

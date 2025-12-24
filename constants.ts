@@ -35,7 +35,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 1, episode: 1, episodeTitle: "THE BREACH",
     filename: "signal_trace.log",
-    objective: "Decrypt network traffic by navigating the signal patterns  ",
+    objective: "Decrypt network traffic by navigating the signal patterns",
     newKeys: ['h', 'j', 'k', 'l', 'w', 'b', '0', '$', 'gg', 'G'],
     mechanics: ['nav_basic', 'nav_word', 'nav_line', 'nav_file'],
     idealKeystrokes: 15
@@ -43,7 +43,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 2, episode: 1, episodeTitle: "THE BREACH",
     filename: "security_hub.log",
-    objective: "Disable security protocols and purge compromised logs.",
+    objective: "Disable security protocols and purge compromised logs with precision editing.",
     newKeys: ['i', 'a', 'o', 'O', 'A', 'I', 'Esc', 'x', 'r', 'cw', 'ciw', 'C', 'dd', 'D', 'yy', 'p', 'P', 'u', 'Ctrl+r'],
     mechanics: ['insert_mode', 'editing', 'line_manipulation', 'undo_redo'],
     idealKeystrokes: 40
@@ -60,14 +60,12 @@ export const CURRICULUM: LevelConfig[] = [
     id: 4, episode: 1, episodeTitle: "THE BREACH",
     filename: "exfiltration.sh",
     objective: "Save the backdoor script and open multiple files for data extraction",
-    newKeys: [':w', ':q', ':wq', ':q!', ':e', ':sp', ':vsp', 'Ctrl+w hjkl', ':ls', ':b<num>'],
+    newKeys: [':w', ':q', ':wq', ':q!', ':e', ':sp', ':vsp', 'Ctrl+w h/j/k/l', ':ls', ':bn', ':bp'],
     mechanics: ['file_operations', 'window_management', 'buffer_management'],
     idealKeystrokes: 20
   },
-
-  // --- EPISODE 2: THE TRACE (Efficiency) ---
   {
-    id: 5, episode: 2, episodeTitle: "THE TRACE",
+    id: 5, episode: 1, episodeTitle: "THE BREACH",
     filename: "firewall_rules.json",
     objective: "Modify firewall rules without breaking JSON/code structure",
     newKeys: ['ci"', "ci'", 'ci(', 'ci{', 'ci[', 'cit', 'diw', 'daw'],
@@ -75,6 +73,8 @@ export const CURRICULUM: LevelConfig[] = [
     timeLimit: 120,
     idealKeystrokes: 20
   },
+
+  // --- EPISODE 2: THE TRACE (Efficiency) ---
   {
     id: 6, episode: 2, episodeTitle: "THE TRACE",
     filename: "blockchain_ledger.dat",
@@ -102,19 +102,17 @@ export const CURRICULUM: LevelConfig[] = [
     timeLimit: 60,
     idealKeystrokes: 10
   },
-
-  // --- EPISODE 3: THE CORE (Mastery) ---
   {
-    id: 9, episode: 3, episodeTitle: "THE CORE",
+    id: 9, episode: 2, episodeTitle: "THE TRACE",
     filename: "code_analysis.cpp",
-    objective: "Analyze and refactor C++ codebase across multiple windows",
-    newKeys: ['Ctrl+w h/j/k/l', 'Ctrl+w c', 'Ctrl+u', 'Ctrl+d'],
-    mechanics: ['window_navigation', 'scrolling'],
+    objective: "Analyze and refactor C++ codebase across multiple windows, scrolling quickly.",
+    newKeys: ['Ctrl+u', 'Ctrl+d'],
+    mechanics: ['scrolling'],
     maxKeystrokes: 40,
     idealKeystrokes: 25
   },
   {
-    id: 10, episode: 3, episodeTitle: "THE CORE",
+    id: 10, episode: 2, episodeTitle: "THE TRACE",
     filename: "quantum_state.sys",
     objective: "Mark quantum states and navigate between entangled positions",
     newKeys: ['ma', "'a", "``a``", 'Ctrl+o', 'Ctrl+i'],
@@ -122,6 +120,8 @@ export const CURRICULUM: LevelConfig[] = [
     maxKeystrokes: 35,
     idealKeystrokes: 20
   },
+
+  // --- EPISODE 3: THE CORE (Mastery) ---
   {
     id: 11, episode: 3, episodeTitle: "THE CORE",
     filename: "source_code.js",
@@ -135,15 +135,33 @@ export const CURRICULUM: LevelConfig[] = [
     id: 12, episode: 3, episodeTitle: "THE CORE",
     filename: "reality.sys",
     objective: "Rewrite reality itself through mass find-and-replace",
-    newKeys: [':s/old/new/g', ':%s/old/new/g', ':%s/old/new/gc', '&'],
+    newKeys: ['&'],
     mechanics: ['substitute'],
     maxKeystrokes: 25,
     idealKeystrokes: 15
   },
   {
     id: 13, episode: 3, episodeTitle: "THE CORE",
+    filename: "terminal_capture.log",
+    objective: "Capture and reuse output from external commands.",
+    newKeys: ['!!', ':r !cmd', 'Ctrl+f'],
+    mechanics: ['shell_integration', 'command_line_mode'],
+    maxKeystrokes: 30,
+    idealKeystrokes: 15
+  },
+  {
+    id: 14, episode: 3, episodeTitle: "THE CORE",
+    filename: "macro_sequence.dat",
+    objective: "Automate a repetitive decryption sequence using macros.",
+    newKeys: ['q', '@q', '@@', 'Q'],
+    mechanics: ['macros'],
+    maxKeystrokes: 20,
+    idealKeystrokes: 10
+  },
+  {
+    id: 15, episode: 3, episodeTitle: "THE CORE",
     filename: "FINAL_GATE.lock",
-    objective: "The final barrier requires mastery of all techniques combined",
+    objective: "The final barrier requires mastery of all techniques combined. Decrypt, align, and release the core.",
     newKeys: ['ALL'],
     mechanics: ['mastery'],
     maxKeystrokes: 60,

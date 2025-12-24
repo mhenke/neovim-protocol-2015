@@ -59,41 +59,92 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     ]
   },
   2: {
-    briefing: "ACCESS DENIED.\n\nThe sector map is read-only. We need to inject false coordinates to reroute their patrols.\n\nOBJECTIVE: Use your insertion commands to add a new XML node and a comment.",
+    briefing: "ACCESS DENIED.\n\nThe sector map is read-only. We need to inject false coordinates to reroute their patrols.\n\nOBJECTIVE: Use your insertion and editing commands to add a new XML node, a comment, disable a protocol and fix a log entry.",
     initialText: [
+      "<!-- Status: active -->",
       "<map>",
       "  <sector id='S1'>Primary</sector>",
-      "</map>"
+      "  <protocoll>ENABLED</protocoll>",
+      "</map>",
+      "// access_log_ECHO-7.purged",
+      "ACCESS_LOG: id_9918 (COMPROMISED)",
+      "ACCESS_LOG: id_2388 (COMPROMISED)",
+      "ACCESS_LOG: id_4511 (DELETE_ME)"
     ],
     targetText: [
       "<!-- Rerouting patrols -->",
       "<map>",
       "  <sector id='S1'>Primary</sector>",
       "  <sector id='S3_FAKE'>Quarantine</sector>",
-      "</map>"
+      "  <protocol>DISABLED</protocol>",
+      "</map>",
+      "// access_log_ECHO-7.purged",
+      "ACCESS_LOG: id_1821 (CLEAN)",
+      "ACCESS_LOG: id_1821 (CLEAN)"
     ],
-    loreReveal: "COORDINATES ACCEPTED. 'Their system is too trusting. It accepted the fake node without validation. Rerouting their patrols now.' - Echo",
+    loreReveal: "MULTIPLE SYSTEMS COMPROMISED. 'They tried to make it hard, but all the tools were at my fingertips.' - Echo",
     hints: [
       "'o' opens a new line below and enters Insert Mode.",
       "'O' opens a new line above and enters Insert Mode.",
       "'A' appends at the end of the current line.",
       "'I' to insert at the start of the line.",
-      "Press Esc to return to Normal Mode."
+      "Press Esc to return to Normal Mode.",
+      "'x' deletes a character, 'r' replaces one.",
+      "'cw' changes a word, 'C' changes to end of line.",
+      "'dd' deletes a line, 'yy' yanks a line, 'p' pastes."
     ],
     tasks: [
       {
         description: "Use 'o' to add a new sector: <sector id='S3_FAKE'>Quarantine</sector>",
         type: "contains",
-        value: "S3_FAKE",
+        value: "<sector id='S3_FAKE'>Quarantine</sector>",
         loreFragment: "Fake node injected.",
         keyHint: "o...Esc"
       },
       {
-        description: "Use 'O' to add a comment at the top: <!-- Rerouting patrols -->",
-        type: "contains",
-        value: "Rerouting patrols",
-        loreFragment: "Comment added, trail obfuscated.",
-        keyHint: "O...Esc"
+        description: "Change 'protocoll' to 'protocol' and 'ENABLED' to 'DISABLED'.",
+        type: "sequence",
+        subTasks: [
+          {
+            description: "Fix the typo 'protocoll' to 'protocol'",
+            type: "contains",
+            value: "protocol>",
+            keyHint: "x"
+          },
+          {
+            description: "Change 'ENABLED' to 'DISABLED'",
+            type: "contains",
+            value: "DISABLED",
+            keyHint: "cw"
+          }
+        ],
+        loreFragment: "Security protocol disabled.",
+        keyHint: "x, cw"
+      },
+      {
+        description: "Delete the 'DELETE_ME' line and all 'COMPROMISED' logs. Duplicate the clean log entry.",
+        type: "sequence",
+        subTasks: [
+          {
+            description: "Delete the 'DELETE_ME' line",
+            type: "missing",
+            value: "DELETE_ME",
+            keyHint: "dd"
+          },
+          {
+            description: "Delete all 'COMPROMISED' lines",
+            type: "missing",
+            value: "COMPROMISED",
+            keyHint: "dd"
+          },
+          {
+            description: "Duplicate the last ACCESS_LOG entry",
+            type: "contains",
+            value: "ACCESS_LOG: id_1821 (CLEAN)\nACCESS_LOG: id_1821 (CLEAN)",
+            keyHint: "yy, p"
+          }
+        ],
+        loreFragment: "Logs purged and duplicated."
       }
     ]
   },
@@ -141,11 +192,17 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// exfiltration.sh",
       "KEY=PLACEHOLDER",
       "TARGET=192.168.1.100",
+      "",
+      "// keys.txt content:",
+      "0xDEADBEEF"
     ],
     targetText: [
       "// exfiltration.sh",
       "KEY=0xDEADBEEF",
       "TARGET=192.168.1.100",
+      "",
+      "// keys.txt content:",
+      "0xDEADBEEF"
     ],
     loreReveal: "EXFILTRATION SCRIPT ARMED. 'Juggling multiple files is a common task. Buffers are your friend.' - Echo",
     hints: [
@@ -183,13 +240,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       targetText: ["  \"status\": \"open\""],
       loreReveal: "CONFIG PATCHED. 'Text objects are like surgical tools for code. Precision is key.' - Echo",
       hints: ["Use 'ci\"' to change the text inside the double quotes.", "Navigate to the word 'locked' and use 'ci\"'.", "Type 'open' and press Esc."],
-      tasks: [{
-          description: "Change 'locked' to 'open' using 'ci\"'.",
-          type: "contains",
-          value: "open",
-          loreFragment: "Status field patched.",
-          keyHint: "ci\""
-      }]
+      tasks: [{"description": "Change 'locked' to 'open' using 'ci\"'.", "type": "contains", "value": "open", "loreFragment": "Status field patched.", "keyHint": "ci\""}]
   },
   6: {
       briefing: "BLOCKCHAIN TAMPERING. \n\nA corrupted block in a blockchain ledger is preventing transaction verification. We need to visually select and remove it.\n\nOBJECTIVE: Use visual block mode to select and delete the 'CORRUPTED' column.",
@@ -201,13 +252,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       targetText: [],
       loreReveal: "LEDGER CORRECTED. 'Columnar editing is a superpower. Most people don't even know it exists.' - Echo",
       hints: ["Use 'Ctrl+v' to enter visual block mode.", "Move down to select the column of 'VALID'.", "Press 'd' to delete the selection."],
-      tasks: [{
-          description: "Delete the 'VALID' column using visual block mode.",
-          type: "missing",
-          value: "VALID",
-          loreFragment: "Ledger realigned.",
-          keyHint: "Ctrl+v"
-      }]
+      tasks: [{"description": "Delete the 'VALID' column using visual block mode.", "type": "missing", "value": "VALID", "loreFragment": "Ledger realigned.", "keyHint": "Ctrl+v"}]
   },
   7: {
       briefing: "NEURAL NET DEBUGGING. \n\nA Python script for a neural net has a syntax error due to mismatched brackets.\n\nOBJECTIVE: Jump to the matching bracket to identify the scope of the error.",
@@ -255,8 +300,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       ],
       targetText: [],
       loreReveal: "ANALYSIS COMPLETE. 'You can't hold the whole system in your head. Split your view, split your focus.' - Echo",
-      hints: ["Use ':sp' for a horizontal split.", "Use 'Ctrl+w' followed by 'j' or 'k' to move between splits."],
-      tasks: [{"description": "Create a horizontal split.", "type": "run_command", "value": ":sp", "loreFragment": "View split. Enhanced analysis enabled.", "keyHint": ":sp"}]
+      hints: ["Use 'Ctrl+u' and 'Ctrl+d' to scroll half a page up and down."],
+      tasks: [{"description": "Scroll down the file using 'Ctrl+d'.", "type": "cursor_on", "value": "myFunction();", "loreFragment": "Scrolled to the end.", "keyHint": "Ctrl+d"}]
   },
   10: {
       briefing: "QUANTUM STATE NAVIGATION.\n\nThis system uses entangled positions (marks) to link critical code sections.\n\nOBJECTIVE: Set a mark at the 'ENTANGLEMENT_POINT', navigate away, and then jump back to it.",
@@ -311,7 +356,77 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       tasks: [{"description": "Replace all 'old' with 'new'.", "type": "missing", "value": "old", "loreFragment": "System assertions rewritten.", "keyHint": ":%s"}]
   },
   13: {
-      briefing: "THE FINAL GATE.\n\nThis is it. The final barrier. It requires mastery of all techniques combined. Decrypt, align, and release.\n\nOBJECTIVE: Change 'ENCRYPTED' to 'DECRYPTED', indent the data, and change 'LOCKED' to 'RELEASED'.",
+      briefing: "TERMINAL INTEGRATION.\n\nWe need to inject output from an external command into the current file.",
+      initialText: [
+          "// Report generated on:",
+          "// System Uptime:",
+          ""
+      ],
+      targetText: [],
+      loreReveal: "DATA INJECTED. 'The terminal is an extension of your mind. Integrate it.' - Echo",
+      hints: [
+          "Use '!!date' to insert the current date.",
+          "Use ':r !uptime' to insert system uptime."
+      ],
+      tasks: [
+          {
+              description: "Insert the current date into the file using '!!date'.",
+              type: "contains",
+              value: "// Report generated on: DATE", // Placeholder for actual date
+              loreFragment: "Date injected."
+          },
+          {
+              description: "Insert system uptime into the file using ':r !uptime'.",
+              type: "contains",
+              value: "// System Uptime: UPTIME", // Placeholder for actual uptime
+              loreFragment: "Uptime injected."
+          }
+      ]
+  },
+  14: {
+      briefing: "MACRO AUTOMATION.\n\nA repetitive data entry task needs to be automated.",
+      initialText: [
+          "Entry: Alpha",
+          "Detail: Value 1",
+          "",
+          "Entry: Beta",
+          "Detail: Value 2",
+          "",
+          "Entry: Gamma",
+          "Detail: Value 3"
+      ],
+      targetText: [],
+      loreReveal: "TASK AUTOMATED. 'Don't do it twice. Automate it.' - Echo",
+      hints: [
+          "Use 'qa' to start recording a macro into register 'a'.",
+          "Perform the repetitive edits.",
+          "Press 'q' to stop recording.",
+          "Use '@a' to play back the macro."
+      ],
+      tasks: [
+          {
+              description: "Automate changing 'Entry:' to 'ID:' and 'Detail:' to 'Info:' for all entries using a macro.",
+              type: "sequence",
+              subTasks: [
+                  {
+                      description: "Change 'Entry:' to 'ID:' for all entries",
+                      type: "missing",
+                      value: "Entry:",
+                      keyHint: "qa...q"
+                  },
+                  {
+                      description: "Change 'Detail:' to 'Info:' for all entries",
+                      type: "missing",
+                      value: "Detail:",
+                      keyHint: "@a"
+                  }
+              ],
+              loreFragment: "Data entries reformatted."
+          }
+      ]
+  },
+  15: {
+      briefing: "THE FINAL GATE.\n\nThis is it. The final barrier. It requires mastery of all techniques combined. Decrypt, align, and release the core.",
       initialText: [
           "HEADER: [ENCRYPTED]",
           "DATA_STREAM:",

@@ -1,4 +1,4 @@
-# 🎮 The Ghost Protocol: A 13-Level Neovim Game
+# 🎮 The Ghost Protocol: A 15-Level Neovim Game
 
 A comprehensive progression teaching **real, practical Neovim** through a cyberpunk hacking narrative.
 
@@ -21,7 +21,7 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 ---
 
 ### **Level 2** — `security_hub.log`
-**Story:** Disable security protocols and purge compromised logs.  
+**Story:** Disable security protocols and purge compromised logs with precision editing.  
 **New Keys:** `i`, `a`, `o`, `O`, `A`, `I`, `Esc`, `x`, `r`, `cw`, `ciw`, `C`, `dd`, `D`, `yy`, `p`, `P`, `u`, `Ctrl+r`
 
 **Teaches:**
@@ -50,19 +50,17 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 
 ### **Level 4** — `exfiltration.sh`
 **Story:** Save the backdoor script and open multiple files for data extraction  
-**New Keys:** `:w`, `:q`, `:wq`, `:q!`, `:e`, `:sp`, `:vsp`, `Ctrl+w hjkl`, `:ls`, `:b<num>`
+**New Keys:** `:w`, `:q`, `:wq`, `:q!`, `:e`, `:sp`, `:vsp`, `Ctrl+w h/j/k/l`, `:ls`, `:bn`, `:bp`
 
 **Teaches:**
 - File operations (save, quit)
 - Opening files (`:e`)
-- Window management (splits, navigation)
-- Buffer management (`:ls`, `:b<num>`)
+- Window management (splits, navigation `Ctrl+w hjkl`)
+- Buffer management (`:ls`, `:bn`, `:bp`)
 
 **Real Usage:** Managing multiple files and windows, a daily task for developers.
 
 ---
-
-## 📖 EPISODE 2: THE TRACE (Efficiency)
 
 ### **Level 5** — `firewall_rules.json`
 **Story:** Modify firewall rules without breaking JSON/code structure  
@@ -78,6 +76,8 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 **Real Usage:** Text objects for structured editing (essential for code)
 
 ---
+
+## 📖 EPISODE 2: THE TRACE (Efficiency)
 
 ### **Level 6** — `blockchain_ledger.dat`
 **Story:** Extract and manipulate transaction blocks visually  
@@ -121,18 +121,14 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 
 ---
 
-## 📖 EPISODE 3: THE CORE (Mastery)
-
 ### **Level 9** — `code_analysis.cpp`
-**Story:** Analyze and refactor C++ codebase across multiple windows  
-**New Keys:** `Ctrl+w h/j/k/l`, `Ctrl+w c`, `Ctrl+u`, `Ctrl+d`
+**Story:** Analyze and refactor C++ codebase across multiple windows, scrolling quickly.  
+**New Keys:** `Ctrl+u`, `Ctrl+d`
 
 **Teaches:**
-- Navigate splits (Ctrl+w + hjkl)
-- Close split (Ctrl+w c)
 - **Scroll half-page (Ctrl+u/d)**
 
-**Real Usage:** Multi-file workflow, reference while coding
+**Real Usage:** Efficient file navigation.
 
 ---
 
@@ -150,6 +146,8 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 **Real Usage:** Bookmark locations, navigate jump history
 
 ---
+
+## 📖 EPISODE 3: THE CORE (Mastery)
 
 ### **Level 11** — `source_code.js`
 **Story:** Indent and format corrupted source code  
@@ -169,30 +167,53 @@ A comprehensive progression teaching **real, practical Neovim** through a cyberp
 
 ### **Level 12** — `reality.sys`
 **Story:** Rewrite reality itself through mass find-and-replace  
-**New Keys:** `:s/old/new/g`, `:%s/old/new/g`, `:%s/old/new/gc`, `&`
+**New Keys:** `&`
 
 **Teaches:**
-- Replace on line (:s/old/new/g)
-- Replace in file (:%s/old/new/g)
-- Replace with confirmation (:%s/old/new/gc)
 - **Repeat last substitution (&)**
 
-**Real Usage:** Refactoring, mass edits
+**Real Usage:** Rapid consecutive changes.
 
 ---
 
-### **Level 13** — `FINAL_GATE.lock`
-**Story:** The final barrier requires mastery of all techniques combined  
+### **Level 13** — `terminal_capture.log`
+**Story:** Capture and reuse output from external commands.
+**New Keys:** `!!`, `:r !cmd`, `Ctrl+f`
+
+**Teaches:**
+- Execute shell commands from Vim (`!!`)
+- Insert command output into buffer (`:r !cmd`)
+- Navigate command history in command-line mode (`Ctrl+f`)
+
+**Real Usage:** Integrating shell commands into editing workflow, automating tasks.
+
+---
+
+### **Level 14** — `macro_sequence.dat`
+**Story:** Automate a repetitive decryption sequence using macros.
+**New Keys:** `q`, `@q`, `@@`, `Q`
+
+**Teaches:**
+- Record macros (`q`)
+- Playback macros (`@q`, `@@`)
+- Visual command-line mode (`Q`)
+
+**Real Usage:** Automating repetitive tasks, increasing efficiency.
+
+---
+
+### **Level 15** — `FINAL_GATE.lock`
+**Story:** The final barrier requires mastery of all techniques combined. Decrypt, align, and release the core.  
 **New Keys:** `ALL` (synthesis level)
 
 **Challenges:**
-1. Navigate between 3 split windows
-2. Search and replace across files
-3. Use marks to bookmark key sections
-4. Use text objects to edit structured data
-5. Use visual block to edit columns
-6. Indent/format code blocks
-7. Use counts and dot command for efficiency
-8. Jump between bracket pairs in nested structures
+1. Navigate between splits and buffers efficiently.
+2. Use search and replace across files with confirmation.
+3. Utilize marks and jump lists for quick navigation.
+4. Apply text objects for precise structural edits.
+5. Manipulate columns using visual block mode.
+6. Auto-indent and format code blocks.
+7. Combine counts and the dot command for maximum efficiency.
+8. Integrate external commands or macros into your workflow.
 
-**Real Usage:** Complete real-world workflow simulation
+**Real Usage:** Complete real-world workflow simulation with advanced techniques.
