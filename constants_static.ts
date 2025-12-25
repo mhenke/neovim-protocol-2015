@@ -151,8 +151,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     hints: [
       "`yy`, `p` (paste after), `P` (paste before).",
       "`u` (undo), `Ctrl-r` (redo).",
-      '`"+y`/`"+p` (system clipboard).',
-      '`"ay`/`"ap` (named register \'a\').'
+      "`\"+y`/`\"+"p` (system clipboard).",
+      "`\"ay`/`\"ap` (named register 'a')."
     ],
     tasks: [
       {
@@ -209,7 +209,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     loreReveal: "LOG_06: 'The firewall config is a web of lies. I've rewoven it.' - Echo",
     hints: ["`ci\"` changes inside double quotes.", "`diw` deletes inner word.", "`daw` deletes a word (with space)."],
     tasks: [
-      { description: "Change the policy to 'deny'.", type: "contains", value: '"deny"', loreFragment: "LOG_06A: 'Flipping the policy bit.'", keyHint: "ci\"" },
+      { description: "Change the policy to 'deny'.", type: "contains", value: \"\"deny\"\", loreFragment: "LOG_06A: 'Flipping the policy bit.'", keyHint: "ci\"" },
       { description: "Delete just the word 'me' from 'delete_me' using 'diw'.", type: "contains", value: "delete_ and_space", loreFragment: "LOG_06B: 'Inner word deletion.'", keyHint: "diw" },
       { description: "Delete the word 'and_space' and the space before it using 'daw'.", type: "missing", value: "and_space", loreFragment: "LOG_06C: 'Word and space deletion.'", keyHint: "daw" },
     ]
@@ -254,7 +254,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     initialText: ["// report.txt", "ERROR: Corrupt", "ERROR: Corrupt", "ERROR: Corrupt", "", "---", "", "Final report needed."],
     targetText: [],
     loreReveal: "LOG_10: 'The system's attacks are predictable. I can erase them faster than it can create them.' - Echo",
-    hints: ["Prefix a command with a number to repeat it (e.g., `5j`, `d2w`).", "." repeats the last change.", "`{`/`}` jumps between paragraphs."],
+    hints: ["Prefix a command with a number to repeat it (e.g., `5j`, `d2w`).", "\".\" repeats the last change.", "`{`/`}` jumps between paragraphs."],
     tasks: [
       { description: "Delete the 3 corrupt error lines with one command (e.g. `3dd`).", type: "missing", value: "ERROR: Corrupt", loreFragment: "LOG_10A: 'A single command to wipe the slate clean.'", keyHint: "3dd" },
       { description: "From the top, move down 5 lines.", type: "cursor_on", value: "ERROR: Corrupt", loreFragment: "LOG_10B: 'Jumping past the noise.'", keyHint: "5j" },
