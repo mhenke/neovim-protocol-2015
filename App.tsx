@@ -1151,6 +1151,11 @@ export default function App() {
             s.lastExecutedCommand = 'k';
             return s;
         }
+        case 'K': {
+            // Neovim convention: K looks up help for keyword under cursor.
+            // In-game, open the HELP modal to provide relevant guidance.
+            return { ...newState, activeDialog: 'HELP' };
+        }
         case 'l': {
             const s = fs.moveCursor(newState, 1 * count, 0);
             s.lastExecutedCommand = 'l';
