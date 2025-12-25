@@ -1438,7 +1438,7 @@ export default function App() {
 
                     {/* Briefing Overlay (If active) */}
                     {gameState.status === 'BRIEFING' && (
-                        <div className="absolute inset-0 bg-black/90 z-20 flex flex-col items-center justify-center p-8 text-center animate-fadeIn">
+                        <div className="fixed inset-0 bg-black/90 z-40 flex flex-col items-center justify-center p-8 text-center animate-fadeIn">
                             <div className="text-xs text-gray-500 mb-2 tracking-[0.5em] uppercase">EPISODE {currentLevel.config.episode}: {currentLevel.config.episodeTitle}</div>
                             <h2 className="text-[#33ff00] text-2xl mb-4 font-bold tracking-widest uppercase">
                                 Target Acquired: {currentLevel.config.filename}
