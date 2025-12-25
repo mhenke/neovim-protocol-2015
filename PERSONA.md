@@ -1,3 +1,5 @@
+Note (2025-12-24T23:42:28.629Z): This project is a mystery sci-fi thriller with a major twist — Echo is uploaded, not captured. Update documentation and levels to foreground investigative, suspenseful tone and a reveal-driven arc.
+
 # Codebase Learning Principle
 
 It is a critical design goal that the codebase provides a smooth, progressive learning curve focused on NeoVim skills. The structure of each level is intentional: players are introduced to new commands and concepts in a logical, non-overwhelming order. This ensures that learning NeoVim is engaging, accessible, and central to the experience.

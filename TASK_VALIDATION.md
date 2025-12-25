@@ -93,3 +93,49 @@ If a task fails any of these criteria, revise it for clarity, authenticity, and 
 Ensure tests cover these updated behaviors (history clearing, dialog dismissal, and `/` key handling) when validating tasks.
 
 - Recent Policy Update (2025-12-24T20:36:13.362Z): Removed the 'Ghost Par' / idealKeystrokes metric from the codebase and docs; keystroke targets remain advisory for Episodes 1–2, while hard maximum keystroke limits are enforced only in Episode 3 levels. THEATRE.md was updated to allow introducing related skill clusters per teaching level instead of a strict single-new-skill rule.
+
+---
+
+## Example: Level 2 Tactical Intel (Protocol Injection) — 2025-12-24T22:05:01.255Z
+
+Goal: Tighten Level 2 tactical intel to follow the Level 1 pattern: provide 3–5 concise, diegetic, and sequential micro-tasks that map directly to validation logic.
+
+Rewritten Tactical Intel — Protocol Injection
+
+Level context: THE BREACH — You have a fragile window to leave a persistent trace in the protocol log. Tasks are ordered narratively and must be performed in sequence.
+
+Tasks (3–5, sequential):
+
+1) Insert persistent bypass header
+- Description: Insert the string "BYPASS_SEC_0X00: " at the start of the line containing `PROTOCOL_STATUS: DEACTIVATED` and exit Insert Mode (I, Esc).
+- Type: verify_key_sequence
+- Value: "BYPASS_SEC_0X00: PROTOCOL_STATUS: DEACTIVATED"
+- KeyHint: I
+
+2) Append valid token
+- Description: Append " [TOKEN_VALID]" to the end of the `CONNECTION_ROUTE: UNSECURED` line and exit Insert Mode (A, Esc).
+- Type: verify_key_sequence
+- Value: "CONNECTION_ROUTE: UNSECURED [TOKEN_VALID]"
+- KeyHint: A
+
+3) Create a new echo ping entry
+- Description: Open a new line below `// APPEND_POINT_B`, add `LOG_04_ECHO_PING_RECEIVED`, and exit Insert Mode (o, Esc).
+- Type: verify_key_sequence
+- Value: "LOG_04_ECHO_PING_RECEIVED"
+- KeyHint: o
+
+4) Commit changes
+- Description: Save the buffer with an Ex command (:w) to commit the injected entries.
+- Type: run_command
+- Value: ":w"
+- KeyHint: :w
+
+Validation notes:
+- Each task must be checked against the exact content (contains/missing) and, when required, cursorExact should be set to true for positional tasks.
+- expectedKeySequence should list the minimal meaningful keys (operator/motion/insert characters are acceptable), but validation must allow natural repeated motions (e.g., multiple 'w' presses) rather than rigid index counts.
+- Command-mode detection uses the commandPrefix/commandBuffer model; ensure run_command checks the executed command (full prefix+buffer) for equality.
+- Tasks are sequential: later tasks should assume the state resulting from previous tasks unless explicitly marked as order-independent.
+
+Keystroke guidance: advisory target ~25 keystrokes for Level 2 (informational only; not enforced).
+
+Use this example as the canonical Level 2 tactical intel template when authoring or reviewing static and AI-generated content.

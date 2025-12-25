@@ -32,35 +32,37 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 1, episode: 1, episodeTitle: "THE BREACH",
     filename: "signal_trace.log",
-    objective: "Decrypt network traffic by navigating the signal patterns",
+    objective: "Decrypt Echo's signal trace by navigating log patterns and revealing key fragments.",
     newKeys: ['h', 'j', 'k', 'l', 'w', 'b', '0', '$', 'gg', 'G'],
     mechanics: ['nav_basic', 'nav_word', 'nav_line', 'nav_file']
   },
   {
     id: 2, episode: 1, episodeTitle: "THE BREACH",
-    filename: "protocol_entry.log",
-    objective: "Inject new data and make basic corrections to system logs.",
+    filename: "protocol_bypass.cgi",
+    objective: "Plant a persistent bypass header, append validation tokens, and commit protocol fixes to secure a foothold.",
+
+
     newKeys: ['i', 'a', 'o', 'O', 'A', 'I', 'Esc', 'x', 'r', 'cw', 'ciw', 'C'],
     mechanics: ['insert_mode', 'editing']
   },
   {
     id: 3, episode: 1, episodeTitle: "THE BREACH",
     filename: "system_fault.log",
-    objective: "Purge compromised log entries and duplicate clean ones, recovering from errors.",
+    objective: "Purge compromised fault entries and duplicate verified fragments to preserve evidence.",
     newKeys: ['dd', 'D', 'dw', 'yy', 'p', 'P', 'u', 'Ctrl+r', '.'],
     mechanics: ['line_manipulation', 'undo_redo', 'repeat_last_action']
   },
   {
     id: 4, episode: 1, episodeTitle: "THE BREACH",
     filename: "data_stream.dat",
-    objective: "Search and navigate through encrypted packet data, and replace corrupted data.",
+    objective: "Search encrypted packet streams, locate corrupted packets and substitute corrected entries.",
     newKeys: ['/pattern', '?pattern', 'n', 'N', '*', '#', ':nohl', ':s/old/new/g', ':%s/old/new/g'],
     mechanics: ['search', 'replace']
   },
   {
     id: 5, episode: 1, episodeTitle: "THE BREACH",
     filename: "exfiltration.sh",
-    objective: "Save the backdoor script and open multiple files for data extraction",
+    objective: "Save the backdoor script and open multiple buffers to extract hidden data.",
     newKeys: [':w', ':q', ':wq', ':q!', ':e', ':sp', ':vsp', 'Ctrl+w h/j/k/l', ':ls', ':bn', ':bp'],
     mechanics: ['file_operations', 'window_management', 'buffer_management']
   },
@@ -69,7 +71,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 6, episode: 2, episodeTitle: "THE TRACE",
     filename: "firewall_rules.json",
-    objective: "Modify firewall rules without breaking JSON/code structure",
+    objective: "Patch firewall JSON rules to reopen diagnostic channels without breaking structure.",
     newKeys: ['ci"', "ci'", 'ci(', 'ci{', 'ci[', 'cit', 'diw', 'daw'],
     mechanics: ['text_objects'],
     timeLimit: 120,
@@ -77,7 +79,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 7, episode: 2, episodeTitle: "THE TRACE",
     filename: "blockchain_ledger.dat",
-    objective: "Extract and manipulate transaction blocks visually",
+    objective: "Reconstruct ledger blocks visually to restore transaction integrity.",
     newKeys: ['v', 'V', 'Ctrl+v', 'd', 'y', '>', '<'],
     mechanics: ['visual_mode', 'visual_line_mode', 'visual_block_mode', 'indent'],
     timeLimit: 100,
@@ -85,7 +87,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 8, episode: 2, episodeTitle: "THE TRACE",
     filename: "neural_net.py",
-    objective: "Fix corrupted neural network code with precision targeting",
+    objective: "Repair malformed neural module code to restore runtime checks and stability.",
     newKeys: ['f', 't', 'F', 'T', ';', ',', '%'],
     mechanics: ['find_char', 'match_bracket'],
     timeLimit: 80,
@@ -93,7 +95,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 9, episode: 2, episodeTitle: "THE TRACE",
     filename: "config_array.ini",
-    objective: "Fix repeated configuration errors efficiently",
+    objective: "Apply counts and repeat edits to efficiently correct repeated configuration errors.",
     newKeys: ['.', '5j', '3dd', '2yy'],
     mechanics: ['dot_command', 'counts'],
     timeLimit: 60,
@@ -101,7 +103,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 10, episode: 2, episodeTitle: "THE TRACE",
     filename: "code_analysis.cpp",
-    objective: "Analyze and refactor C++ codebase across multiple windows, marking key points for navigation.",
+    objective: "Mark and navigate cross-file references to refactor and expose interconnected Echo signatures.",
     newKeys: ['Ctrl+u', 'Ctrl+d', 'ma', "'a", "``a``", 'Ctrl+o', 'Ctrl+i'],
     mechanics: ['scrolling', 'marks', 'jump_list'],
   },
@@ -110,7 +112,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 11, episode: 3, episodeTitle: "THE CORE",
     filename: "source_code.js",
-    objective: "Indent and format corrupted source code",
+    objective: "Normalize indentation and formatting to reveal hidden protocol markers.",
     newKeys: ['>>', '<<', '==', 'gg=G', 'J', 'gJ'],
     mechanics: ['indent', 'auto_indent', 'join_lines'],
     maxKeystrokes: 30,
@@ -118,7 +120,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 12, episode: 3, episodeTitle: "THE CORE",
     filename: "reality.sys",
-    objective: "Rewrite reality itself through mass find-and-replace",
+    objective: "Apply controlled global substitutions to flip legacy policy flags and rewrite system behavior.",
     newKeys: ['&'],
     mechanics: ['substitute'],
     maxKeystrokes: 25,
@@ -126,7 +128,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 13, episode: 3, episodeTitle: "THE CORE",
     filename: "terminal_capture.log",
-    objective: "Capture and reuse output from external commands.",
+    objective: "Capture external command output and integrate it into buffers for forensic analysis.",
     newKeys: ['!!', ':r !cmd', 'Ctrl+f'],
     mechanics: ['shell_integration', 'command_line_mode'],
     maxKeystrokes: 30,
@@ -134,7 +136,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 14, episode: 3, episodeTitle: "THE CORE",
     filename: "macro_sequence.dat",
-    objective: "Automate a repetitive decryption sequence using macros.",
+    objective: "Record and replay macros to automate time-critical decryption sequences.",
     newKeys: ['q', '@q', '@@', 'Q'],
     mechanics: ['macros'],
     maxKeystrokes: 20,
@@ -142,7 +144,7 @@ export const CURRICULUM: LevelConfig[] = [
   {
     id: 15, episode: 3, episodeTitle: "THE CORE",
     filename: "FINAL_GATE.lock",
-    objective: "The final barrier requires mastery of all techniques combined. Decrypt, align, and release the core.",
+    objective: "Combine all learned techniques to decrypt the Final Gate and release Echo from the Core.",
     newKeys: ['ALL'],
     mechanics: ['mastery'],
     maxKeystrokes: 60,
