@@ -211,6 +211,23 @@ This audit compares the current implementation of game mechanics (as of Dec 2025
   - Edge cases (punctuation, empty lines) are handled simply, but not always pixel-perfect.
   - Asymmetry is present, matching real Neovim.
 
+## Help Keybindings (Audit)
+
+- Neovim canonical help access:
+  - :help <topic> — opens help for topic in cmdline
+  - K (Normal mode) — shows help for keyword under cursor
+  - F1 is commonly mapped to open help in some environments but is not a Neovim default
+
+Current implementation in-game:
+- UI hotkeys: F1 and Alt+1 open the HELP modal (implemented in App.tsx). These are convenient UI shortcuts but are not canonical Neovim commands.
+- K (Normal mode) now opens the HELP modal (implemented to match Neovim's 'K' convention).
+- :help handling via command mode is recommended but may not be implemented; add support so typing `:help` or `:help {topic}` opens the same HELP modal (with topic-aware content where available).
+
+Recommendations:
+1. Preserve F1 / Alt+1 as UI convenience, but ensure accessibility via canonical Neovim bindings (K and :help).
+2. Implement `:help` parsing in COMMAND mode to open the HELP modal and accept an optional topic (e.g., `:help i` or `:help insert`). Map topic to UI sections where possible.
+3. Document these bindings in-game help text and NEOVIM_BEHAVIOR_AUDIT.md so players learn canonical Neovim workflows (K and :help) rather than only UI shortcuts.
+
 ## 2. Cursor Bounds & Motions
 - **Game**: Cursor is clamped to line length (Normal: last char, Insert: after last char).
 - **Neovim**: Same behavior with `virtualedit=off`.
