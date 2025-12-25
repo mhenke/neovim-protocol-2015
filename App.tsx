@@ -154,7 +154,8 @@ const DialogInterjector = ({ message, source }: { message: string, source: Dialo
 };
 import { GameState, VimMode, Level, LevelConfig, Task, DialogType, LastAction } from './types';
 import { CURRICULUM, INITIAL_LORE, EPISODE_CONTEXT } from './constants';
-import STATIC_LEVELS from './constants_static';
+import * as STATIC_LEVELS_MOD from './constants_static';
+const STATIC_LEVELS: any = (STATIC_LEVELS_MOD as any).default || (STATIC_LEVELS_MOD as any).STATIC_LEVELS || STATIC_LEVELS_MOD as any;
 import * as fs from './utils/fsHelpers';
 
 // --- Utility Components ---
