@@ -1053,6 +1053,10 @@ export default function App() {
              return fs.executeSubstitute(newState, cmd.slice(1)); 
           } else if (cmd.startsWith('/')) {
              return { ...fs.executeSearch(newState, cmd.slice(1)), mode: VimMode.NORMAL, commandBuffer: '' };
+          } else if (cmd.startsWith(':help')) {
+             // Open help modal for :help or :help {topic}
+             // Optional topic parsing is supported; pass it via lastExecutedCommand for now.
+             return { ...newState, mode: VimMode.NORMAL, commandBuffer: '', commandPrefix: undefined, activeDialog: 'HELP', lastExecutedCommand: cmd };
           } else {
              msg = 'E492: Not an editor command';
           }
