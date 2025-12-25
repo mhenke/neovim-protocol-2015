@@ -4,35 +4,53 @@ import { GeminiLevelResponse } from './types';
 export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   // --- EPISODE 1: FOUNDATION ---
   1: {
-    briefing: "Initial breach. Navigate a corrupted log file to find Echo's first trace. Efficient scrolling is key to parsing large data streams.",
+    briefing: "AGENT 'Echo' IS DARK. Her last signal is fragmented—and possibly corrupted. Navigate the log to find key fragments.",
     initialText: [
       "// signal_trace.log",
-      ...Array(45).fill("..."),
+      "// Agent Echo - Last Transmission",
+      "",
       "[2015-12-23 18:00:01] BOOT: System nominal.",
       "[2015-12-23 18:00:02] STATUS: Connection to main server... OFFLINE.",
-      "...",
-      "// END OF STREAM"
+      "[2015-12-23 18:00:03] Attempting to TRACE route... [MISALIGNED].",
+      "[2015-12-23 18:00:04] Packet stream... CONNECTION LOST.",
+      "[2015-12-23 18:00:05] Fallback to last known NODE: ALPHA.",
+      "",
+      "// END OF TRANSMISSION",
+      ...Array(50).fill("..."), // Add some lines for scrolling
+      "// PAYLOAD_FOUND_HERE" // Target for scrolling task
     ],
-    targetText: [],
-    loreReveal: "LOG_01: '...found the entry point. The system is blind here.' - Echo",
+    targetText: [], // Will be dynamically generated
+    loreReveal: "LOG_01 DECRYPTED: '...hiding a consciousness... deeper...' [FRAGMENTED, ORIGIN UNCERTAIN] - Echo",
     hints: [
-      "Use `h/j/k/l` for movement.",
-      "Use `w/b` to jump by words, `0/$` for line ends.",
-      "`gg` jumps to the start of the file, `G` to the end.",
+      "Use 'j' to move down and 'k' to move up.",
+      "Use 'w' to jump forwards by word, and 'b' to jump backwards.",
+      "Use '0' to go to the start of the line, and '$' to go to the end.",
       "`Ctrl-d` scrolls down half a page, `Ctrl-u` scrolls up."
     ],
     tasks: [
       {
-        description: "Jump to the end of the file.",
-        type: "cursor_on", value: "// END OF STREAM", loreFragment: "LOG_01A: 'Too far. The trace is higher up.'", keyHint: "G"
+        description: "Scroll down to find the 'PAYLOAD_FOUND_HERE' message using `Ctrl-d`.",
+        type: "cursor_on", value: "PAYLOAD_FOUND_HERE", loreFragment: "LOG_01A: 'The payload. Hidden beneath layers of static.'", keyHint: "Ctrl-d"
       },
       {
         description: "Jump to the start of the file.",
-        type: "cursor_on", value: "// signal_trace.log", loreFragment: "LOG_01B: 'Closer. It's a dense stream.'", keyHint: "gg"
+        type: "cursor_on", value: "// signal_trace.log", loreFragment: "LOG_01B: 'The beginning of the thread.'", keyHint: "gg"
       },
       {
-        description: "Scroll down to find the 'OFFLINE' status message.",
-        type: "cursor_on", value: "OFFLINE", loreFragment: "LOG_01C: 'There. The connection broke. That's my window.'", keyHint: "Ctrl-d"
+        description: "Move down to the 'STATUS' line, then jump to the first word.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["j", "j", "j", "j", "w"], // Adjust sequence as needed for new initialText
+        value: "STATUS",
+        loreFragment: "LOG_01C: \"They aren't creating an AI. They are becoming it.\"",
+        keyHint: "j w"
+      },
+      {
+        description: "From the end of the 'OFFLINE.' line, jump back to 'server...'.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["$", "b"],
+        value: "server...",
+        loreFragment: "LOG_01D: \"System state protocol locked. Classifier shows anomalous entropy.\"",
+        keyHint: "$ b"
       }
     ]
   },
@@ -50,28 +68,27 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
       "// session.log",
       "USER: ghost",
       "AUTH: PENDING",
+      "//Timestamp line",
       "COMMAND: BYPASS_AUTH",
-      "// NEWLINE ADDED"
     ],
     loreReveal: "LOG_02: 'My signature is in the log. A ghost in the machine.' - Echo",
     hints: [
-      "`i` to insert, `a` to append. `I` to insert at line start, `A` at line end.",
-      "`o` to open a new line below, `O` above.",
+      "`i/a/o/O/I/A` to enter Insert Mode.",
       "In Insert Mode, `Ctrl-w` deletes the previous word, `Ctrl-u` deletes the whole line.",
       "`Esc` to return to Normal Mode."
     ],
     tasks: [
       {
-        description: "Correct the username from 'ghozt' to 'ghost'.",
-        type: "contains", value: "USER: ghost", loreFragment: "LOG_02A: 'My handle. They misspelled it.'", keyHint: "i"
+        description: "Correct the username from 'ghozt' to 'ghost' using 'r'.",
+        type: "contains", value: "USER: ghost", loreFragment: "LOG_02A: 'My handle. They misspelled it.'", keyHint: "r"
       },
       {
-        description: "In insert mode, type 'BYPASS_AUTHH' then delete the extra 'H' using `Ctrl-w` and type `_AUTH`",
-        type: "contains", value: "COMMAND: BYPASS_AUTH", loreFragment: "LOG_02B: 'A typo could trip the alarms. Clean.'", keyHint: "Ctrl-w"
+        description: "Go to the COMMAND line, enter Insert mode, type 'BYPASS_CMD', then use Ctrl-w to delete the word and type 'BYPASS_AUTH'.",
+        type: "contains", value: "COMMAND: BYPASS_AUTH", loreFragment: "LOG_02B: 'A typo could trip the alarms. Clean.'", keyHint: "A, Ctrl-w"
       },
       {
         description: "Open a new line above the COMMAND line.",
-        type: "cursor_on", value: "", loreFragment: "LOG_02C: 'Need to add a timestamp.'", keyHint: "O"
+        type: "run_command", value: "O", loreFragment: "LOG_02C: 'Need to add a timestamp.'", keyHint: "O"
       }
     ]
   },
@@ -108,12 +125,12 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
         type: "contains", value: "action=log_all_unauth", loreFragment: "LOG_03B: 'Don't delete the evidence. Just hide it.'", keyHint: "cw"
       },
       {
-        description: "Change 'HTTP_UNSECURE' to 'HTTPS_SECURE'.",
-        type: "contains", value: "protocol=HTTPS_SECURE", loreFragment: "LOG_03C: 'Encrypt the trail.'", keyHint: "ciw"
+        description: "Change the '1' to a '0' on the critical_flag line using 'r'.",
+        type: "contains", value: "critical_flag=0", loreFragment: "LOG_03C: 'Lower the alert status.'", keyHint: "r"
       },
        {
-        description: "Delete from 'critical' to the end of the line.",
-        type: "missing", value: "critical_flag=1", loreFragment: "LOG_03D: 'Lower the alert status.'", keyHint: "D"
+        description: "From the beginning of the 'protocol' line, delete to the end of the line using 'D'.",
+        type: "missing", value: "protocol=HTTP_UNSECURE", loreFragment: "LOG_03D: 'Scrubbing the protocol.'", keyHint: "D"
       }
     ]
   },
@@ -123,67 +140,60 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     initialText: [
       "// key_vault.txt",
       "primary_key: 8c6f-a1e4-b3d8-2a9f",
-      "",
+      "secondary_key: aaaa-bbbb-cccc-dddd",
       "// target_config.cfg",
       "auth_key: [PASTE HERE]",
-      "system_key: [PASTE FROM OUTSIDE]"
+      "system_key: [PASTE FROM CLIPBOARD]",
+      "secondary_auth: [PASTE FROM REGISTER]"
     ],
-    targetText: [
-      "// key_vault.txt",
-      "primary_key: 8c6f-a1e4-b3d8-2a9f",
-      "",
-      "// target_config.cfg",
-      "auth_key: 8c6f-a1e4-b3d8-2a9f",
-      "system_key: ext_key_from_clipboard"
-    ],
+    targetText: [],
     loreReveal: "LOG_04: 'Keys swapped. The system sees my signature as valid.' - Echo",
     hints: [
-      "`yy` yanks (copies) a line. `p` pastes after the cursor, `P` pastes before.",
-      "`u` undoes the last change. `Ctrl-r` redoes it.",
-      "`+y` yanks to the system clipboard. `+p` pastes from it.",
-      "`ay` yanks to register 'a'. `ap` pastes from it."
+      "`yy`, `p` (paste after), `P` (paste before).",
+      "`u` (undo), `Ctrl-r` (redo).",
+      '`"+y`/`"+p` (system clipboard).',
+      '`"ay`/`"ap` (named register \'a\').'
     ],
     tasks: [
       {
-        description: "Yank the primary_key line.",
-        type: "run_command", value: "yy", loreFragment: "LOG_04A: 'Got the key.'", keyHint: "yy"
+        description: "Yank the 'secondary_key' line to named register 'a'.",
+        type: "run_command", value: "\"ayy", loreFragment: "LOG_04A: 'Storing the secondary key for later.'", keyHint: "\"ayy"
       },
       {
-        description: "Paste the key into the 'auth_key' field.",
-        type: "contains", value: "auth_key: 8c6f-a1e4-b3d8-2a9f", loreFragment: "LOG_04B: 'Slotting it in.'", keyHint: "p"
+        description: "Yank the 'primary_key' line to the default register.",
+        type: "run_command", value: "yy", loreFragment: "LOG_04B: 'Got the primary key.'", keyHint: "yy"
       },
       {
-        description: "Paste from the system clipboard into the 'system_key' field. (For this exercise, the clipboard is pre-loaded with 'ext_key_from_clipboard')",
-        type: "contains", value: "system_key: ext_key_from_clipboard", loreFragment: "LOG_04C: 'Pulling in an external sigil.'", keyHint: "+p"
+        description: "Paste the 'primary_key' (from default register) into the 'auth_key' field.",
+        type: "contains", value: "auth_key: 8c6f-a1e4-b3d8-2a9f", loreFragment: "LOG_04C: 'Slotting it in.'", keyHint: "p"
       },
       {
-        description: "Make a mistake and undo it. Delete the 'key_vault.txt' line, then press 'u'.",
-        type: "sequence",
-        subTasks: [ { description: "Delete a line", type: "missing", value: "// key_vault.txt", keyHint: "dd" },
-          { description: "Undo the deletion", type: "contains", value: "// key_vault.txt", keyHint: "u" }
-        ],
-        loreFragment: "LOG_04D: 'A misstep. Corrected before the watchdog noticed.'",
-        keyHint: "dd, u"
+        description: "Paste from named register 'a' on the line *above* 'secondary_auth' using 'P'.",
+        type: "contains", value: "secondary_key: aaaa-bbbb-cccc-dddd\nsecondary_auth", loreFragment: "LOG_04D: 'Using the stored key now.'", keyHint: "\"aP"
+      },
+      {
+        description: "Paste from the system clipboard into the 'system_key' field. (Clipboard is pre-loaded with 'ext_key_from_clipboard')",
+        type: "contains", value: "system_key: ext_key_from_clipboard", loreFragment: "LOG_04E: 'Pulling in an external sigil.'", keyHint: "\"+p"
       }
     ]
   },
 
   5: {
-    briefing: "You have a foothold. Commit changes to the mainframe's storage and open new security manifests.",
+    briefing: "You have a foothold. Commit changes to storage and open new security manifests.",
     initialText: ["// manifest.log", "File one is complete. Access 'manifest_part_2.log' next."],
     targetText: [],
     loreReveal: "LOG_05: 'I'm in. The manifests are opening. Now the real work begins.' - Echo",
     hints: [
-      "`:w` saves the current file.",
-      "`:q` quits the current file. Fails if there are unsaved changes.",
+      "`:w` saves the file.",
+      "`:q` quits. Fails if unsaved.",
       "`:wq` saves and quits.",
-      "`:q!` quits without saving (force).",
-      "`:e <filename>` opens a new file."
+      "`:q!` force-quits without saving.",
+      "`:e <filename>` opens a file."
     ],
     tasks: [
       {
         description: "Save the current file.",
-        type: "run_command", value: ":w", loreFragment: "LOG_05A: 'Committing my trace to the system memory.'", keyHint: ":w"
+        type: "run_command", value: ":w", loreFragment: "LOG_05A: 'Committing my trace.'", keyHint: ":w"
       },
       {
         description: "Open the next file mentioned in the manifest.",
@@ -194,67 +204,70 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   // --- EPISODE 2: EFFICIENCY ---
   6: {
     briefing: "Surgically edit delimited data within complex configuration files to bypass security without triggering alarms.",
-    initialText: ["// firewall.json", "{\"policy\": \"allow\", \"ports\": [80, 443], \"description\": \"<temporary>\"}"],
-    targetText: ["// firewall.json", "{\"policy\": \"deny\", \"ports\": [8080], \"description\": \"<permanent>\"}"],
+    initialText: ["// firewall.json", "{\"policy\": \"allow\", \"ports\": [80], \"desc\": \"<temporary>\"}", "delete_me and_space"],
+    targetText: [],
     loreReveal: "LOG_06: 'The firewall config is a web of lies. I've rewoven it.' - Echo",
-    hints: ["`ci\"` changes inside double quotes.", "`ci[` changes inside square brackets.", "`cit` changes inside tags."],
+    hints: ["`ci\"` changes inside double quotes.", "`diw` deletes inner word.", "`daw` deletes a word (with space)."],
     tasks: [
-      { description: "Change the policy to 'deny'.", type: "contains", value: "deny", loreFragment: "LOG_06A: 'Flipping the policy bit.'", keyHint: "ci\"" },
-      { description: "Change the ports to `[8080]`.", type: "contains", value: "[8080]", loreFragment: "LOG_06B: 'Rerouting their precious data.'", keyHint: "ci[" },
-      { description: "Change the description to `<permanent>`.", type: "contains", value: "<permanent>", loreFragment: "LOG_06C: 'Making my mark indelible.'", keyHint: "cit" },
+      { description: "Change the policy to 'deny'.", type: "contains", value: '"deny"', loreFragment: "LOG_06A: 'Flipping the policy bit.'", keyHint: "ci\"" },
+      { description: "Delete just the word 'me' from 'delete_me' using 'diw'.", type: "contains", value: "delete_ and_space", loreFragment: "LOG_06B: 'Inner word deletion.'", keyHint: "diw" },
+      { description: "Delete the word 'and_space' and the space before it using 'daw'.", type: "missing", value: "and_space", loreFragment: "LOG_06C: 'Word and space deletion.'", keyHint: "daw" },
     ]
   },
   7: {
     briefing: "Echo's traces are scattered. Hunt down specific error codes, then center the screen to see the surrounding context.",
-    initialText: ["// system.log", ...Array(20).fill("..."), "ERROR: 0xDEADBEEF", ...Array(20).fill("...")],
+    initialText: ["// system.log", ...Array(20).fill("..."), "ERROR: 0xDEADBEEF", "INFO: another ERROR here", ...Array(20).fill("...")],
     targetText: [],
     loreReveal: "LOG_07: 'The error codes are a map. Each one a step closer.' - Echo",
-    hints: ["`/` searches forward, `?` searches backward.", "`n`/`N` jumps to the next/previous match.", "`*`/`#` searches for the word under the cursor.", "`:nohl` clears search highlighting.", "`zz` centers the screen on the cursor."],
+    hints: ["`/` searches forward.", "`n`/`N` for next/previous match.", "`*`/`#` searches for the word under the cursor.", "`:nohl` clears search highlighting.", "`zz` centers the screen."],
     tasks: [
       { description: "Search for the error code '0xDEADBEEF'.", type: "cursor_on", value: "0xDEADBEEF", loreFragment: "LOG_07A: 'There. A signature.'", keyHint: "/" },
-      { description: "Center the screen on the error code.", type: "run_command", value: "zz", loreFragment: "LOG_07B: 'Need to see the context.'", keyHint: "zz" }
+      { description: "Center the screen on the error code using 'zz'.", type: "run_command", value: "zz", loreFragment: "LOG_07B: 'Need to see the context.'", keyHint: "zz" },
+      { description: "Move to the word 'ERROR' on the next line and search for all occurrences using `*`.", type: "cursor_on", value: "ERROR", loreFragment: "LOG_07C: 'This pattern is repeating.'", keyHint: "*" }
     ]
   },
   8: {
-    briefing: "Reformat large blocks of corrupted code and use visual block mode to comment out multiple lines of hostile code at once.",
+    briefing: "Reformat corrupted code and use visual modes to comment out multiple lines of hostile code at once.",
     initialText: ["// security_daemon.js", "exec_purge();", "exec_alert();", "exec_lockdown();"],
-    targetText: ["// security_daemon.js", "// exec_purge();", "// exec_alert();", "// exec_lockdown();"],
+    targetText: ["// security_daemon.js", "  // exec_purge();", "  // exec_alert();", "  // exec_lockdown();"],
     loreReveal: "LOG_08: 'I've declawed their watchdog. It can only bark now.' - Echo",
-    hints: ["`v` for visual, `V` for visual-line.", "`Ctrl-v` for visual-block.", "In visual block mode, use 'I' to insert at the start of every selected line."],
+    hints: ["`v` (visual), `V` (visual-line), `Ctrl-v` (visual-block).", `In visual modes, '>' indents.`, `In visual block mode, 'I' inserts at the start of every selected line.`],
     tasks: [
-      { description: "Select the three `exec` lines in visual-block mode.", type: "run_command", value: "Ctrl-v", loreFragment: "LOG_08A: 'Targeting the kill-switch functions.'", keyHint: "Ctrl-v" },
-      { description: "Insert '// ' at the beginning of all selected lines to comment them out.", type: "contains", value: "// exec_purge();", loreFragment: "LOG_08B: 'Neutralized.'", keyHint: "I" }
+      { description: "Select lines 2-4 in visual-line mode using 'V'.", type: "run_command", value: "V", loreFragment: "LOG_08A: 'Isolating the hostile routines.'", keyHint: "V" },
+      { description: "Indent the selected lines using '>'", type: "contains", value: "  exec_purge()", loreFragment: "LOG_08B: 'Shifting the code block.'", keyHint: ">" },
+      { description: "Select the same lines in visual-block mode and insert '// ' to comment them out.", type: "contains", value: "//   exec_purge()", loreFragment: "LOG_08C: 'Neutralized.'", keyHint: "Ctrl-v, I" }
     ]
   },
   9: {
     briefing: "Data streams are dense. Master precise, single-line jumps to edit function calls with surgical accuracy.",
     initialText: ["process(data, 'raw', {priority: 1});"],
     targetText: ["process(data, 'processed', {priority: 9});"],
-    loreReveal: "LOG_09: 'The function calls bend to my will. The data flows where I command.' - Echo",
-    hints: ["`f<char>` jumps to the next occurrence of a character.", "`t<char>` jumps *to* (before) the next occurrence.", "`;` repeats the last f/t jump, `,` repeats it backward.", "`%` jumps to a matching bracket."],
+    loreReveal: "LOG_09: 'The function calls bend to my will.' - Echo",
+    hints: ["`f<char>` jumps to char.", "`t<char>` jumps *to* char.", "`;`/`,` repeats last f/t jump.", "`%` jumps to a matching bracket."],
     tasks: [
       { description: "Jump to the 'r' in 'raw' and change the word to 'processed'.", type: "contains", value: "'processed'", loreFragment: "LOG_09A: 'Marking the data as clean.'", keyHint: "f'cw" },
       { description: "Jump to the closing ')' and use '%' to find its match.", type: "cursor_on", value: "(", loreFragment: "LOG_09B: 'Checking the function scope.'", keyHint: "f)%" }
     ]
   },
   10: {
-    briefing: "The mainframe deploys repetitive countermeasures. Use counts and paragraph jumps to automate fixes and outpace its defenses.",
+    briefing: "The mainframe deploys repetitive countermeasures. Use counts and paragraph jumps to automate fixes.",
     initialText: ["// report.txt", "ERROR: Corrupt", "ERROR: Corrupt", "ERROR: Corrupt", "", "---", "", "Final report needed."],
-    targetText: ["// report.txt", "", "---", "", "Final report needed."],
+    targetText: [],
     loreReveal: "LOG_10: 'The system's attacks are predictable. I can erase them faster than it can create them.' - Echo",
-    hints: ["Prefix a command with a number to repeat it (e.g., `3j`).", "`.` repeats the last change.", "`{`/`}` jumps between paragraphs (blank lines)."],
+    hints: ["Prefix a command with a number to repeat it (e.g., `5j`, `d2w`).", "." repeats the last change.", "`{`/`}` jumps between paragraphs."],
     tasks: [
-      { description: "Delete the 3 corrupt error lines with one command.", type: "missing", value: "ERROR: Corrupt", loreFragment: "LOG_10A: 'A single command to wipe the slate clean.'", keyHint: "3dd" },
-      { description: "Jump from the top to the 'Final report' paragraph.", type: "cursor_on", value: "Final report needed.", loreFragment: "LOG_10B: 'Skipping the noise.'", keyHint: "}" }
+      { description: "Delete the 3 corrupt error lines with one command (e.g. `3dd`).", type: "missing", value: "ERROR: Corrupt", loreFragment: "LOG_10A: 'A single command to wipe the slate clean.'", keyHint: "3dd" },
+      { description: "From the top, move down 5 lines.", type: "cursor_on", value: "ERROR: Corrupt", loreFragment: "LOG_10B: 'Jumping past the noise.'", keyHint: "5j" },
+      { description: "From the 'Final report needed' line, jump up to the previous paragraph using '{'.", type: "cursor_on", value: "ERROR: Corrupt", loreFragment: "LOG_10C: 'Back to the source of the problem.'", keyHint: "{" }
     ]
   },
   // --- EPISODE 3: MASTERY ---
   11: {
-    briefing: "The investigation now spans multiple systems. Manage and view several files at once to correlate intel between logs.",
+    briefing: "The investigation spans multiple systems. Manage and view several files at once to correlate intel.",
     initialText: ["// main.log", "See credentials.cfg"],
     targetText: [],
     loreReveal: "LOG_11: 'I can see it all at once. The connections are clear.' - Echo",
-    hints: ["`:sp <file>` splits horizontally.", "`:vs <file>` splits vertically.", "`:ls` lists buffers.", "`:bn` goes to the next buffer.", "`Ctrl-w <h,j,k,l>` moves between splits."],
+    hints: ["`:sp <file>` splits horizontally.", "`:vs <file>` splits vertically.", "`:ls` lists buffers.", "`:bn` to next buffer.", "`Ctrl-w <h,j,k,l>` moves between splits."],
     tasks: [
       { description: "Open 'credentials.cfg' in a vertical split.", type: "run_command", value: ":vs credentials.cfg", loreFragment: "LOG_11A: 'Comparing the log to the key file.'", keyHint: ":vs" },
       { description: "Switch back to the main.log window.", type: "run_command", value: "Ctrl-w l", loreFragment: "LOG_11B: 'Cross-referencing.'", keyHint: "Ctrl-w l" }
@@ -263,21 +276,22 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
   12: {
     briefing: "A critical piece of code is unreadable. Fix the indentation and join broken lines to uncover a hidden backdoor.",
     initialText: ["// backdoor.js", "if (key === 'override') {", "  unlock_all()", "}"],
-    targetText: ["// backdoor.js", "if (key === 'override') { unlock_all() }"],
+    targetText: ["if (key === 'override') { unlock_all() }"],
     loreReveal: "LOG_12: 'The code was a mess. I reassembled it. The path is open.' - Echo",
-    hints: ["`>>` indents a line, `<<` un-indents.", "`gg=G` formats the whole file.", "`J` joins the line below to the current one."],
+    hints: ["`>>` indents a line, `<<` un-indents.", "`gg=G` formats the whole file.", "`J` joins the line below."],
     tasks: [
-      { description: "Join the three lines of the 'if' statement.", type: "missing", value: "  unlock_all()", loreFragment: "LOG_12A: 'Consolidating the logic.'", keyHint: "J" }
+      { description: "Indent the 'unlock_all()' line using `>>`.", type: "contains", value: "    unlock_all()", loreFragment: "LOG_12A: 'Proper structure reveals intent.'", keyHint: ">>" },
+      { description: "Join all the lines of the 'if' statement using 'J'.", type: "missing", value: "  unlock_all()", loreFragment: "LOG_12B: 'Consolidating the logic.'", keyHint: "J" }
     ]
   },
   13: {
-    briefing: "A rogue AI process is propagating a malicious token. Use a global substitute command to eradicate it everywhere at once.",
+    briefing: "A rogue AI process is propagating a malicious token. Use a global substitute command to eradicate it.",
     initialText: ["// memory_map.dat", "TOKEN_MALICIOUS_A", "TOKEN_MALICIOUS_B", "TOKEN_CLEAN"],
     targetText: ["// memory_map.dat", "TOKEN_PURGED_A", "TOKEN_PURGED_B", "TOKEN_CLEAN"],
     loreReveal: "LOG_13: 'A system-wide purge. I am the cure and the disease.' - Echo",
-    hints: ["`:%s/old/new/g` substitutes all occurrences in a file.", "`:%s/old/new/gc` does the same, but asks for confirmation each time."],
+    hints: ["`:%s/old/new/g` substitutes all occurrences.", "`:%s/old/new/gc` asks for confirmation."],
     tasks: [
-      { description: "Replace all instances of 'MALICIOUS' with 'PURGED'.", type: "missing", value: "MALICIOUS", loreFragment: "LOG_13A: 'Cutting the rot out, everywhere at once.'", keyHint: ":%s" }
+      { description: "Replace all instances of 'MALICIOUS' with 'PURGED' using `:%s`.", type: "missing", value: "MALICIOUS", loreFragment: "LOG_13A: 'Cutting the rot out, everywhere at once.'", keyHint: ":%s" }
     ]
   },
   14: {
@@ -285,21 +299,29 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     initialText: ["// file_A.log", "MARKER_ALPHA", ...Array(50).fill("..."), "// file_B.log", "JUMP_TARGET"],
     targetText: [],
     loreReveal: "LOG_14: 'The path is a tangled thread. But I have marked the way.' - Echo",
-hints: ["`ma` sets mark 'a' at the cursor position.", "`'a` jumps to the line of mark 'a'.", "```a` jumps to the exact position of mark 'a'.", "`Ctrl-o`/`Ctrl-i` navigate the jump list.", "`''` jumps to the position before the last jump."],
+    hints: ["`ma` sets mark 'a'.", "`'a` jumps to the line of mark 'a'.", "```a` jumps to the exact position.", "`Ctrl-o`/`Ctrl-i` navigate the jump list.", "`''` jumps to the position before the last jump."],
     tasks: [
       { description: "Set a mark 'a' on the 'MARKER_ALPHA' line.", type: "run_command", value: "ma", loreFragment: "LOG_14A: 'Anchoring my position.'", keyHint: "ma" },
-      { description: "Jump to the end of the file, then jump back to mark 'a'.", type: "cursor_on", value: "MARKER_ALPHA", loreFragment: "LOG_14B: 'A perfect return.'", keyHint: "G'a" },
-      { description: "Jump to 'JUMP_TARGET', then jump back to your previous location.", type: "cursor_on", value: "MARKER_ALPHA", loreFragment: "LOG_14C: 'There and back again.'", keyHint: "/''" }
+      { description: "Jump to the 'JUMP_TARGET', then jump back to your previous location with `''`.", type: "verify_key_sequence", expectedKeySequence: ["'", "'"], value: "MARKER_ALPHA", loreFragment: "LOG_14B: 'There and back again.'", keyHint: "''" }
     ]
   },
   15: {
-    briefing: "The Core is protected by the Final Gate, a multi-layered defense mechanism that requires all of your acquired skills to bypass under pressure.",
-    initialText: ["// FINAL_GATE.lock", "STATUS: [LOCKED]", "KEY: [MISSING]", "AUTH: [NONE]"],
-    targetText: ["// FINAL_GATE.lock", "STATUS: [UNLOCKED]", "KEY: [8c6f-a1e4-b3d8-2a9f]", "AUTH: [GHOST]"],
+    briefing: "The Core is protected by the Final Gate. Synthesize your skills to bypass the multi-layered defense and release Echo.",
+    initialText: [
+        "// FINAL_GATE.lock", 
+        "1 STATUS: [LOCKED]", 
+        "2 KEY: [REDACTED]", 
+        "3 AUTH: [NONE]",
+        "4 REDIRECT: [inactive]"
+    ],
+    targetText: [],
     loreReveal: "LOG_FINAL: 'The gate is open. I am free. Find me in the noise, Ghost. - Echo'",
-    hints: ["You have all the tools. Navigate, edit, search, and manage your workspace. Good luck."],
+    hints: ["You have all the tools. Navigate, edit, search, and manage your workspace. No more hints."],
     tasks: [
-      { description: "Synthesize all learned skills to unlock the final gate.", type: "contains", value: "UNLOCKED", loreFragment: "LOG_15: 'The final sequence. No more hints.'", keyHint: "ci[" }
+      { description: "Change '[LOCKED]' to '[UNLOCKED]'.", type: "contains", value: "[UNLOCKED]", loreFragment: "LOG_15A: 'First layer bypassed.'", keyHint: "ci[" },
+      { description: "Delete the word 'REDACTED' and its brackets using 'da['.", type: "missing", value: "[REDACTED]", loreFragment: "LOG_15B: 'Key field cleared.'", keyHint: "da[" },
+      { description: "Paste the primary key '8c6f-a1e4-b3d8-2a9f' into the KEY field. (Assume key is in default register or clipboard)", type: "contains", value: "KEY: 8c6f-a1e4-b3d8-2a9f", loreFragment: "LOG_15C: 'The master key... it worked.'", keyHint: "p" },
+      { description: "Replace 'NONE' with 'GHOST' in the AUTH field.", type: "contains", value: "AUTH: [GHOST]", loreFragment: "LOG_15D: 'My identity, my pass.'", keyHint: "ci[" }
     ]
   }
 };
