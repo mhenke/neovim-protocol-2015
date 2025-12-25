@@ -1512,7 +1512,7 @@ export default function App() {
             </div>
 
             {/* --- RIGHT: MISSION LOG (HUD) --- */}
-            <div className="w-80 border-l border-gray-800 bg-[#080808] p-6 flex flex-col z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)]">
+            <div className={`w-80 border-l border-gray-800 bg-[#080808] p-6 flex flex-col z-20 shadow-[-10px_0_30px_rgba(0,0,0,0.5)] ${gameState.status === 'EPISODE_INTRO' || gameState.status === 'BRIEFING' ? 'opacity-40 blur-sm pointer-events-none' : ''}`} aria-hidden={gameState.status === 'EPISODE_INTRO' || gameState.status === 'BRIEFING'}>
                 
                 {/* HUD Header */}
                 <div className="mb-8 border-b border-gray-700 pb-2 flex justify-between items-end">
