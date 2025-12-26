@@ -930,6 +930,11 @@ export default function App() {
       e.preventDefault();
     }
 
+    // Prevent browser default actions for Ctrl-d and Ctrl-u (e.g., add bookmark, scroll up)
+    if (e.ctrlKey && (e.key === 'd' || e.key === 'u')) {
+        e.preventDefault();
+    }
+
     if (gameState.status === 'BRIEFING') {
       if (e.key === 'Enter') setGameState(prev => ({ ...prev, status: 'PLAYING' }));
       return;

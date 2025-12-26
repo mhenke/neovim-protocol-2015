@@ -22,27 +22,33 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     targetText: [], // Will be dynamically generated
     loreReveal: "LOG_01 DECRYPTED: '...hiding a consciousness... deeper...' [FRAGMENTED, ORIGIN UNCERTAIN] - Echo",
     hints: [
-      "Use 'j' to move down and 'k' to move up.",
-      "Use 'w' to jump forwards by word, and 'b' to jump backwards.",
-      "Use '0' to go to the start of the line, and '$' to go to the end.",
+      "`j` to move down and `k` to move up.",
+      "(`w`) to jump forwards by word, and `b` to jump backwards.",
+      "`0` to go to the start of the line, and `$` to go to the end.",
       "`Ctrl-d` scrolls down half a page, `Ctrl-u` scrolls up."
     ],
     tasks: [
       {
-        description: "Scroll down to find the 'PAYLOAD_FOUND_HERE' message using `Ctrl-d`.",
-        type: "cursor_on", value: "PAYLOAD_FOUND_HERE", loreFragment: "LOG_01A: 'The payload. Hidden beneath layers of static.'", keyHint: "Ctrl-d"
+        description: "Move to the 'A' in 'Agent' on the '// Agent Echo - Last Transmission' line using `j` and `l`.",
+        type: "verify_key_sequence",
+        expectedKeySequence: ["j", "l", "l", "l"],
+        value: "Agent Echo - Last Transmission",
+        cursor: 3,
+        cursorExact: true,
+        loreFragment: "LOG_00: \"Backdoor found. I have breached the R&D perimeter.\"",
+        keyHint: "j l"
       },
       {
-        description: "Jump to the start of the file.",
-        type: "cursor_on", value: "// signal_trace.log", loreFragment: "LOG_01B: 'The beginning of the thread.'", keyHint: "gg"
+        description: "Scroll down to find the 'PAYLOAD_FOUND_HERE' message using `Ctrl-d`.",
+        type: "cursor_on", value: "// PAYLOAD_FOUND_HERE", loreFragment: "LOG_01A: 'The payload. Hidden beneath layers of static.'", keyHint: "Ctrl-d"
       },
       {
         description: "Move down to the 'STATUS' line, then jump to the first word.",
         type: "verify_key_sequence",
-        expectedKeySequence: ["j", "j", "j", "j", "w"], // Adjust sequence as needed for new initialText
+        expectedKeySequence: ["k", "k", "k", "w"], // Adjusted to move from PAYLOAD to STATUS and then to word
         value: "STATUS",
         loreFragment: "LOG_01C: \"They aren't creating an AI. They are becoming it.\"",
-        keyHint: "j w"
+        keyHint: "k w"
       },
       {
         description: "From the end of the 'OFFLINE.' line, jump back to 'server...'.",
@@ -151,8 +157,8 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     hints: [
       "`yy`, `p` (paste after), `P` (paste before).",
       "`u` (undo), `Ctrl-r` (redo).",
-      "`\"+y`/`\"+"p` (system clipboard).",
-      "`\"ay`/`\"ap` (named register 'a')."
+      "\"+y / \" +p (system clipboard).",
+      "\"ay / \"ap (named register 'a')."
     ],
     tasks: [
       {
@@ -254,7 +260,7 @@ export const STATIC_LEVELS: Record<number, GeminiLevelResponse> = {
     initialText: ["// report.txt", "ERROR: Corrupt", "ERROR: Corrupt", "ERROR: Corrupt", "", "---", "", "Final report needed."],
     targetText: [],
     loreReveal: "LOG_10: 'The system's attacks are predictable. I can erase them faster than it can create them.' - Echo",
-    hints: ["Prefix a command with a number to repeat it (e.g., `5j`, `d2w`).", "\".\" repeats the last change.", "`{`/`}` jumps between paragraphs."],
+    hints: ["Prefix a command with a number to repeat it (e.g., `5j`, `d2w`).", "`.` repeats the last change.", "`{`/`}` jumps between paragraphs."],
     tasks: [
       { description: "Delete the 3 corrupt error lines with one command (e.g. `3dd`).", type: "missing", value: "ERROR: Corrupt", loreFragment: "LOG_10A: 'A single command to wipe the slate clean.'", keyHint: "3dd" },
       { description: "From the top, move down 5 lines.", type: "cursor_on", value: "ERROR: Corrupt", loreFragment: "LOG_10B: 'Jumping past the noise.'", keyHint: "5j" },
